@@ -270,3 +270,4 @@ CREATE POLICY "Users can update own reviews" ON reviews
 -- CREATE POLICY "Anyone can view photos" ON storage.objects FOR SELECT USING (bucket_id = 'property-photos');
 -- CREATE POLICY "Authenticated users can upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'property-photos' AND auth.role() = 'authenticated');
 -- CREATE POLICY "Users can delete own photos" ON storage.objects FOR DELETE USING (bucket_id = 'property-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
+
