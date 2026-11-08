@@ -32,8 +32,6 @@ export default function Navbar({ user }: NavbarProps) {
     router.refresh()
   }
 
-  const isKos = pathname.startsWith('/kos')
-  const isKontrakan = pathname.startsWith('/kontrakan')
 
   return (
     <header className="sticky top-0 z-50 glass-nav transition-all">
@@ -53,42 +51,7 @@ export default function Navbar({ user }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/"
-              className={cn(
-                'text-sm font-bold transition-colors',
-                pathname === '/'
-                  ? 'text-[#3E2723]'
-                  : 'text-[#8D6E63] hover:text-[#3E2723]'
-              )}
-            >
-              Beranda
-            </Link>
-            <Link
-              href="/kos"
-              className={cn(
-                'text-sm font-bold transition-colors',
-                isKos
-                  ? 'text-[#5D4037] border-b-2 border-[#5D4037] pb-1'
-                  : 'text-[#8D6E63] hover:text-[#5D4037]'
-              )}
-            >
-              Kos
-            </Link>
-            <Link
-              href="/kontrakan"
-              className={cn(
-                'text-sm font-bold transition-colors',
-                isKontrakan
-                  ? 'text-[#5D4037] border-b-2 border-[#5D4037] pb-1'
-                  : 'text-[#8D6E63] hover:text-[#5D4037]'
-              )}
-            >
-              Kontrakan
-            </Link>
-          </nav>
+
 
           {/* Desktop Right Action Area */}
           <div className="hidden md:flex items-center gap-3">

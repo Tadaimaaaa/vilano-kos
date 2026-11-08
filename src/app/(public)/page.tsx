@@ -1,12 +1,11 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import {
-  ArrowRight, Building2, Home, ShieldCheck, Star, Users,
-  CheckCircle2, Sparkles, MessageSquare, Zap, Clock, ThumbsUp
+  ArrowRight, Building2, Home, ShieldCheck,
+  Sparkles, MessageSquare, Zap, ThumbsUp
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import PropertyCard from '@/components/property/PropertyCard'
-import HeroSearch from '@/components/home/HeroSearch'
 import PopularCities from '@/components/home/PopularCities'
 import { getFeaturedProperties, getProperties } from '@/lib/queries'
 
@@ -58,7 +57,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-4">
       {/* Hero Section with Warm Earthy Brown & Cream Gradient */}
-      <section className="relative bg-gradient-to-br from-[#1F1A17] via-[#3E2723] to-[#2D241E] text-white pt-20 pb-28 px-4 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#1F1A17] via-[#3E2723] to-[#2D241E] text-white pt-20 pb-20 px-4 overflow-hidden">
         {/* Warm Ambient Glows */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#8D6E63]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#D4BCA7]/15 rounded-full blur-3xl pointer-events-none" />
@@ -83,11 +82,26 @@ export default function HomePage() {
             Bebas pilih kamar kos harian/bulanan atau rumah kontrakan keluarga dengan foto real, fasilitas terverifikasi, dan kontak langsung ke WhatsApp pemilik.
           </p>
 
-          {/* Search Console Component */}
-          <HeroSearch />
+          {/* Action CTAs: Kos (Coklat-Krem) & Kontrakan (Krem-Coklat) */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+            <Link href="/kos">
+              <Button size="lg" className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] rounded-2xl font-bold px-8 py-6 text-sm gap-2.5 border border-[#8D6E63]/40 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-0.5">
+                <Building2 className="h-5 w-5 text-[#E8D8C8]" />
+                <span>Eksplor Kos</span>
+                <ArrowRight className="h-4 w-4 text-[#D4BCA7]" />
+              </Button>
+            </Link>
+            <Link href="/kontrakan">
+              <Button size="lg" className="bg-[#FAF7F2] hover:bg-[#F5EDE4] text-[#4E342E] rounded-2xl font-bold px-8 py-6 text-sm gap-2.5 border border-[#D4BCA7] shadow-xl hover:shadow-2xl transition-all hover:-translate-y-0.5">
+                <Home className="h-5 w-5 text-[#5D4037]" />
+                <span>Eksplor Kontrakan</span>
+                <ArrowRight className="h-4 w-4 text-[#5D4037]" />
+              </Button>
+            </Link>
+          </div>
 
           {/* Key Value Stats */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-[#D4BCA7]/20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-[#D4BCA7]/20">
             <div>
               <p className="text-2xl font-black text-[#FAF7F2]">5.000+</p>
               <p className="text-xs text-[#A98467] font-semibold">Unit Kos & Kontrakan</p>
@@ -105,57 +119,6 @@ export default function HomePage() {
               <p className="text-xs text-[#A98467] font-semibold">Rating Kepuasan</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Two Big Category Showcases (Kos: Coklat-Krem, Kontrakan: Krem-Coklat) */}
-      <section className="container mx-auto px-4 lg:px-8 -mt-10 z-20 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Card Kos: COKLAT DOMINAN dengan Aksen KREM */}
-          <Link
-            href="/kos"
-            className="group relative bg-gradient-to-br from-[#4E342E] via-[#5D4037] to-[#795548] rounded-4xl p-8 text-[#FAF7F2] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-[#3E2723]"
-          >
-            <div className="relative z-10 max-w-md">
-              <span className="px-3 py-1 rounded-full bg-[#FAF7F2]/15 backdrop-blur-md text-xs font-black uppercase tracking-wider inline-block mb-3 text-[#E8D8C8]">
-                Kamar Kos Eksklusif
-              </span>
-              <h3 className="text-3xl font-black mb-2 text-[#FAF7F2]">Kamar Kos</h3>
-              <p className="text-[#E8D8C8] text-sm mb-6 leading-relaxed">
-                Kamar siap huni lengkap dengan WiFi, AC, dan kamar mandi dalam. Pilihan kos putra, putri, dan campur dekat kampus & perkantoran.
-              </p>
-              <div className="inline-flex items-center gap-2 font-bold text-sm bg-[#FAF7F2] text-[#4E342E] px-5 py-2.5 rounded-2xl group-hover:bg-white transition-colors shadow-sm">
-                <span>Eksplor Kos</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-            <div className="absolute right-4 bottom-2 text-8xl md:text-9xl opacity-20 group-hover:scale-110 transition-transform select-none">
-              🏠
-            </div>
-          </Link>
-
-          {/* Card Kontrakan: KREM DOMINAN dengan Aksen COKLAT */}
-          <Link
-            href="/kontrakan"
-            className="group relative bg-gradient-to-br from-[#FAF7F2] via-[#F5EDE4] to-[#E8D8C8] rounded-4xl p-8 text-[#2D241E] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border-2 border-[#D4BCA7]"
-          >
-            <div className="relative z-10 max-w-md">
-              <span className="px-3 py-1 rounded-full bg-[#5D4037] text-xs font-black uppercase tracking-wider inline-block mb-3 text-[#FAF7F2]">
-                Rumah Kontrakan Keluarga
-              </span>
-              <h3 className="text-3xl font-black mb-2 text-[#3E2723]">Rumah Kontrakan</h3>
-              <p className="text-[#6D4C41] text-sm mb-6 leading-relaxed">
-                Satu rumah utuh dengan ruang tamu, dapur, dan carport mobil. Ideal untuk tempat tinggal keluarga atau patungan teman kerja.
-              </p>
-              <div className="inline-flex items-center gap-2 font-bold text-sm bg-[#5D4037] text-[#FAF7F2] px-5 py-2.5 rounded-2xl group-hover:bg-[#4E342E] transition-colors shadow-sm">
-                <span>Eksplor Kontrakan</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-            <div className="absolute right-4 bottom-2 text-8xl md:text-9xl opacity-20 group-hover:scale-110 transition-transform select-none">
-              🏡
-            </div>
-          </Link>
         </div>
       </section>
 
