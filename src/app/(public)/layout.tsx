@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
@@ -10,21 +10,23 @@ export default async function PublicLayout({
   let user = null
   let profile = null
 
-  try {
-    const supabase = await createClient()
-    const userRes = await supabase.auth.getUser()
-    user = userRes.data?.user || null
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createClient()
+      const userRes = await supabase.auth.getUser()
+      user = userRes.data?.user || null
 
-    if (user) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('full_name, role')
-        .eq('id', user.id)
-        .single()
-      profile = data
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('full_name, role')
+          .eq('id', user.id)
+          .single()
+        profile = data
+      }
+    } catch {
+      // Supabase credentials not set or network issue
     }
-  } catch {
-    // Supabase credentials not set or network issue
   }
 
   return (

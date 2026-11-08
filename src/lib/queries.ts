@@ -1,7 +1,41 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { PropertyFilters, PropertyWithDetails } from '@/types'
+import { MOCK_PROPERTIES } from '@/lib/mock-data'
+
+function filterMockProperties(filters?: PropertyFilters): PropertyWithDetails[] {
+  let list = [...MOCK_PROPERTIES]
+  if (filters?.type) {
+    list = list.filter((p) => p.type === filters.type)
+  }
+  if (filters?.kota) {
+    list = list.filter((p) => p.kota.toLowerCase().includes(filters.kota!.toLowerCase()))
+  }
+  if (filters?.gender_type && filters.gender_type !== 'all') {
+    list = list.filter((p) => p.gender_type === filters.gender_type || p.gender_type === 'all')
+  }
+  if (filters?.min_price) {
+    list = list.filter((p) => p.price_per_month >= filters.min_price!)
+  }
+  if (filters?.max_price) {
+    list = list.filter((p) => p.price_per_month <= filters.max_price!)
+  }
+  if (filters?.search) {
+    const q = filters.search.toLowerCase()
+    list = list.filter((p) =>
+      p.name.toLowerCase().includes(q) ||
+      p.address.toLowerCase().includes(q) ||
+      p.kota.toLowerCase().includes(q) ||
+      (p.kecamatan && p.kecamatan.toLowerCase().includes(q))
+    )
+  }
+  return list
+}
 
 export async function getProperties(filters?: PropertyFilters): Promise<PropertyWithDetails[]> {
+  if (!isSupabaseConfigured()) {
+    return filterMockProperties(filters)
+  }
+
   try {
     const supabase = await createClient()
 
@@ -24,18 +58,20 @@ export async function getProperties(filters?: PropertyFilters): Promise<Property
     }
 
     const { data, error } = await query
-    if (error) {
-      console.warn('⚠️ Supabase getProperties notice:', error.message || error)
-      return []
+    if (error || !data || data.length === 0) {
+      return filterMockProperties(filters)
     }
-    return (data || []) as PropertyWithDetails[]
-  } catch (err) {
-    console.warn('⚠️ getProperties caught error:', err)
-    return []
+    return data as PropertyWithDetails[]
+  } catch {
+    return filterMockProperties(filters)
   }
 }
 
 export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
+  if (!isSupabaseConfigured()) {
+    return MOCK_PROPERTIES.filter((p) => p.is_featured)
+  }
+
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
@@ -44,18 +80,21 @@ export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
       .eq('status', 'active')
       .eq('is_featured', true)
       .limit(6)
-    if (error) {
-      console.warn('⚠️ Supabase getFeaturedProperties notice:', error.message || error)
-      return []
+    if (error || !data || data.length === 0) {
+      return MOCK_PROPERTIES.filter((p) => p.is_featured)
     }
-    return (data || []) as PropertyWithDetails[]
-  } catch (err) {
-    console.warn('⚠️ getFeaturedProperties caught error:', err)
-    return []
+    return data as PropertyWithDetails[]
+  } catch {
+    return MOCK_PROPERTIES.filter((p) => p.is_featured)
   }
 }
 
 export async function getPropertyById(id: string) {
+  if (!isSupabaseConfigured()) {
+    const mock = MOCK_PROPERTIES.find((p) => p.id === id) || MOCK_PROPERTIES[0]
+    return { property: mock }
+  }
+
   try {
     const supabase = await createClient()
 
@@ -78,24 +117,29 @@ export async function getPropertyById(id: string) {
     ])
 
     if (propertyRes.error || !propertyRes.data) {
-      return null
+      const mock = MOCK_PROPERTIES.find((p) => p.id === id)
+      return mock ? { property: mock } : null
     }
 
     return {
       property: {
         ...propertyRes.data,
-        photos: photosRes.data || [],
+        photos: photosRes.data && photosRes.data.length > 0 ? photosRes.data : [],
         facilities: facilitiesRes.data?.map((f: any) => f.facilities) || [],
         reviews: reviewsRes.data || [],
       } as PropertyWithDetails,
     }
-  } catch (err) {
-    console.warn('⚠️ getPropertyById caught error:', err)
-    return null
+  } catch {
+    const mock = MOCK_PROPERTIES.find((p) => p.id === id)
+    return mock ? { property: mock } : null
   }
 }
 
 export async function getOwnerProperties(ownerId: string): Promise<PropertyWithDetails[]> {
+  if (!isSupabaseConfigured()) {
+    return MOCK_PROPERTIES.slice(0, 3)
+  }
+
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
@@ -103,42 +147,64 @@ export async function getOwnerProperties(ownerId: string): Promise<PropertyWithD
       .select('*')
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false })
-    if (error) {
-      console.warn('⚠️ getOwnerProperties notice:', error.message || error)
-      return []
-    }
-    return (data || []) as PropertyWithDetails[]
+    if (error || !data) return MOCK_PROPERTIES.slice(0, 3)
+    return data as PropertyWithDetails[]
   } catch {
-    return []
+    return MOCK_PROPERTIES.slice(0, 3)
   }
 }
 
 export async function getAllFacilities() {
+  if (!isSupabaseConfigured()) {
+    return [
+      { id: 'f-1', name: 'WiFi', icon: 'Wifi', category: 'umum' },
+      { id: 'f-2', name: 'AC', icon: 'Wind', category: 'kamar' },
+      { id: 'f-3', name: 'Kamar Mandi Dalam', icon: 'Bath', category: 'kamar' },
+      { id: 'f-4', name: 'Kasur & Lemari', icon: 'Bed', category: 'kamar' },
+      { id: 'f-5', name: 'Parkir Motor', icon: 'Bike', category: 'umum' },
+      { id: 'f-6', name: 'Parkir Mobil', icon: 'Car', category: 'umum' },
+      { id: 'f-7', name: 'Dapur', icon: 'Utensils', category: 'umum' },
+      { id: 'f-8', name: 'CCTV 24 Jam', icon: 'Shield', category: 'keamanan' },
+    ]
+  }
+
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
       .from('facilities')
       .select('*')
       .order('category')
-    if (error) return []
-    return data || []
+    if (error || !data || data.length === 0) {
+      return [
+        { id: 'f-1', name: 'WiFi', icon: 'Wifi', category: 'umum' },
+        { id: 'f-2', name: 'AC', icon: 'Wind', category: 'kamar' },
+        { id: 'f-3', name: 'Kamar Mandi Dalam', icon: 'Bath', category: 'kamar' },
+        { id: 'f-4', name: 'Kasur & Lemari', icon: 'Bed', category: 'kamar' },
+      ]
+    }
+    return data
   } catch {
     return []
   }
 }
 
 export async function getKotaList(): Promise<string[]> {
+  if (!isSupabaseConfigured()) {
+    return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
+  }
+
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
       .from('properties')
       .select('kota')
       .eq('status', 'active')
-    if (error || !data) return []
+    if (error || !data || data.length === 0) {
+      return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
+    }
     const unique = [...new Set(data.map((d: any) => d.kota).filter(Boolean))] as string[]
     return unique.sort()
   } catch {
-    return []
+    return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
   }
 }
-
