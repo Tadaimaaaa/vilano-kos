@@ -60,12 +60,12 @@ export default async function DashboardBookingPage() {
       </div>
 
       {bookings.length === 0 ? (
-        <div className="bg-white rounded-4xl border border-slate-200/80 p-16 text-center shadow-soft">
-          <div className="w-16 h-16 rounded-3xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-4">
+        <div className="bg-white rounded-4xl border border-[#E8D8C8] p-16 text-center shadow-soft">
+          <div className="w-16 h-16 rounded-3xl bg-[#F5EDE4] text-[#5D4037] flex items-center justify-center mx-auto mb-4">
             <CalendarCheck className="h-8 w-8" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">Belum Ada Riwayat Booking</h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+          <h3 className="text-lg font-bold text-[#2D241E]">Belum Ada Riwayat Booking</h3>
+          <p className="text-xs text-[#8D6E63] mt-1 max-w-sm mx-auto">
             {isPemilik
               ? 'Ketika ada penyewa yang mengajukan sewa kamar kos atau kontrakanmu, datanya akan muncul di sini.'
               : 'Kamu belum mengajukan booking sewa. Jelajahi katalog kos dan kontrakan untuk mulai memilih hunian.'}
@@ -76,39 +76,39 @@ export default async function DashboardBookingPage() {
           {bookings.map((booking: any) => (
             <div
               key={booking.id}
-              className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-soft hover:shadow-hover transition-all"
+              className="bg-white rounded-3xl border border-[#E8D8C8] p-6 shadow-soft hover:shadow-hover transition-all"
             >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 {/* Property & Tenant Info */}
                 <div className="space-y-3 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-base text-slate-900">
+                    <span className="font-extrabold text-base text-[#2D241E]">
                       {booking.property?.name || 'Properti'}
                     </span>
-                    <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full capitalize">
+                    <span className="text-[10px] font-bold bg-[#F5EDE4] text-[#4E342E] px-2 py-0.5 rounded-full capitalize">
                       {booking.property?.type || 'Kos'} &middot; {booking.property?.kota || ''}
                     </span>
                   </div>
 
                   {isPemilik && booking.tenant && (
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                      <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                        <User className="h-3.5 w-3.5 text-teal-600" />
+                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#FAF7F2] p-3 rounded-2xl border border-[#E8D8C8]">
+                      <div className="flex items-center gap-1.5 font-bold text-[#2D241E]">
+                        <User className="h-3.5 w-3.5 text-[#5D4037]" />
                         <span>Penyewa: {booking.tenant.full_name || 'Tanpa Nama'}</span>
                       </div>
                       {booking.tenant.phone && (
-                        <div className="flex items-center gap-1 text-slate-500">
-                          <Phone className="h-3 w-3 text-emerald-600" />
+                        <div className="flex items-center gap-1 text-[#6D4C41]">
+                          <Phone className="h-3 w-3 text-[#5D4037]" />
                           <span>{booking.tenant.phone}</span>
                         </div>
                       )}
                     </div>
                   )}
 
-                  <div className="flex flex-wrap gap-4 text-xs text-slate-600">
+                  <div className="flex flex-wrap gap-4 text-xs text-[#6D4C41]">
                     <span className="font-medium">📅 Masuk: <strong>{new Date(booking.start_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</strong></span>
                     <span className="font-medium">📆 Durasi: <strong>{booking.duration_months} Bulan</strong></span>
-                    <span className="font-medium">💰 Total: <strong className="text-teal-700 font-extrabold text-sm">{formatPrice(booking.total_price)}</strong></span>
+                    <span className="font-medium">💰 Total: <strong className="text-[#5D4037] font-extrabold text-sm">{formatPrice(booking.total_price)}</strong></span>
                   </div>
 
                   {booking.notes && (

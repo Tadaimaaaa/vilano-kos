@@ -6,7 +6,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import PropertyCard from '@/components/property/PropertyCard'
-import PopularCities from '@/components/home/PopularCities'
 import { getFeaturedProperties, getProperties } from '@/lib/queries'
 
 async function FeaturedSection() {
@@ -126,9 +125,6 @@ export default function HomePage() {
       <Suspense fallback={<div className="py-16 text-center text-[#8D6E63]">Memuat properti pilihan...</div>}>
         <FeaturedSection />
       </Suspense>
-
-      {/* Popular Cities */}
-      <PopularCities />
 
       {/* Why Choose Vilano - Warm Coffee Night */}
       <section className="py-16 bg-[#2D241E] text-[#FAF7F2] rounded-4xl container mx-auto px-6 lg:px-12 my-8 shadow-2xl border border-[#3E2723]">

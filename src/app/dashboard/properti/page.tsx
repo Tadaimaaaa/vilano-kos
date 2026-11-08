@@ -39,12 +39,12 @@ export default async function DashboardPropertiPage() {
       </div>
 
       {properties.length === 0 ? (
-        <div className="bg-white rounded-4xl border border-slate-200/80 p-16 text-center shadow-soft">
-          <div className="w-16 h-16 rounded-3xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-4">
+        <div className="bg-white rounded-4xl border border-[#E8D8C8] p-16 text-center shadow-soft">
+          <div className="w-16 h-16 rounded-3xl bg-[#F5EDE4] text-[#5D4037] flex items-center justify-center mx-auto mb-4">
             <Building2 className="h-8 w-8" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">Belum Ada Properti</h3>
-          <p className="text-xs text-slate-400 mb-6 max-w-sm mx-auto">
+          <h3 className="text-lg font-bold text-[#2D241E] mb-1">Belum Ada Properti</h3>
+          <p className="text-xs text-[#8D6E63] mb-6 max-w-sm mx-auto">
             Mulai iklankan kos atau kontrakanmu untuk menjangkau ribuan calon penyewa di kotamu.
           </p>
           <Link href="/dashboard/properti/baru">

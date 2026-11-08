@@ -57,15 +57,15 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-teal-800 via-teal-700 to-slate-900 rounded-4xl p-8 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#3E2723] via-[#5D4037] to-[#2D241E] rounded-4xl p-8 text-[#FAF7F2] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl relative overflow-hidden border border-[#3E2723]">
         <div className="relative z-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-200 bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#E8D8C8] bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-2">
             Selamat Datang di Vilano Panel
           </span>
           <h1 className="text-2xl md:text-3xl font-black">
             Halo, {profile?.full_name || 'Pengguna'}! 👋
           </h1>
-          <p className="text-teal-100 text-xs md:text-sm mt-1 max-w-md">
+          <p className="text-[#D4BCA7] text-xs md:text-sm mt-1 max-w-md">
             {isPemilik
               ? 'Pantau properti kos dan kontrakanmu, update ketersediaan unit, dan kelola booking masuk.'
               : 'Pantau status permohonan sewa kos dan kontrakan yang sudah kamu ajukan.'}
@@ -75,14 +75,14 @@ export default async function DashboardPage() {
         <div className="relative z-10 flex gap-3">
           {isPemilik ? (
             <Link href="/dashboard/properti/baru">
-              <Button size="lg" className="bg-white text-teal-800 hover:bg-teal-50 font-bold rounded-2xl gap-2 shadow-md">
+              <Button size="lg" className="bg-[#FAF7F2] text-[#4E342E] hover:bg-white font-bold rounded-2xl gap-2 shadow-md">
                 <Plus className="h-4 w-4" />
                 Tambah Properti Baru
               </Button>
             </Link>
           ) : (
             <Link href="/kos">
-              <Button size="lg" className="bg-white text-teal-800 hover:bg-teal-50 font-bold rounded-2xl gap-2 shadow-md">
+              <Button size="lg" className="bg-[#FAF7F2] text-[#4E342E] hover:bg-white font-bold rounded-2xl gap-2 shadow-md">
                 <Building2 className="h-4 w-4" />
                 Cari Properti
               </Button>
