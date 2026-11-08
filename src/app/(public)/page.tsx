@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight, Building2, Home, ShieldCheck,
-  Sparkles, MessageSquare, Zap, ThumbsUp
+  Sparkles, MessageSquare, Zap, ThumbsUp, CalendarCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import PropertyCard from '@/components/property/PropertyCard'
@@ -181,31 +181,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Property Owner Banner */}
+      {/* Booking CTA Banner */}
       <section className="container mx-auto px-4 lg:px-8 py-8 mb-8">
         <div className="relative bg-gradient-to-r from-[#4E342E] via-[#5D4037] to-[#2D241E] rounded-4xl p-8 md:p-14 text-[#FAF7F2] overflow-hidden shadow-xl border border-[#3E2723]">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-[#D4BCA7]/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-2xl">
-            <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-bold uppercase tracking-wider text-[#E8D8C8] border border-white/15 inline-block mb-3">
-              Untuk Pemilik Properti
+            <span className="px-3.5 py-1.5 rounded-full bg-white/10 text-xs font-bold uppercase tracking-wider text-[#E8D8C8] border border-white/15 inline-flex items-center gap-1.5 mb-3">
+              <Sparkles className="h-3.5 w-3.5 text-[#D4BCA7]" />
+              Reservasi Mudah & Cepat
             </span>
             <h2 className="text-3xl md:text-4xl font-black mb-3">
-              Punya Kamar Kos atau Kontrakan Kosong?
+              Siap Pindah ke Hunian Impian?
             </h2>
             <p className="text-[#E8D8C8] text-sm md:text-base leading-relaxed mb-8">
-              Iklankan propertimu di Vilano dan dapatkan calon penyewa terpercaya mahasiswa & karyawan di kotamu secara gratis!
+              Pilih kamar kos atau rumah kontrakan terbaik dengan harga transparan, fasilitas lengkap terverifikasi, dan kontak langsung ke WhatsApp pemilik.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/auth/register?role=pemilik">
-                <Button size="lg" className="bg-[#FAF7F2] text-[#4E342E] hover:bg-white font-black rounded-2xl w-full sm:w-auto shadow-md">
-                  Daftarkan Properti Sekarang
+              <Link href="/kos">
+                <Button size="lg" className="bg-[#FAF7F2] text-[#4E342E] hover:bg-white font-black rounded-2xl w-full sm:w-auto shadow-md gap-2">
+                  <CalendarCheck className="h-4 w-4 text-[#5D4037]" />
+                  Booking Sekarang
                 </Button>
               </Link>
-              <Link href="/dashboard">
-                <Button size="lg" variant="outline" className="border-[#D4BCA7] text-[#FAF7F2] hover:bg-white/10 rounded-2xl w-full sm:w-auto">
-                  Pelajari Selengkapnya
+              <Link href="/kontrakan">
+                <Button size="lg" variant="outline" className="border-[#D4BCA7] text-[#FAF7F2] hover:bg-white/10 rounded-2xl w-full sm:w-auto font-bold gap-2">
+                  <Home className="h-4 w-4 text-[#E8D8C8]" />
+                  Booking Kontrakan
                 </Button>
               </Link>
             </div>
