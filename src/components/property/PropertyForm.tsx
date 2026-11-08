@@ -95,6 +95,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     const propertyData = {
       ...formData,
       owner_id: ownerId,
+      status: initialData?.status || 'active',
       price_per_month: Number(formData.price_per_month),
       total_units: Number(formData.total_units),
       available_units: Number(formData.available_units),

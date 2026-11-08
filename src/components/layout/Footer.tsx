@@ -16,12 +16,12 @@ export default function Footer() {
             </Link>
 
             <p className="text-xs leading-relaxed text-[#A98467] max-w-sm">
-              Platform pencarian kamar kos eksklusif (Coklat-Krem) dan rumah kontrakan keluarga (Krem-Coklat) terpercaya di seluruh Indonesia.
+              Situs resmi sewa kamar kos eksklusif (Coklat-Krem) dan rumah kontrakan keluarga (Krem-Coklat) Vilano. Hunian bersih, nyaman, dan terawat langsung dari pemilik.
             </p>
 
             <div className="flex items-center gap-2 pt-2 text-xs text-[#E8D8C8] font-bold">
               <ShieldCheck className="h-4 w-4 text-[#D4BCA7]" />
-              <span>100% Terverifikasi & Bebas Calo</span>
+              <span>100% Unit Terawat & Bebas Calo</span>
             </div>
           </div>
 
@@ -29,7 +29,7 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-3">
             <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">Kamar Kos (Coklat)</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/kos" className="hover:text-white transition-colors">Semua Kos</Link></li>
+              <li><Link href="/kos" className="hover:text-white transition-colors">Semua Unit Kos</Link></li>
               <li><Link href="/kos?gender=putra" className="hover:text-white transition-colors">Kos Putra</Link></li>
               <li><Link href="/kos?gender=putri" className="hover:text-white transition-colors">Kos Putri</Link></li>
               <li><Link href="/kos?gender=campur" className="hover:text-white transition-colors">Kos Campur</Link></li>
@@ -49,14 +49,14 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Nav Links: Pemilik */}
+          {/* Nav Links: Layanan */}
           <div className="md:col-span-2 space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">Untuk Pemilik</h4>
+            <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">Layanan Sewa</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/auth/register?role=pemilik" className="text-[#E8D8C8] font-bold hover:underline">Pasang Iklan Gratis</Link></li>
-              <li><Link href="/auth/login" className="hover:text-white transition-colors">Masuk Akun Pemilik</Link></li>
-              <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard Saya</Link></li>
-              <li><Link href="/dashboard/properti/baru" className="hover:text-white transition-colors">Tambah Properti</Link></li>
+              <li><Link href="/kos" className="text-[#E8D8C8] font-bold hover:underline">Booking Sekarang</Link></li>
+              <li><a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Jadwal Survey Unit</a></li>
+              <li><Link href="/auth/login" className="hover:text-white transition-colors">Masuk Pengelola</Link></li>
+              <li><Link href="/dashboard" className="hover:text-white transition-colors">Kelola Properti</Link></li>
             </ul>
           </div>
 

@@ -19,13 +19,13 @@ async function FeaturedSection() {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-[#5D4037] bg-[#F5EDE4] px-3 py-1 rounded-full border border-[#D4BCA7]">
-            Rekomendasi Terhangat
+            Unit Pilihan Vilano
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-[#2D241E] mt-2">
-            Hunian Terpilih Minggu Ini
+            Kamar Kos & Rumah Kontrakan Kami
           </h2>
           <p className="text-[#8D6E63] text-sm mt-1">
-            Pilihan kos (coklat-krem) dan kontrakan (krem-coklat) dengan rating tertinggi.
+            Pilihan kamar kos (coklat-krem) dan rumah kontrakan (krem-coklat) terawat yang siap kamu huni.
           </p>
         </div>
 
@@ -66,19 +66,19 @@ export default function HomePage() {
           {/* Top Pill */}
           <div className="inline-flex items-center gap-2 bg-[#F5EDE4]/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#D4BCA7]/20 text-xs font-bold text-[#E8D8C8] mb-6">
             <Sparkles className="h-3.5 w-3.5 text-[#D4BCA7]" />
-            <span>Platform Kos & Kontrakan Nyaman Terpercaya</span>
+            <span>Website Resmi Kos & Kontrakan Vilano</span>
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#FAF7F2] mb-5 leading-[1.15]">
-            Temukan Kos & Kontrakan Impian, <br />
+            Sewa Kos & Kontrakan Nyaman, <br />
             <span className="bg-gradient-to-r from-[#FAF7F2] via-[#E8D8C8] to-[#D4BCA7] bg-clip-text text-transparent">
-              Hangat, Nyaman & Transparan.
+              Terawat, Bersih & Langsung Pemilik.
             </span>
           </h1>
 
           <p className="text-sm md:text-base text-[#D4BCA7] max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Bebas pilih kamar kos harian/bulanan atau rumah kontrakan keluarga dengan foto real, fasilitas terverifikasi, dan kontak langsung ke WhatsApp pemilik.
+            Pilihan kamar kos eksklusif dan rumah kontrakan keluarga milik Vilano. Foto 100% real sesuai aslinya, fasilitas lengkap terawat, tanpa biaya perantara / calo.
           </p>
 
           {/* Action CTAs: Kos (Coklat-Krem) & Kontrakan (Krem-Coklat) */}
@@ -102,16 +102,16 @@ export default function HomePage() {
           {/* Key Value Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-[#D4BCA7]/20">
             <div>
-              <p className="text-2xl font-black text-[#FAF7F2]">5.000+</p>
-              <p className="text-xs text-[#A98467] font-semibold">Unit Kos & Kontrakan</p>
+              <p className="text-2xl font-black text-[#FAF7F2]">100%</p>
+              <p className="text-xs text-[#A98467] font-semibold">Foto & Unit Real</p>
             </div>
             <div>
-              <p className="text-2xl font-black text-[#E8D8C8]">100%</p>
-              <p className="text-xs text-[#A98467] font-semibold">Bebas Biaya Admin</p>
+              <p className="text-2xl font-black text-[#E8D8C8]">0 Biaya</p>
+              <p className="text-xs text-[#A98467] font-semibold">Tanpa Calo / Perantara</p>
             </div>
             <div>
-              <p className="text-2xl font-black text-[#FAF7F2]">1.800+</p>
-              <p className="text-xs text-[#A98467] font-semibold">Pemilik Terdaftar</p>
+              <p className="text-2xl font-black text-[#FAF7F2]">Langsung</p>
+              <p className="text-xs text-[#A98467] font-semibold">Kontak Pemilik Langsung</p>
             </div>
             <div>
               <p className="text-2xl font-black text-[#D4BCA7]">4.9 / 5</p>
@@ -145,7 +145,7 @@ export default function HomePage() {
             </div>
             <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">Direct WhatsApp</h3>
             <p className="text-[#D4BCA7] text-xs leading-relaxed">
-              Tanya ketersediaan dan survey lokasi langsung ke pemilik tanpa perantara atau calo liar.
+              Tanya ketersediaan dan atur jadwal survey langsung ke kami selaku pemilik tanpa perantara.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function HomePage() {
             </div>
             <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">100% Foto Real</h3>
             <p className="text-[#D4BCA7] text-xs leading-relaxed">
-              Foto dan fasilitas dicek secara berkala untuk memastikan kondisi kamar real sesuai dengan aslinya.
+              Semua foto kamar dan fasilitas diambil langsung di lokasi unit kami sesuai kondisi nyata aslinya.
             </p>
           </div>
 
@@ -163,9 +163,9 @@ export default function HomePage() {
             <div className="w-12 h-12 rounded-2xl bg-[#5D4037] text-[#E8D8C8] flex items-center justify-center mb-4">
               <Zap className="h-6 w-6" />
             </div>
-            <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">Booking Online Cepat</h3>
+            <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">Booking Langsung Cepat</h3>
             <p className="text-[#D4BCA7] text-xs leading-relaxed">
-              Kunci unit impianmu sebelum keduluan orang lain hanya dengan mengisi form reservasi singkat.
+              Kunci kamar kos atau rumah kontrakan pilihanmu secara langsung dan mudah sebelum keduluan.
             </p>
           </div>
 
@@ -173,9 +173,9 @@ export default function HomePage() {
             <div className="w-12 h-12 rounded-2xl bg-[#5D4037] text-[#E8D8C8] flex items-center justify-center mb-4">
               <ThumbsUp className="h-6 w-6" />
             </div>
-            <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">Tanpa Biaya Calo</h3>
+            <h3 className="font-bold text-lg mb-1.5 text-[#FAF7F2]">Bebas Biaya Calo</h3>
             <p className="text-[#D4BCA7] text-xs leading-relaxed">
-              Bebas komisi perantara. Tarif yang tertera adalah tarif murni yang ditentukan pemilik properti.
+              Tarif murni langsung dari kami pemilik properti, tanpa mark-up komisi atau biaya perantara.
             </p>
           </div>
         </div>

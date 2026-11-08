@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Home, Building2, Menu, X, User, LogOut, LayoutDashboard, Shield, PlusCircle, Sparkles } from 'lucide-react'
+import { Home, Building2, Menu, X, User, LogOut, LayoutDashboard, Shield, Phone, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -55,13 +55,17 @@ export default function Navbar({ user }: NavbarProps) {
 
           {/* Desktop Right Action Area */}
           <div className="hidden md:flex items-center gap-3">
-            {/* CTA for Owners */}
-            <Link href={user ? "/dashboard/properti/baru" : "/auth/register?role=pemilik"}>
-              <Button variant="outline" size="sm" className="gap-2 rounded-xl border-[#D4BCA7] text-[#4E342E] bg-[#FAF7F2] hover:bg-[#F5EDE4]">
-                <PlusCircle className="h-4 w-4 text-[#6D4C41]" />
-                <span>Pasang Iklan</span>
+            {/* Direct Contact WhatsApp CTA */}
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20ketersediaan%20unit%20kos%20/%20kontrakan"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" size="sm" className="gap-2 rounded-xl border-[#D4BCA7] text-[#4E342E] bg-[#FAF7F2] hover:bg-[#F5EDE4] font-bold text-xs shadow-xs">
+                <Phone className="h-3.5 w-3.5 text-[#5D4037]" />
+                <span>Hubungi Pemilik</span>
               </Button>
-            </Link>
+            </a>
 
             {user ? (
               <div className="relative">
