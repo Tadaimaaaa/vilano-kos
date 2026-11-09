@@ -8,11 +8,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-10">
           {/* Brand Info */}
           <div className="md:col-span-6 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#3E2723] via-[#5D4037] to-[#8D6E63] flex items-center justify-center text-[#FAF7F2] shadow-md border border-[#8D6E63]">
-                <Home className="h-5 w-5" />
-              </div>
-              <span className="font-black text-2xl text-[#FAF7F2] tracking-tight">Vilano</span>
+            <Link href="/" className="flex flex-col">
+              <span className="font-black text-2xl md:text-[26px] text-[#FAF7F2] tracking-tight leading-none">
+                Vilano
+              </span>
+              <p className="text-[11px] text-[#A98467] font-semibold tracking-wide mt-1">
+                Kos &bull; Kontrakan
+              </p>
             </Link>
 
             <p className="text-xs leading-relaxed text-[#A98467] max-w-md">

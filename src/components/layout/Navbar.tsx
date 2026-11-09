@@ -56,17 +56,13 @@ export default function Navbar({ user }: NavbarProps) {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4 relative">
           {/* Logo Brand */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#3E2723] via-[#5D4037] to-[#8D6E63] flex items-center justify-center shadow-md shadow-[#5D4037]/20 group-hover:scale-105 transition-transform">
-              <Home className="h-6 w-6 text-[#FAF7F2]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-black text-2xl tracking-tight text-[#3E2723] group-hover:text-[#5D4037] transition-colors">Vilano</span>
-                <span className="text-[10px] font-bold bg-[#F5EDE4] text-[#4E342E] px-2 py-0.5 rounded-full border border-[#D4BCA7]">ID</span>
-              </div>
-              <p className="text-[11px] text-[#8D6E63] font-semibold tracking-wide">Kos &bull; Kontrakan</p>
-            </div>
+          <Link href="/" className="flex flex-col group py-1">
+            <span className="font-black text-2xl md:text-[26px] tracking-tight text-[#3E2723] group-hover:text-[#5D4037] transition-colors leading-none">
+              Vilano
+            </span>
+            <p className="text-[11px] text-[#8D6E63] font-semibold tracking-wide mt-1">
+              Kos &bull; Kontrakan
+            </p>
           </Link>
 
           {/* Switch Button: Kos, Beranda (Tengah), & Kontrakan dengan Animasi Sliding Smooth */}
