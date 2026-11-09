@@ -39,7 +39,7 @@ BEGIN
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kos', 'Kos Griya Asri Pogung',
+      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Griya Asri Pogung',
       'Kos putra nyaman, tenang, dan strategis dekat kampus UGM. Fasilitas lengkap tinggal bawa koper. Lingkungan aman dengan CCTV 24 jam.',
       'Jl. Pogung Kidul No. 15', 'Mlati', 'Yogyakarta',
       1200000, 10, 3, 'putra', '081234567890', 'active', true
@@ -58,7 +58,7 @@ BEGIN
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kos', 'Kost Putri Cempaka Tebet',
+      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kost Putri Cempaka Tebet',
       'Kost khusus putri di area strategis Tebet, hanya 5 menit ke stasiun KRL. Akses mudah ke perkantoran Kuningan dan Sudirman.',
       'Jl. Tebet Barat Dalam VII No. 20', 'Tebet', 'Jakarta',
       2100000, 8, 2, 'putri', '081298765432', 'active', true
@@ -76,7 +76,7 @@ BEGIN
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kontrakan', 'Kontrakan Harmoni Dago',
+      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Kontrakan Harmoni Dago',
       'Rumah kontrakan 2 kamar tidur, 1 kamar mandi, ruang tamu luas, dapur, dan carport. Udara sejuk dekat kawasan wisata Dago.',
       'Jl. Dago Asri Blok B No. 4', 'Coblong', 'Bandung',
       3500000, 1, 1, 'all', '081311223344', 'active', true
@@ -94,7 +94,7 @@ BEGIN
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kontrakan', 'Rumah Kontrakan Rungkut Asri',
+      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Kontrakan Rungkut Asri',
       'Kontrakan siap huni di perumahan tenang. 3 Kamar Tidur, 2 Kamar Mandi, Listrik 2200 VA token, PDAM lancar, bebas banjir.',
       'Perum Rungkut Asri Timur No. 12', 'Rungkut', 'Surabaya',
       2800000, 1, 1, 'all', '081555667788', 'active', true

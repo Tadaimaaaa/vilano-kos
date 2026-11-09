@@ -33,10 +33,11 @@ CREATE TABLE profiles (
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, full_name, role)
+  INSERT INTO profiles (id, full_name, phone, role)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data->>'full_name',
+    NEW.raw_user_meta_data->>'phone',
     COALESCE((NEW.raw_user_meta_data->>'role')::user_role, 'penyewa')
   );
   RETURN NEW;
@@ -260,14 +261,34 @@ CREATE POLICY "Users can update own reviews" ON reviews
   FOR UPDATE USING (auth.uid() = reviewer_id);
 
 -- ============================================
--- STORAGE BUCKETS
+-- STORAGE BUCKETS (for Property Photos)
 -- ============================================
 
--- Run these in Supabase Dashboard > Storage:
--- INSERT INTO storage.buckets (id, name, public) VALUES ('property-photos', 'property-photos', true);
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('property-photos', 'property-photos', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
 
--- Storage policies (run after creating bucket)
--- CREATE POLICY "Anyone can view photos" ON storage.objects FOR SELECT USING (bucket_id = 'property-photos');
--- CREATE POLICY "Authenticated users can upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'property-photos' AND auth.role() = 'authenticated');
--- CREATE POLICY "Users can delete own photos" ON storage.objects FOR DELETE USING (bucket_id = 'property-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'objects' AND policyname = 'Anyone can view photos'
+  ) THEN
+    CREATE POLICY "Anyone can view photos" ON storage.objects
+      FOR SELECT USING (bucket_id = 'property-photos');
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'objects' AND policyname = 'Authenticated users can upload photos'
+  ) THEN
+    CREATE POLICY "Authenticated users can upload photos" ON storage.objects
+      FOR INSERT WITH CHECK (bucket_id = 'property-photos' AND auth.role() = 'authenticated');
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'objects' AND policyname = 'Users can delete photos'
+  ) THEN
+    CREATE POLICY "Users can delete photos" ON storage.objects
+      FOR DELETE USING (bucket_id = 'property-photos' AND auth.role() = 'authenticated');
+  END IF;
+END $$;
 
