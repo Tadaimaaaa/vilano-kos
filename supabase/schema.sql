@@ -66,7 +66,7 @@ CREATE TABLE properties (
   available_units INTEGER DEFAULT 1,
   gender_type gender_type DEFAULT 'all',
   wa_number TEXT,
-  status property_status DEFAULT 'pending',
+  status property_status DEFAULT 'active',
   is_featured BOOLEAN DEFAULT FALSE,
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
