@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { Home, Building2, Menu, X, User, LogOut, LayoutDashboard, Shield, Phone, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {
@@ -23,6 +22,9 @@ export default function Navbar({ user }: NavbarProps) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+
+  const isKos = Boolean(pathname?.startsWith('/kos'))
+  const isKontrakan = Boolean(pathname?.startsWith('/kontrakan'))
 
   const supabase = createClient()
 
@@ -58,16 +60,16 @@ export default function Navbar({ user }: NavbarProps) {
                 href="/kos"
                 className={cn(
                   "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
-                  pathname.startsWith('/kos')
+                  isKos
                     ? "bg-[#5D4037] text-[#FAF7F2] shadow-md shadow-[#5D4037]/25 scale-[1.02]"
                     : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
                 )}
               >
-                <Building2 className={cn("h-4 w-4", pathname.startsWith('/kos') ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <Building2 className={cn("h-4 w-4", isKos ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
                 <span>Kos</span>
                 <span className={cn(
                   "text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider",
-                  pathname.startsWith('/kos') ? "bg-white/20 text-[#FAF7F2]" : "bg-[#E8D8C8]/70 text-[#5D4037]"
+                  isKos ? "bg-white/20 text-[#FAF7F2]" : "bg-[#E8D8C8]/70 text-[#5D4037]"
                 )}>
                   Putra
                 </span>
@@ -77,12 +79,12 @@ export default function Navbar({ user }: NavbarProps) {
                 href="/kontrakan"
                 className={cn(
                   "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
-                  pathname.startsWith('/kontrakan')
+                  isKontrakan
                     ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
                     : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
                 )}
               >
-                <Home className={cn("h-4 w-4", pathname.startsWith('/kontrakan') ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <Home className={cn("h-4 w-4", isKontrakan ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
                 <span>Kontrakan</span>
               </Link>
             </div>
@@ -95,11 +97,10 @@ export default function Navbar({ user }: NavbarProps) {
               href="https://wa.me/6281234567890?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20ketersediaan%20unit%20kos%20/%20kontrakan"
               target="_blank"
               rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D4BCA7] text-[#4E342E] bg-[#FAF7F2] hover:bg-[#F5EDE4] font-bold text-xs h-9 px-3.5 shadow-xs transition-colors"
             >
-              <Button variant="outline" size="sm" className="gap-2 rounded-xl border-[#D4BCA7] text-[#4E342E] bg-[#FAF7F2] hover:bg-[#F5EDE4] font-bold text-xs shadow-xs">
-                <Phone className="h-3.5 w-3.5 text-[#5D4037]" />
-                <span>Hubungi Pemilik</span>
-              </Button>
+              <Phone className="h-3.5 w-3.5 text-[#5D4037]" />
+              <span>Hubungi Pemilik</span>
             </a>
 
             {user ? (
@@ -162,15 +163,17 @@ export default function Navbar({ user }: NavbarProps) {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link href="/auth/login">
-                  <Button variant="ghost" size="sm" className="font-bold text-[#4E342E]">
-                    Masuk
-                  </Button>
+                <Link
+                  href="/auth/login"
+                  className="inline-flex items-center justify-center h-9 px-3.5 text-xs font-bold text-[#4E342E] hover:bg-[#F5EDE4] rounded-xl transition-colors"
+                >
+                  Masuk
                 </Link>
-                <Link href="/auth/register">
-                  <Button variant="gradient" size="sm" className="shadow-sm">
-                    Daftar Gratis
-                  </Button>
+                <Link
+                  href="/auth/register"
+                  className="inline-flex items-center justify-center h-9 px-4 text-xs font-bold bg-gradient-to-r from-[#795548] via-[#6D4C41] to-[#4E342E] text-[#FAF7F2] shadow-sm hover:from-[#6D4C41] hover:to-[#3E2723] rounded-xl transition-all"
+                >
+                  Daftar Gratis
                 </Link>
               </div>
             )}
@@ -245,11 +248,19 @@ export default function Navbar({ user }: NavbarProps) {
                 </>
               ) : (
                 <div className="grid grid-cols-2 gap-2 pt-3">
-                  <Link href="/auth/login" onClick={() => setMenuOpen(false)}>
-                    <Button variant="outline" className="w-full text-xs">Masuk</Button>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center h-10 px-3 text-xs font-bold rounded-xl border border-[#D4BCA7] bg-white text-[#4E342E] shadow-xs hover:bg-[#F5EDE4]"
+                  >
+                    Masuk
                   </Link>
-                  <Link href="/auth/register" onClick={() => setMenuOpen(false)}>
-                    <Button variant="gradient" className="w-full text-xs">Daftar</Button>
+                  <Link
+                    href="/auth/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center h-10 px-3 text-xs font-bold rounded-xl bg-gradient-to-r from-[#795548] via-[#6D4C41] to-[#4E342E] text-[#FAF7F2] shadow-sm hover:from-[#6D4C41] hover:to-[#3E2723]"
+                  >
+                    Daftar
                   </Link>
                 </div>
               )}
