@@ -30,7 +30,7 @@ export default async function DashboardPropertiPage() {
           <h1 className="text-2xl font-black text-slate-900">Kelola Properti Saya</h1>
           <p className="text-xs text-slate-500 mt-1">Daftar semua kos dan kontrakan yang kamu sewakan di Vilano.</p>
         </div>
-        <Link href="/dashboard/properti/baru">
+        <Link href="/admin/properti/baru">
           <Button variant="gradient" className="gap-2 rounded-2xl font-bold h-11 px-5 shadow-sm">
             <PlusCircle className="h-4 w-4" />
             Tambah Properti Baru
@@ -47,7 +47,7 @@ export default async function DashboardPropertiPage() {
           <p className="text-xs text-[#8D6E63] mb-6 max-w-sm mx-auto">
             Mulai iklankan kos atau kontrakanmu untuk menjangkau ribuan calon penyewa di kotamu.
           </p>
-          <Link href="/dashboard/properti/baru">
+          <Link href="/admin/properti/baru">
             <Button variant="gradient" className="gap-2 rounded-2xl font-bold">
               <Plus className="h-4 w-4" />
               Tambah Properti Pertama
@@ -108,7 +108,7 @@ export default async function DashboardPropertiPage() {
                             <Eye className="h-4 w-4" />
                           </Button>
                         </Link>
-                        <Link href={`/dashboard/properti/${property.id}/edit`}>
+                        <Link href={`/admin/properti/${property.id}/edit`}>
                           <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>

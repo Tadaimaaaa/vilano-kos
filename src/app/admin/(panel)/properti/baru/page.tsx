@@ -15,7 +15,7 @@ export default async function NewPropertyPage() {
     .single()
 
   if (profile?.role === 'penyewa') {
-    redirect('/dashboard')
+    redirect('/admin')
   }
 
   const facilities = await getAllFacilities()

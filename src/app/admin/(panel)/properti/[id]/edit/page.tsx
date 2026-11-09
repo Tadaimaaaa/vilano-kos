@@ -22,7 +22,7 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
 
   // Only owner can edit
   if (property.owner_id !== user.id) {
-    redirect('/dashboard/properti')
+    redirect('/admin/properti')
   }
 
   const facilities = await getAllFacilities()

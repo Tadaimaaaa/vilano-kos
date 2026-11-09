@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 export default async function DashboardBookingPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  if (!user) redirect('/admin/login')
 
   const { data: profile } = await supabase
     .from('profiles')

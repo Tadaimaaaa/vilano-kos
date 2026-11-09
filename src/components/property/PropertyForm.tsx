@@ -143,7 +143,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     }
 
     setLoading(false)
-    router.push('/dashboard/properti')
+    router.push('/admin/properti')
     router.refresh()
   }
 

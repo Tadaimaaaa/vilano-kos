@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Shield, Home, Building2, CalendarCheck, Users, LogOut, ArrowLeft } from 'lucide-react'
+import { Shield, Home, Building2, CalendarCheck, Users, LogOut, ArrowLeft, PlusCircle } from 'lucide-react'
 
 async function getAdminUser() {
   const supabase = await createClient()
@@ -71,21 +71,21 @@ export default async function AdminLayout({
             <span>Master Control</span>
           </Link>
           <Link
-            href="/dashboard"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
-          >
-            <Home className="h-4 w-4" />
-            <span>Dashboard Pemilik</span>
-          </Link>
-          <Link
-            href="/dashboard/properti"
+            href="/admin/properti"
             className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
           >
             <Building2 className="h-4 w-4" />
-            <span>Kelola Unit Saya</span>
+            <span>Kelola Properti</span>
           </Link>
           <Link
-            href="/dashboard/booking"
+            href="/admin/properti/baru"
+            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
+          >
+            <PlusCircle className="h-4 w-4" />
+            <span>Tambah Properti Baru</span>
+          </Link>
+          <Link
+            href="/admin/booking"
             className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
           >
             <CalendarCheck className="h-4 w-4" />

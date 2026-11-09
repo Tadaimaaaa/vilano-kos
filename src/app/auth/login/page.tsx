@@ -39,15 +39,11 @@ export default function LoginPage() {
         .single()
 
       setLoading(false)
-      if (profile?.role === 'admin') {
-        router.push('/admin')
-      } else {
-        router.push('/dashboard')
-      }
+      router.push('/admin')
       router.refresh()
     } else {
       setLoading(false)
-      router.push('/dashboard')
+      router.push('/admin')
       router.refresh()
     }
   }

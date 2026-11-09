@@ -164,24 +164,13 @@ export default function Navbar({ user }: NavbarProps) {
                     </div>
 
                     <Link
-                      href="/dashboard"
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#4E342E] hover:bg-[#F5EDE4] transition-colors"
+                      href="/admin"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#5D4037] hover:bg-[#F5EDE4] transition-colors"
                       onClick={() => setUserMenuOpen(false)}
                     >
-                      <LayoutDashboard className="h-4 w-4 text-[#8D6E63]" />
-                      Dashboard Saya
+                      <Shield className="h-4 w-4 text-[#8D6E63]" />
+                      Dashboard Admin
                     </Link>
-
-                    {(user.role === 'admin' || user.role === 'pemilik') && (
-                      <Link
-                        href="/admin"
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#5D4037] hover:bg-[#F5EDE4] transition-colors"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        <Shield className="h-4 w-4 text-[#8D6E63]" />
-                        Admin Master Panel
-                      </Link>
-                    )}
 
                     <div className="my-1.5 border-t border-[#F5EDE4]" />
 
@@ -255,23 +244,13 @@ export default function Navbar({ user }: NavbarProps) {
               {user ? (
                 <>
                   <Link
-                    href="/dashboard"
+                    href="/admin"
                     className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-[#4E342E] rounded-lg hover:bg-[#F5EDE4]"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <LayoutDashboard className="h-4 w-4 text-[#8D6E63]" />
-                    Dashboard
+                    <Shield className="h-4 w-4 text-[#8D6E63]" />
+                    Dashboard Admin
                   </Link>
-                  {(user.role === 'admin' || user.role === 'pemilik') && (
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-[#4E342E] rounded-lg hover:bg-[#F5EDE4]"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <Shield className="h-4 w-4 text-[#8D6E63]" />
-                      Admin Master Panel
-                    </Link>
-                  )}
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center gap-2.5 px-3 py-2 text-sm font-semibold text-rose-700 rounded-lg hover:bg-rose-50"
