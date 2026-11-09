@@ -65,13 +65,13 @@ export default async function KosPage({ searchParams }: KosPageProps) {
         <div className="relative z-10 max-w-2xl">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF7F2]/15 backdrop-blur-md text-xs font-bold uppercase tracking-wider mb-3 text-[#E8D8C8]">
             <Building2 className="h-3.5 w-3.5 text-[#D4BCA7]" />
-            Katalog Kamar Kos Vilano
+            Khusus Cowok / Putra &bull; Kamar Kos Vilano
           </span>
           <h1 className="text-3xl md:text-5xl font-black mb-3 text-[#FAF7F2]">
-            Kamar Kos Nyaman & Eksklusif
+            Kamar Kos Putra Nyaman & Eksklusif
           </h1>
           <p className="text-[#E8D8C8] text-sm md:text-base leading-relaxed">
-            Pilihan kamar kos putra, putri, dan campur milik Vilano. Bersih, terawat, full-furnished, dan langsung dari pemilik tanpa perantara.
+            Pilihan kamar kos khusus cowok (mahasiswa & karyawan) milik Vilano. Bersih, terawat, full-furnished, dan langsung dari pemilik tanpa perantara.
           </p>
         </div>
         <div className="absolute right-6 -bottom-6 text-9xl opacity-15 select-none hidden md:block">

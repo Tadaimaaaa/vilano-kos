@@ -41,7 +41,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     price_per_month: initialData?.price_per_month || '',
     total_units: initialData?.total_units || 1,
     available_units: initialData?.available_units || 1,
-    gender_type: initialData?.gender_type || 'all',
+    gender_type: initialData?.gender_type || (initialData?.type === 'kontrakan' ? 'all' : 'putra'),
     wa_number: initialData?.wa_number || '',
   })
 

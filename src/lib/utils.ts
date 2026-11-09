@@ -37,8 +37,8 @@ export function getPropertyTypeLabel(type: string): string {
 
 export function getGenderTypeLabel(type: string): string {
   const labels: Record<string, string> = {
-    putra: 'Putra',
-    putri: 'Putri',
+    putra: 'Khusus Cowok',
+    putri: 'Khusus Putri',
     campur: 'Campur',
     all: 'Semua',
   }

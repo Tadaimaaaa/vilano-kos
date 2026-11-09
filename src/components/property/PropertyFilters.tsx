@@ -133,23 +133,16 @@ function PropertyFiltersContent({ kotaList = [], defaultType }: PropertyFiltersP
             </select>
           </div>
 
-          {/* Tipe Penghuni (Kos Only) */}
+          {/* Kategori Penghuni (Kos Khusus Putra) */}
           {(!defaultType || defaultType === 'kos') && (
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-[#4E342E] flex items-center gap-1.5">
                 <Users className="h-3.5 w-3.5 text-[#6D4C41]" />
                 Kategori Penghuni Kos
               </label>
-              <select
-                value={genderType}
-                onChange={(e) => setGenderType(e.target.value)}
-                className="w-full h-11 text-xs font-semibold border border-[#D4BCA7] rounded-xl px-3 bg-[#FAF7F2] text-[#2D241E] focus:outline-none focus:border-[#6D4C41]"
-              >
-                <option value="">Semua Penghuni</option>
-                <option value="putra">Khusus Putra</option>
-                <option value="putri">Khusus Putri</option>
-                <option value="campur">Campur</option>
-              </select>
+              <div className="h-11 px-3.5 rounded-xl bg-[#F5EDE4] border border-[#D4BCA7] flex items-center text-xs font-extrabold text-[#4E342E]">
+                👦 100% Khusus Cowok / Putra
+              </div>
             </div>
           )}
         </div>

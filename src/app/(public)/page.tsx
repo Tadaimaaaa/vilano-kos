@@ -25,7 +25,7 @@ async function FeaturedSection() {
             Kamar Kos & Rumah Kontrakan Kami
           </h2>
           <p className="text-[#8D6E63] text-sm mt-1">
-            Pilihan kamar kos (coklat-krem) dan rumah kontrakan (krem-coklat) terawat yang siap kamu huni.
+            Pilihan kamar kos khusus cowok (coklat-krem) dan rumah kontrakan keluarga (krem-coklat) terawat yang siap kamu huni.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-sm md:text-base text-[#D4BCA7] max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Pilihan kamar kos eksklusif dan rumah kontrakan keluarga milik Vilano. Foto 100% real sesuai aslinya, fasilitas lengkap terawat, tanpa biaya perantara / calo.
+            Pilihan kamar kos eksklusif khusus cowok/putra dan rumah kontrakan keluarga milik Vilano. Foto 100% real sesuai aslinya, fasilitas lengkap terawat, tanpa biaya perantara / calo.
           </p>
 
           {/* Action CTAs: Kos (Coklat-Krem) & Kontrakan (Krem-Coklat) */}
@@ -86,7 +86,7 @@ export default function HomePage() {
             <Link href="/kos">
               <Button size="lg" className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] rounded-2xl font-bold px-8 py-6 text-sm gap-2.5 border border-[#8D6E63]/40 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-0.5">
                 <Building2 className="h-5 w-5 text-[#E8D8C8]" />
-                <span>Eksplor Kos</span>
+                <span>Eksplor Kos Putra</span>
                 <ArrowRight className="h-4 w-4 text-[#D4BCA7]" />
               </Button>
             </Link>

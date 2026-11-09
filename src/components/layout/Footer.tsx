@@ -25,14 +25,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Nav Links: Kos (Coklat-Krem) */}
+          {/* Nav Links: Kos (Coklat-Krem) - Khusus Cowok */}
           <div className="md:col-span-2 space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">Kamar Kos (Coklat)</h4>
+            <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">Kos Putra (Coklat)</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/kos" className="hover:text-white transition-colors">Semua Unit Kos</Link></li>
-              <li><Link href="/kos?gender=putra" className="hover:text-white transition-colors">Kos Putra</Link></li>
-              <li><Link href="/kos?gender=putri" className="hover:text-white transition-colors">Kos Putri</Link></li>
-              <li><Link href="/kos?gender=campur" className="hover:text-white transition-colors">Kos Campur</Link></li>
+              <li><Link href="/kos" className="hover:text-white transition-colors">Semua Kos Cowok</Link></li>
+              <li><Link href="/kos" className="hover:text-white transition-colors">Kos Mahasiswa</Link></li>
+              <li><Link href="/kos" className="hover:text-white transition-colors">Kos Karyawan</Link></li>
+              <li><Link href="/kos" className="hover:text-white transition-colors">Kamar Mandi Dalam</Link></li>
               <li><Link href="/kos?price=0-1500000" className="hover:text-white transition-colors">Kos &le; 1.5 Jt/bln</Link></li>
             </ul>
           </div>
