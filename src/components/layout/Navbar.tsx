@@ -23,6 +23,7 @@ export default function Navbar({ user }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
+  const isHome = pathname === '/'
   const isKos = Boolean(pathname?.startsWith('/kos'))
   const isKontrakan = Boolean(pathname?.startsWith('/kontrakan'))
 
@@ -53,19 +54,32 @@ export default function Navbar({ user }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Switch Button Kos & Kontrakan (Center) */}
+          {/* Switch Button: Beranda, Kos & Kontrakan (Center) */}
           <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
             <div className="flex items-center p-1.5 bg-[#F5EDE4]/90 rounded-full border border-[#D4BCA7] shadow-inner backdrop-blur-md">
               <Link
+                href="/"
+                className={cn(
+                  "flex items-center gap-1.5 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  isHome
+                    ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
+                    : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
+                )}
+              >
+                <Sparkles className={cn("h-3.5 w-3.5 lg:h-4 lg:w-4", isHome ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <span>Beranda</span>
+              </Link>
+
+              <Link
                 href="/kos"
                 className={cn(
-                  "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  "flex items-center gap-1.5 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs font-bold transition-all duration-300",
                   isKos
                     ? "bg-[#5D4037] text-[#FAF7F2] shadow-md shadow-[#5D4037]/25 scale-[1.02]"
                     : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
                 )}
               >
-                <Building2 className={cn("h-4 w-4", isKos ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <Building2 className={cn("h-3.5 w-3.5 lg:h-4 lg:w-4", isKos ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
                 <span>Kos</span>
                 <span className={cn(
                   "text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider",
@@ -78,13 +92,13 @@ export default function Navbar({ user }: NavbarProps) {
               <Link
                 href="/kontrakan"
                 className={cn(
-                  "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  "flex items-center gap-1.5 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs font-bold transition-all duration-300",
                   isKontrakan
                     ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
                     : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
                 )}
               >
-                <Home className={cn("h-4 w-4", isKontrakan ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <Home className={cn("h-3.5 w-3.5 lg:h-4 lg:w-4", isKontrakan ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
                 <span>Kontrakan</span>
               </Link>
             </div>
