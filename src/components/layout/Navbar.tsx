@@ -54,22 +54,9 @@ export default function Navbar({ user }: NavbarProps) {
             </div>
           </Link>
 
-          {/* Switch Button: Beranda, Kos & Kontrakan (Center) */}
+          {/* Switch Button: Kos, Beranda (Tengah), & Kontrakan */}
           <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
             <div className="flex items-center p-1.5 bg-[#F5EDE4]/90 rounded-full border border-[#D4BCA7] shadow-inner backdrop-blur-md">
-              <Link
-                href="/"
-                className={cn(
-                  "flex items-center gap-1.5 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs font-bold transition-all duration-300",
-                  isHome
-                    ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
-                    : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
-                )}
-              >
-                <Sparkles className={cn("h-3.5 w-3.5 lg:h-4 lg:w-4", isHome ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
-                <span>Beranda</span>
-              </Link>
-
               <Link
                 href="/kos"
                 className={cn(
@@ -87,6 +74,19 @@ export default function Navbar({ user }: NavbarProps) {
                 )}>
                   Putra
                 </span>
+              </Link>
+
+              <Link
+                href="/"
+                className={cn(
+                  "flex items-center gap-1.5 px-3.5 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  isHome
+                    ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
+                    : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
+                )}
+              >
+                <Sparkles className={cn("h-3.5 w-3.5 lg:h-4 lg:w-4", isHome ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <span>Beranda</span>
               </Link>
 
               <Link
