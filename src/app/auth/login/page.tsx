@@ -23,12 +23,30 @@ export default function LoginPage() {
     setError('')
 
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
-    setLoading(false)
     if (authError) {
+      setLoading(false)
       setError('Email atau password salah. Silakan periksa kembali.')
+      return
+    }
+
+    if (authData.user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', authData.user.id)
+        .single()
+
+      setLoading(false)
+      if (profile?.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/dashboard')
+      }
+      router.refresh()
     } else {
+      setLoading(false)
       router.push('/dashboard')
       router.refresh()
     }
@@ -117,13 +135,23 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-[#F5EDE4] text-center">
+          <div className="mt-6 pt-5 border-t border-[#F5EDE4] text-center space-y-3">
             <p className="text-xs text-[#8D6E63] font-medium">
               Belum punya akun?{' '}
               <Link href="/auth/register" className="text-[#5D4037] font-extrabold hover:underline">
                 Daftar akun baru
               </Link>
             </p>
+
+            <div>
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8D6E63] hover:text-[#3E2723] transition-colors bg-[#FAF7F2] px-3.5 py-1.5 rounded-xl border border-[#E8D8C8]"
+              >
+                <ShieldCheck className="h-3.5 w-3.5 text-[#5D4037]" />
+                <span>Portal Login Admin &bull; Pemilik</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

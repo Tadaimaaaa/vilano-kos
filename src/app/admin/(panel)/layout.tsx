@@ -6,7 +6,7 @@ import { Shield, Home, Building2, CalendarCheck, Users, LogOut, ArrowLeft } from
 async function getAdminUser() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  if (!user) redirect('/admin/login')
 
   const { data: profile } = await supabase
     .from('profiles')
@@ -15,7 +15,7 @@ async function getAdminUser() {
     .single()
 
   if (profile?.role !== 'admin' && profile?.role !== 'pemilik') {
-    redirect('/dashboard')
+    redirect('/admin/login?error=forbidden')
   }
 
   return { user, profile }
