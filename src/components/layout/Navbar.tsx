@@ -36,7 +36,7 @@ export default function Navbar({ user }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 glass-nav transition-all">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-4">
+        <div className="flex h-20 items-center justify-between gap-4 relative">
           {/* Logo Brand */}
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#3E2723] via-[#5D4037] to-[#8D6E63] flex items-center justify-center shadow-md shadow-[#5D4037]/20 group-hover:scale-105 transition-transform">
@@ -51,7 +51,42 @@ export default function Navbar({ user }: NavbarProps) {
             </div>
           </Link>
 
+          {/* Switch Button Kos & Kontrakan (Center) */}
+          <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
+            <div className="flex items-center p-1.5 bg-[#F5EDE4]/90 rounded-full border border-[#D4BCA7] shadow-inner backdrop-blur-md">
+              <Link
+                href="/kos"
+                className={cn(
+                  "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  pathname.startsWith('/kos')
+                    ? "bg-[#5D4037] text-[#FAF7F2] shadow-md shadow-[#5D4037]/25 scale-[1.02]"
+                    : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
+                )}
+              >
+                <Building2 className={cn("h-4 w-4", pathname.startsWith('/kos') ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <span>Kos</span>
+                <span className={cn(
+                  "text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider",
+                  pathname.startsWith('/kos') ? "bg-white/20 text-[#FAF7F2]" : "bg-[#E8D8C8]/70 text-[#5D4037]"
+                )}>
+                  Putra
+                </span>
+              </Link>
 
+              <Link
+                href="/kontrakan"
+                className={cn(
+                  "flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300",
+                  pathname.startsWith('/kontrakan')
+                    ? "bg-[#3E2723] text-[#FAF7F2] shadow-md shadow-[#3E2723]/25 scale-[1.02]"
+                    : "text-[#6D4C41] hover:text-[#3E2723] hover:bg-white/70"
+                )}
+              >
+                <Home className={cn("h-4 w-4", pathname.startsWith('/kontrakan') ? "text-[#E8D8C8]" : "text-[#8D6E63]")} />
+                <span>Kontrakan</span>
+              </Link>
+            </div>
+          </div>
 
           {/* Desktop Right Action Area */}
           <div className="hidden md:flex items-center gap-3">
@@ -102,7 +137,7 @@ export default function Navbar({ user }: NavbarProps) {
                       Dashboard Saya
                     </Link>
 
-                    {user.role === 'admin' && (
+                    {(user.role === 'admin' || user.role === 'pemilik') && (
                       <Link
                         href="/admin"
                         className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#5D4037] hover:bg-[#F5EDE4] transition-colors"
@@ -190,6 +225,16 @@ export default function Navbar({ user }: NavbarProps) {
                     <LayoutDashboard className="h-4 w-4 text-[#8D6E63]" />
                     Dashboard
                   </Link>
+                  {(user.role === 'admin' || user.role === 'pemilik') && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-[#4E342E] rounded-lg hover:bg-[#F5EDE4]"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <Shield className="h-4 w-4 text-[#8D6E63]" />
+                      Admin Master Panel
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center gap-2.5 px-3 py-2 text-sm font-semibold text-rose-700 rounded-lg hover:bg-rose-50"
