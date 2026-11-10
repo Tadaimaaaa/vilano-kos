@@ -62,13 +62,13 @@ export default async function KontrakanPage({ searchParams }: KontrakanPageProps
         <div className="relative z-10 max-w-2xl">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5D4037] text-xs font-bold uppercase tracking-wider mb-3 text-[#FAF7F2]">
             <Home className="h-3.5 w-3.5 text-[#E8D8C8]" />
-            Katalog Rumah Kontrakan Vilano
+            Rumah Kontrakan Keluarga &bull; Kota Solok
           </span>
           <h1 className="text-3xl md:text-5xl font-black mb-3 text-[#2D241E]">
-            Sewa Rumah Kontrakan Keluarga
+            Sewa Rumah Kontrakan di Kota Solok
           </h1>
           <p className="text-[#6D4C41] text-sm md:text-base leading-relaxed">
-            Satu rumah utuh milik Vilano dengan ruang keluarga, dapur privat, dan carport untuk kenyamanan tempat tinggal keluargamu langsung dari pemilik.
+            Satu rumah utuh milik Vilano di Jl. Gg. Suhada No.8, Simpang Rumbio, Kec. Lubuk Sikarah, Kota Solok dengan ruang keluarga lega, dapur privat, dan carport untuk kenyamanan tempat tinggal keluargamu.
           </p>
         </div>
         <div className="absolute right-6 -bottom-6 text-9xl opacity-15 select-none hidden md:block">

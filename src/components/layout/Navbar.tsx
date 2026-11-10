@@ -61,7 +61,7 @@ export default function Navbar({ user }: NavbarProps) {
               Vilano
             </span>
             <p className="text-[11px] text-[#8D6E63] font-semibold tracking-wide mt-1">
-              Kos &bull; Kontrakan
+              Kos &bull; Kontrakan &bull; Kota Solok
             </p>
           </Link>
 
