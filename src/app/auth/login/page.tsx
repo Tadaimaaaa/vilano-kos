@@ -27,14 +27,7 @@ export default function LoginPage() {
 
     if (authError) {
       setLoading(false)
-      const msg = authError.message.toLowerCase()
-      if (msg.includes('invalid') || msg.includes('credential')) {
-        setError('Email atau password salah. Silakan periksa kembali.')
-      } else if (msg.includes('confirm')) {
-        setError('Email belum dikonfirmasi di Supabase.')
-      } else {
-        setError(`Gagal masuk: ${authError.message}`)
-      }
+      setError('Email atau password salah. Silakan periksa kembali.')
       return
     }
 

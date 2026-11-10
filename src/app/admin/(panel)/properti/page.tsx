@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils'
+import DeletePropertyButton from '@/components/admin/DeletePropertyButton'
 
 export default async function DashboardPropertiPage() {
   const supabase = await createClient()
@@ -104,15 +105,16 @@ export default async function DashboardPropertiPage() {
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <Link href={`/properti/${property.id}`} target="_blank">
-                          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl text-slate-500 hover:text-slate-900">
+                          <Button variant="ghost" size="icon" title="Lihat Halaman" className="h-9 w-9 rounded-xl text-slate-500 hover:text-slate-900">
                             <Eye className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Link href={`/admin/properti/${property.id}/edit`}>
-                          <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
+                          <Button variant="outline" size="icon" title="Edit Properti" className="h-9 w-9 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
                         </Link>
+                        <DeletePropertyButton id={property.id} name={property.name} />
                       </div>
                     </td>
                   </tr>

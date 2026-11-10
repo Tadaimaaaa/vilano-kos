@@ -71,7 +71,10 @@ export default function HomePage() {
 
           {/* Heading */}
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#FAF7F2] mb-5 leading-[1.15]">
-            Sewa Kos & Kontrakan di Kota Solok
+            Sewa Kos & Kontrakan di Kota Solok, <br />
+            <span className="bg-gradient-to-r from-[#FAF7F2] via-[#E8D8C8] to-[#D4BCA7] bg-clip-text text-transparent">
+              Langsung dari Pemilik Resmi
+            </span>
           </h1>
 
           <p className="text-sm md:text-base text-[#D4BCA7] max-w-2xl mx-auto mb-10 leading-relaxed font-normal">

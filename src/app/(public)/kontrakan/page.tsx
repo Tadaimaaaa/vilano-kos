@@ -17,20 +17,10 @@ async function KontrakanList({ filters }: { filters: Filters }) {
         <div className="w-16 h-16 rounded-3xl bg-[#F5EDE4] text-[#4E342E] border border-[#D4BCA7] flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
           🏡
         </div>
-        <h3 className="text-xl font-extrabold text-[#2D241E]">Belum Ada Kontrakan yang Ditampilkan</h3>
-        <p className="text-[#8D6E63] text-sm mt-1.5 max-w-md mx-auto">
-          Unit rumah kontrakan keluarga Vilano di Simpang Rumbio, Kota Solok sedang dalam persiapan. Silakan hubungi pemilik langsung via WhatsApp untuk info sewa.
+        <h3 className="text-xl font-extrabold text-[#2D241E]">Belum Ada Kontrakan Tersedia</h3>
+        <p className="text-[#8D6E63] text-sm mt-1.5 max-w-sm mx-auto">
+          Unit rumah kontrakan sedang disiapkan oleh pemilik. Hubungi kami langsung melalui WhatsApp untuk informasi ketersediaan.
         </p>
-        <div className="mt-6">
-          <a
-            href="https://wa.me/6281234567890?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20sewa%20rumah%20kontrakan%20di%20Simpang%20Rumbio%20Solok"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs shadow-md transition-all"
-          >
-            Hubungi Pemilik via WhatsApp
-          </a>
-        </div>
       </div>
     )
   }

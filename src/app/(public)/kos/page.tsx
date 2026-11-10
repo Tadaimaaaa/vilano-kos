@@ -15,22 +15,12 @@ async function KosList({ filters }: { filters: Filters }) {
     return (
       <div className="text-center py-20 bg-white rounded-4xl border border-[#E8D8C8] shadow-soft p-8">
         <div className="w-16 h-16 rounded-3xl bg-[#5D4037] text-[#FAF7F2] flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
-          🏢
+          🏠
         </div>
-        <h3 className="text-xl font-extrabold text-[#2D241E]">Belum Ada Unit Kos yang Ditampilkan</h3>
-        <p className="text-[#8D6E63] text-sm mt-1.5 max-w-md mx-auto">
-          Unit kamar kos putra Vilano di Jl. Pandan Tengah, Kota Solok sedang dalam persiapan. Silakan hubungi pemilik langsung via WhatsApp untuk menanyakan ketersediaan kamar.
+        <h3 className="text-xl font-extrabold text-[#2D241E]">Belum Ada Kamar Kos Tersedia</h3>
+        <p className="text-[#8D6E63] text-sm mt-1.5 max-w-sm mx-auto">
+          Unit kamar kos sedang disiapkan oleh pemilik. Hubungi kami langsung melalui WhatsApp untuk informasi ketersediaan.
         </p>
-        <div className="mt-6">
-          <a
-            href="https://wa.me/6281234567890?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20ketersediaan%20kamar%20kos%20putra%20di%20Pandan%20Solok"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs shadow-md transition-all"
-          >
-            Hubungi Pemilik via WhatsApp
-          </a>
-        </div>
       </div>
     )
   }

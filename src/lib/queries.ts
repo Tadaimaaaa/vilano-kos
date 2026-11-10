@@ -137,7 +137,7 @@ export async function getPropertyById(id: string) {
 
 export async function getOwnerProperties(ownerId: string): Promise<PropertyWithDetails[]> {
   if (!isSupabaseConfigured()) {
-    return MOCK_PROPERTIES.slice(0, 3)
+    return []
   }
 
   try {
@@ -147,10 +147,10 @@ export async function getOwnerProperties(ownerId: string): Promise<PropertyWithD
       .select('*')
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false })
-    if (error || !data) return MOCK_PROPERTIES.slice(0, 3)
+    if (error || !data) return []
     return data as PropertyWithDetails[]
   } catch {
-    return MOCK_PROPERTIES.slice(0, 3)
+    return []
   }
 }
 
