@@ -20,12 +20,84 @@ interface KosFloorPlanProps {
 }
 
 export default function KosFloorPlan({
-  propertyId,
+  propertyId = 'kos-vilano-pandan',
   propertyName,
-  rooms = DEFAULT_FLOOR1_ROOMS,
+  rooms: initialRooms = DEFAULT_FLOOR1_ROOMS,
   ownerPhone = '08127951435',
 }: KosFloorPlanProps) {
+  const [rooms, setRooms] = useState<KosRoom[]>(initialRooms)
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
+
+  // Sinkronisasi Real-Time (BroadcastChannel + LocalStorage + Server Polling)
+  useEffect(() => {
+    // 1. Ambil dari cache lokal awal jika ada
+    try {
+      const cached = localStorage.getItem('vilano_rooms_' + propertyId)
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setRooms(parsed)
+        }
+      }
+    } catch {}
+
+    // 2. Fetch data terkini dari server
+    async function fetchLatest() {
+      try {
+        const res = await fetch(`/api/rooms?propertyId=${encodeURIComponent(propertyId)}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.rooms && Array.isArray(data.rooms)) {
+            setRooms(data.rooms)
+          }
+        }
+      } catch {}
+    }
+    fetchLatest()
+
+    // 3. BroadcastChannel untuk instan 0ms update saat admin ubah status di tab lain
+    let channel: BroadcastChannel | null = null
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        channel = new BroadcastChannel('vilano_rooms_sync')
+        channel.onmessage = (event) => {
+          if (event.data?.rooms && (!event.data.propertyId || event.data.propertyId === propertyId)) {
+            setRooms(event.data.rooms)
+          }
+        }
+      } catch {}
+    }
+
+    // 4. Storage event untuk cross-window sync
+    function handleStorage(e: StorageEvent) {
+      if (e.key === 'vilano_rooms_' + propertyId && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue)
+          if (Array.isArray(parsed)) setRooms(parsed)
+        } catch {}
+      }
+    }
+    window.addEventListener('storage', handleStorage)
+
+    // 5. Polling server setiap 3 detik untuk sinkronisasi antar-perangkat (device berbeda)
+    const interval = setInterval(fetchLatest, 3000)
+
+    return () => {
+      if (channel) channel.close()
+      window.removeEventListener('storage', handleStorage)
+      clearInterval(interval)
+    }
+  }, [propertyId])
+
+  // Update detail kamar pop-up secara real-time jika kamar yang sedang dibuka statusnya diubah oleh admin
+  useEffect(() => {
+    if (selectedRoom) {
+      const updated = rooms.find((r) => r.id === selectedRoom.id)
+      if (updated && (updated.status !== selectedRoom.status || updated.price !== selectedRoom.price)) {
+        setSelectedRoom(updated)
+      }
+    }
+  }, [rooms, selectedRoom])
 
   // Kunci scroll halaman (html & body) saat pop up terbuka & tutup jika tekan tombol Escape
   useEffect(() => {

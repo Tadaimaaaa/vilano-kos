@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   CheckCircle2, XCircle, Footprints, Utensils, DoorOpen,
   Sparkles, Save, Edit3, X, Check, RefreshCw
@@ -77,18 +77,55 @@ export default function AdminKosFloorPlan({
     await persistRooms(updated)
   }
 
+  // Ambil state terbaru dari server saat mount
+  useEffect(() => {
+    async function fetchLatest() {
+      try {
+        const res = await fetch(`/api/rooms?propertyId=${encodeURIComponent(propertyId)}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.rooms && Array.isArray(data.rooms)) {
+            setRooms(data.rooms)
+            if (onChange) onChange(data.rooms)
+          }
+        }
+      } catch {}
+    }
+    fetchLatest()
+  }, [propertyId])
+
+  // Broadcast perubahan secara instan (0ms delay) ke seluruh tab & web penyewa
+  function broadcastRooms(updatedRooms: KosRoom[]) {
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        const channel = new BroadcastChannel('vilano_rooms_sync')
+        channel.postMessage({ type: 'ROOMS_UPDATED', propertyId, rooms: updatedRooms })
+        channel.close()
+      } catch {}
+    }
+
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('vilano_rooms_' + propertyId, JSON.stringify(updatedRooms))
+      } catch {}
+    }
+  }
+
   // Persist to server if propertyId exists
   async function persistRooms(updatedRooms: KosRoom[]) {
+    // 1. Broadcast langsung tanpa delay
+    broadcastRooms(updatedRooms)
+
     if (!propertyId || readOnly) return
     setSaving(true)
     try {
-      const res = await fetch(`/api/admin/properties/${propertyId}`, {
-        method: 'PATCH',
+      const res = await fetch('/api/rooms', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rooms: updatedRooms }),
+        body: JSON.stringify({ propertyId, rooms: updatedRooms }),
       })
       if (res.ok) {
-        setSaveNotice('Status tata letak berhasil disimpan!')
+        setSaveNotice('Status tata letak berhasil disimpan & live real-time!')
         setTimeout(() => setSaveNotice(null), 3000)
       }
     } catch {
@@ -414,3 +451,4 @@ export default function AdminKosFloorPlan({
     </div>
   )
 }
+

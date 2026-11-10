@@ -1,7 +1,10 @@
 import { Building2 } from 'lucide-react'
 import KosFloorPlan from '@/components/property/KosFloorPlan'
+import { getRoomsData } from '@/lib/rooms-storage'
 
-export default function KosPage() {
+export default async function KosPage() {
+  const rooms = await getRoomsData('kos-vilano-pandan')
+
   return (
     <div className="container mx-auto px-4 lg:px-8 py-10 max-w-7xl">
       {/* Header Banner - COKLAT DOMINAN & KREM */}
@@ -27,6 +30,7 @@ export default function KosPage() {
       <KosFloorPlan
         propertyId="kos-vilano-pandan"
         propertyName="Vilano Kos Putra Pandan"
+        rooms={rooms}
         ownerPhone="08127951435"
       />
     </div>

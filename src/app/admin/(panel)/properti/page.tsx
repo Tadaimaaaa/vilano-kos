@@ -9,6 +9,7 @@ import DeletePropertyButton from '@/components/admin/DeletePropertyButton'
 import AdminKosFloorPlan from '@/components/admin/AdminKosFloorPlan'
 import { MOCK_PROPERTIES } from '@/lib/mock-data'
 import { parseRoomsFromDescription, DEFAULT_FLOOR1_ROOMS } from '@/lib/rooms'
+import { getRoomsData } from '@/lib/rooms-storage'
 
 export default async function DashboardPropertiPage() {
   const supabase = await createClient()
@@ -29,7 +30,10 @@ export default async function DashboardPropertiPage() {
 
   const displayProperties = properties.length > 0 ? properties : MOCK_PROPERTIES
   const kosProperty = displayProperties.find((p: any) => p.type === 'kos')
-  const kosRooms = kosProperty ? parseRoomsFromDescription(kosProperty.description) : DEFAULT_FLOOR1_ROOMS
+  const kosRooms = await getRoomsData(kosProperty?.id || 'kos-vilano-pandan')
+  if (kosProperty) {
+    kosProperty.available_units = kosRooms.filter((r) => r.status === 'available').length
+  }
 
   return (
     <div className="space-y-8">

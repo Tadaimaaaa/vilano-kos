@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import PropertyCard from '@/components/property/PropertyCard'
 import KosFloorPlan from '@/components/property/KosFloorPlan'
 import { getFeaturedProperties, getProperties } from '@/lib/queries'
+import { getRoomsData } from '@/lib/rooms-storage'
 
 async function FeaturedSection() {
   const properties = await getFeaturedProperties()
@@ -53,7 +54,9 @@ async function FeaturedSection() {
   )
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const rooms = await getRoomsData('kos-vilano-pandan')
+
   return (
     <div className="flex flex-col gap-4">
       {/* Hero Section with Warm Earthy Brown & Cream Gradient */}
@@ -132,6 +135,7 @@ export default function HomePage() {
         <KosFloorPlan
           propertyId="kos-vilano-pandan"
           propertyName="Vilano Kos Putra Pandan"
+          rooms={rooms}
           ownerPhone="08127951435"
         />
       </section>

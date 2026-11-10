@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { serializeRoomsToDescription, getCleanDescription } from '@/lib/rooms'
+import { saveRoomsData } from '@/lib/rooms-storage'
 
 export async function DELETE(
   _request: NextRequest,
@@ -64,34 +65,14 @@ export async function PATCH(
       return NextResponse.json({ error: 'Data rooms tidak valid' }, { status: 400 })
     }
 
-    const { data: prop } = await supabase
-      .from('properties')
-      .select('id, description, owner_id')
-      .eq('id', id)
-      .maybeSingle()
+    // Simpan ke storage terpusat (file server + database Supabase)
+    const savedRooms = await saveRoomsData(rooms, id)
 
-    if (!prop) {
-      // Mock / fallback property success
-      return NextResponse.json({ success: true, message: 'Status kamar tersimpan' })
-    }
-
-    const cleanDesc = getCleanDescription(prop.description)
-    const newDescription = serializeRoomsToDescription(cleanDesc, rooms)
-    const availableUnits = rooms.filter((r: any) => r.status === 'available').length
-
-    const { error } = await supabase
-      .from('properties')
-      .update({
-        description: newDescription,
-        available_units: availableUnits,
-      })
-      .eq('id', id)
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true, message: 'Status denah kamar berhasil diperbarui' })
+    return NextResponse.json({
+      success: true,
+      message: 'Status denah kamar berhasil diperbarui dan disinkronkan secara real-time',
+      rooms: savedRooms,
+    })
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Gagal menyimpan status' }, { status: 500 })
   }
