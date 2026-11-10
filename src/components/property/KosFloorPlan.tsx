@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Bed, Wind, Bath, CheckCircle2, XCircle, ArrowRight, X,
-  Sparkles, Utensils, Footprints, DoorOpen, Info, ShieldCheck
+  Sparkles, Utensils, Footprints, DoorOpen, Info, ShieldCheck,
+  MessageCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -22,9 +23,28 @@ export default function KosFloorPlan({
   propertyId,
   propertyName,
   rooms = DEFAULT_FLOOR1_ROOMS,
-  ownerPhone,
+  ownerPhone = '08127951435',
 }: KosFloorPlanProps) {
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
+
+  // Kunci scroll body saat pop up terbuka & tutup jika tekan tombol Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setSelectedRoom(null)
+      }
+    }
+    if (selectedRoom) {
+      document.body.style.overflow = 'hidden'
+      window.addEventListener('keydown', handleKeyDown)
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedRoom])
 
   const availableCount = rooms.filter((r) => r.status === 'available').length
   const occupiedCount = rooms.filter((r) => r.status === 'occupied').length
@@ -91,8 +111,11 @@ export default function KosFloorPlan({
 
         {/* Bottom Click Hint */}
         <div className="flex items-center justify-between pt-1 border-t border-black/5 text-[10px] font-bold text-[#5D4037]">
-          <span>{isSelected ? '★ Terpilih' : 'Klik info'}</span>
-          <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+          <span className="inline-flex items-center gap-1 bg-white/90 group-hover:bg-[#5D4037] group-hover:text-[#FAF7F2] px-2 py-0.5 rounded-lg border border-black/10 transition-colors shadow-2xs">
+            <Info className="h-3 w-3" />
+            <span>Klik info</span>
+          </span>
+          <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform text-[#5D4037]" />
         </div>
       </button>
     )
@@ -238,88 +261,143 @@ export default function KosFloorPlan({
         </div>
       </div>
 
-      {/* MODAL / KARTU DETAIL KAMAR YANG DIPILIH */}
+      {/* POP-UP MODAL INFO KAMAR (DIALOG OVERLAY) */}
       {selectedRoom && (
-        <div className="bg-[#FAF7F2] rounded-3xl p-6 border-2 border-[#5D4037] shadow-lg animate-in fade-in slide-in-from-top-2 relative">
-          <button
-            type="button"
-            onClick={() => setSelectedRoom(null)}
-            className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-white p-1.5 rounded-full border border-[#D4BCA7]"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedRoom(null)
+          }}
+        >
+          <div
+            className="bg-[#FAF7F2] rounded-3xl p-6 md:p-8 border-2 border-[#5D4037] shadow-2xl w-full max-w-xl relative animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
           >
-            <X className="h-4 w-4" />
-          </button>
+            {/* Tombol Tutup Silang (X) */}
+            <button
+              type="button"
+              onClick={() => setSelectedRoom(null)}
+              className="absolute top-4 right-4 text-[#8D6E63] hover:text-[#2D241E] bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs hover:bg-[#F5EDE4] transition-all cursor-pointer"
+              aria-label="Tutup"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            {/* Info Kamar */}
-            <div className="md:col-span-8 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-[#5D4037] bg-white px-3 py-1 rounded-full border border-[#D4BCA7]">
-                  Unit Terpilih: {selectedRoom.number}
+            {/* Header Pop Up */}
+            <div className="space-y-3 pb-4 border-b border-[#E8D8C8]">
+              <div className="flex flex-wrap items-center gap-2 pr-8">
+                <span className="text-xs font-black uppercase tracking-wider text-[#FAF7F2] bg-[#5D4037] px-3.5 py-1 rounded-full border border-[#3E2723]">
+                  {selectedRoom.number} &bull; Lantai 1
                 </span>
                 <span
-                  className={`text-xs font-extrabold px-3 py-1 rounded-full ${
+                  className={`text-xs font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 ${
                     selectedRoom.status === 'available'
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-emerald-600 text-white shadow-xs'
                       : 'bg-slate-300 text-slate-800'
                   }`}
                 >
-                  {selectedRoom.status === 'available' ? '🟢 Kamar Kosong & Siap Huni' : '🔴 Sedang Terisi Penghuni'}
+                  <span className={`w-2 h-2 rounded-full ${selectedRoom.status === 'available' ? 'bg-white animate-pulse' : 'bg-slate-600'}`} />
+                  <span>{selectedRoom.status === 'available' ? 'Kamar Kosong & Siap Huni' : 'Sedang Terisi Penghuni'}</span>
                 </span>
               </div>
 
               <div>
-                <h3 className="text-xl font-black text-[#2D241E]">
+                <h3 className="text-2xl font-black text-[#2D241E]">
                   {selectedRoom.number} &mdash; {selectedRoom.type}
                 </h3>
                 {selectedRoom.notes && (
-                  <p className="text-xs text-[#6D4C41] mt-1 font-medium">
-                    {selectedRoom.notes}
+                  <p className="text-xs text-[#6D4C41] mt-1.5 font-medium bg-white/80 p-2.5 rounded-xl border border-[#D4BCA7]">
+                    📍 <span className="font-semibold">{selectedRoom.notes}</span>
                   </p>
                 )}
               </div>
+            </div>
 
-              {/* Fasilitas Kamar */}
+            {/* Spesifikasi & Fasilitas Kamar */}
+            <div className="py-4 space-y-4">
               <div>
-                <span className="text-[11px] font-bold text-[#8D6E63] block mb-1.5">Fasilitas Termasuk:</span>
-                <div className="flex flex-wrap gap-1.5">
+                <span className="text-xs font-black text-[#4E342E] uppercase tracking-wider block mb-2">
+                  Fasilitas Dalam Kamar:
+                </span>
+                <div className="grid grid-cols-2 gap-2">
                   {selectedRoom.facilities.map((fac, idx) => (
-                    <span
+                    <div
                       key={idx}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold bg-white text-[#4E342E] px-2.5 py-1 rounded-xl border border-[#D4BCA7]"
+                      className="flex items-center gap-2 text-xs font-semibold bg-white text-[#4E342E] p-2.5 rounded-xl border border-[#D4BCA7] shadow-2xs"
                     >
-                      <CheckCircle2 className="h-3 w-3 text-[#5D4037]" />
-                      <span>{fac}</span>
-                    </span>
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span className="truncate">{fac}</span>
+                    </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Fasilitas Bersama */}
+              <div className="bg-[#F5EDE4] p-3.5 rounded-2xl border border-[#D4BCA7] text-xs text-[#5D4037]">
+                <span className="font-bold block mb-1">Fasilitas Bersama di Lantai 1:</span>
+                <p className="text-[11px] text-[#6D4C41] leading-relaxed">
+                  Dapur Bersama (kompor, wastafel cuci piring), akses tangga ke lantai 2, koridor sirkulasi udara sejuk, parkir motor aman berpagar, dan air PDAM bersih lancar.
+                </p>
+              </div>
+
+              {/* Tarif Sewa Bulanan */}
+              <div className="bg-white p-4 rounded-2xl border border-[#D4BCA7] flex items-center justify-between shadow-2xs">
+                <div>
+                  <span className="text-[11px] font-bold text-[#8D6E63] block">Tarif Sewa Kamar:</span>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-2xl md:text-3xl font-black text-[#5D4037]">
+                      {formatPrice(selectedRoom.price)}
+                    </span>
+                    <span className="text-xs text-[#8D6E63] font-semibold">/ bulan</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-[11px] text-[#A98467] font-semibold block">Tanpa Biaya Calo</span>
+                  <span className="text-xs font-bold text-emerald-700">Langsung Pemilik Resmi</span>
                 </div>
               </div>
             </div>
 
-            {/* Price & Action Button */}
-            <div className="md:col-span-4 bg-white p-5 rounded-2xl border border-[#D4BCA7] flex flex-col justify-between gap-4">
-              <div>
-                <span className="text-[11px] font-bold text-[#8D6E63] block">Tarif Sewa Kamar:</span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-2xl font-black text-[#5D4037]">
-                    {formatPrice(selectedRoom.price)}
-                  </span>
-                  <span className="text-xs text-[#8D6E63] font-semibold">/ bulan</span>
-                </div>
-              </div>
-
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
               {selectedRoom.status === 'available' ? (
-                <Link
-                  href={`/properti/${propertyId}/booking?kamar=${encodeURIComponent(selectedRoom.number)}`}
-                  className="block"
-                >
-                  <Button className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-1.5 shadow-md">
-                    <span>Ajukan Booking {selectedRoom.number}</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Button>
-                </Link>
+                <>
+                  <Link
+                    href={`/properti/${propertyId}/booking?kamar=${encodeURIComponent(selectedRoom.number)}`}
+                    className="flex-1"
+                    onClick={() => setSelectedRoom(null)}
+                  >
+                    <Button className="w-full h-12 rounded-2xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
+                      <span>Ajukan Booking {selectedRoom.number}</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+
+                  <a
+                    href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya tertarik tanya ketersediaan dan survey ${selectedRoom.number} (${selectedRoom.type}) di Kos Pandan Kota Solok.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-12 px-5 rounded-2xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Tanya WA</span>
+                  </a>
+                </>
               ) : (
-                <div className="text-center py-2 px-3 bg-slate-100 rounded-xl text-xs font-bold text-slate-500">
-                  Kamar ini sedang terisi. Silakan pilih kamar berwarna hijau lainnya.
+                <div className="w-full space-y-2">
+                  <div className="text-center py-2.5 px-3 bg-slate-200/90 rounded-xl text-xs font-bold text-slate-700">
+                    Kamar ini sedang terisi penghuni. Silakan pilih kamar berwarna hijau lainnya di denah.
+                  </div>
+                  <a
+                    href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-12 rounded-2xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Tanya Pemilik Kapan Kosong via WA</span>
+                  </a>
                 </div>
               )}
             </div>
