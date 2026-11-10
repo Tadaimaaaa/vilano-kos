@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { createClient } from '@/lib/supabase/client'
 import { Facility } from '@/types'
+import AdminKosFloorPlan from '@/components/admin/AdminKosFloorPlan'
+import { parseRoomsFromDescription, serializeRoomsToDescription, getCleanDescription, KosRoom } from '@/lib/rooms'
 
 interface PropertyFormProps {
   facilities: Facility[]
@@ -42,6 +44,10 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     gender_type: initialData?.gender_type || (initialData?.type === 'kontrakan' ? 'all' : 'putra'),
     wa_number: initialData?.wa_number || '08127951435',
   })
+
+  const [rooms, setRooms] = useState<KosRoom[]>(() =>
+    parseRoomsFromDescription(initialData?.description)
+  )
 
   const [facilityList, setFacilityList] = useState<Facility[]>(facilities || [])
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(
@@ -173,8 +179,14 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     setError('')
     const supabase = createClient()
 
+    const cleanDesc = getCleanDescription(formData.description)
+    const finalDesc = formData.type === 'kos'
+      ? serializeRoomsToDescription(cleanDesc, rooms)
+      : formData.description
+
     const propertyData = {
       ...formData,
+      description: finalDesc,
       owner_id: ownerId,
       status: initialData?.status || 'active',
       price_per_month: Number(formData.price_per_month),
@@ -406,6 +418,25 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
           </div>
         </div>
       </div>
+
+      {/* Denah & Tata Letak Kamar Kos (Lantai 1) */}
+      {formData.type === 'kos' && (
+        <div className="space-y-2">
+          <AdminKosFloorPlan
+            propertyId={initialData?.id}
+            initialRooms={rooms}
+            onChange={(updatedRooms) => {
+              setRooms(updatedRooms)
+              const avail = updatedRooms.filter((r) => r.status === 'available').length
+              setFormData((prev) => ({
+                ...prev,
+                available_units: avail,
+                total_units: updatedRooms.length,
+              }))
+            }}
+          />
+        </div>
+      )}
 
       {/* Facilities Selection */}
       <div className="bg-white rounded-3xl border border-[#E8D8C8] p-6 md:p-8 shadow-soft">
