@@ -27,7 +27,7 @@ export default function KosFloorPlan({
 }: KosFloorPlanProps) {
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
 
-  // Kunci scroll body saat pop up terbuka & tutup jika tekan tombol Escape
+  // Kunci scroll halaman (html & body) saat pop up terbuka & tutup jika tekan tombol Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
@@ -35,13 +35,16 @@ export default function KosFloorPlan({
       }
     }
     if (selectedRoom) {
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
       window.addEventListener('keydown', handleKeyDown)
     } else {
-      document.body.style.overflow = 'unset'
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
     }
     return () => {
-      document.body.style.overflow = 'unset'
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [selectedRoom])
@@ -264,13 +267,13 @@ export default function KosFloorPlan({
       {/* POP-UP MODAL INFO KAMAR (DIALOG OVERLAY) */}
       {selectedRoom && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/65 backdrop-blur-sm p-3 sm:p-4 flex min-h-screen items-center justify-center animate-in fade-in duration-200"
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedRoom(null)
           }}
         >
           <div
-            className="bg-[#FAF7F2] rounded-3xl p-6 md:p-8 border-2 border-[#5D4037] shadow-2xl w-full max-w-xl relative animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto"
+            className="bg-[#FAF7F2] rounded-3xl p-5 md:p-6 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-200 my-auto"
             role="dialog"
             aria-modal="true"
           >
@@ -281,13 +284,13 @@ export default function KosFloorPlan({
               className="absolute top-4 right-4 text-[#8D6E63] hover:text-[#2D241E] bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs hover:bg-[#F5EDE4] transition-all cursor-pointer"
               aria-label="Tutup"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
 
             {/* Header Pop Up */}
-            <div className="space-y-3 pb-4 border-b border-[#E8D8C8]">
-              <div className="flex flex-wrap items-center gap-2 pr-8">
-                <span className="text-xs font-black uppercase tracking-wider text-[#FAF7F2] bg-[#5D4037] px-3.5 py-1 rounded-full border border-[#3E2723]">
+            <div className="space-y-2 pb-3 border-b border-[#E8D8C8] pr-8">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-[#FAF7F2] bg-[#5D4037] px-3 py-1 rounded-full border border-[#3E2723]">
                   {selectedRoom.number} &bull; Lantai 1
                 </span>
                 <span
@@ -298,16 +301,16 @@ export default function KosFloorPlan({
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${selectedRoom.status === 'available' ? 'bg-white animate-pulse' : 'bg-slate-600'}`} />
-                  <span>{selectedRoom.status === 'available' ? 'Kamar Kosong & Siap Huni' : 'Sedang Terisi Penghuni'}</span>
+                  <span>{selectedRoom.status === 'available' ? 'Kamar Kosong & Siap Huni' : 'Sedang Terisi'}</span>
                 </span>
               </div>
 
               <div>
-                <h3 className="text-2xl font-black text-[#2D241E]">
+                <h3 className="text-xl md:text-2xl font-black text-[#2D241E]">
                   {selectedRoom.number} &mdash; {selectedRoom.type}
                 </h3>
                 {selectedRoom.notes && (
-                  <p className="text-xs text-[#6D4C41] mt-1.5 font-medium bg-white/80 p-2.5 rounded-xl border border-[#D4BCA7]">
+                  <p className="text-xs text-[#6D4C41] mt-1 font-medium bg-white/80 p-2 rounded-xl border border-[#D4BCA7]">
                     📍 <span className="font-semibold">{selectedRoom.notes}</span>
                   </p>
                 )}
@@ -315,18 +318,18 @@ export default function KosFloorPlan({
             </div>
 
             {/* Spesifikasi & Fasilitas Kamar */}
-            <div className="py-4 space-y-4">
+            <div className="py-3 space-y-3">
               <div>
-                <span className="text-xs font-black text-[#4E342E] uppercase tracking-wider block mb-2">
+                <span className="text-[11px] font-black text-[#4E342E] uppercase tracking-wider block mb-1.5">
                   Fasilitas Dalam Kamar:
                 </span>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-1.5">
                   {selectedRoom.facilities.map((fac, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-2 text-xs font-semibold bg-white text-[#4E342E] p-2.5 rounded-xl border border-[#D4BCA7] shadow-2xs"
+                      className="flex items-center gap-1.5 text-xs font-semibold bg-white text-[#4E342E] px-2.5 py-1.5 rounded-xl border border-[#D4BCA7] shadow-2xs"
                     >
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                       <span className="truncate">{fac}</span>
                     </div>
                   ))}
@@ -334,33 +337,33 @@ export default function KosFloorPlan({
               </div>
 
               {/* Fasilitas Bersama */}
-              <div className="bg-[#F5EDE4] p-3.5 rounded-2xl border border-[#D4BCA7] text-xs text-[#5D4037]">
-                <span className="font-bold block mb-1">Fasilitas Bersama di Lantai 1:</span>
-                <p className="text-[11px] text-[#6D4C41] leading-relaxed">
-                  Dapur Bersama (kompor, wastafel cuci piring), akses tangga ke lantai 2, koridor sirkulasi udara sejuk, parkir motor aman berpagar, dan air PDAM bersih lancar.
-                </p>
+              <div className="bg-[#F5EDE4] p-2.5 rounded-xl border border-[#D4BCA7] text-[11px] text-[#5D4037]">
+                <span className="font-bold">Fasilitas Bersama di Lantai 1: </span>
+                <span className="text-[#6D4C41]">
+                  Dapur Bersama, tangga lantai 2, koridor sirkulasi udara sejuk, parkir motor, air PDAM.
+                </span>
               </div>
 
               {/* Tarif Sewa Bulanan */}
-              <div className="bg-white p-4 rounded-2xl border border-[#D4BCA7] flex items-center justify-between shadow-2xs">
+              <div className="bg-white p-3.5 rounded-2xl border border-[#D4BCA7] flex items-center justify-between shadow-2xs">
                 <div>
-                  <span className="text-[11px] font-bold text-[#8D6E63] block">Tarif Sewa Kamar:</span>
-                  <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-2xl md:text-3xl font-black text-[#5D4037]">
+                  <span className="text-[10px] font-bold text-[#8D6E63] block uppercase tracking-wider">Tarif Sewa Kamar:</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-xl md:text-2xl font-black text-[#5D4037]">
                       {formatPrice(selectedRoom.price)}
                     </span>
                     <span className="text-xs text-[#8D6E63] font-semibold">/ bulan</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[11px] text-[#A98467] font-semibold block">Tanpa Biaya Calo</span>
-                  <span className="text-xs font-bold text-emerald-700">Langsung Pemilik Resmi</span>
+                  <span className="text-[10px] text-[#A98467] font-semibold block">Tanpa Biaya Calo</span>
+                  <span className="text-xs font-bold text-emerald-700">Langsung Pemilik</span>
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+            <div className="pt-1 flex flex-col sm:flex-row gap-2">
               {selectedRoom.status === 'available' ? (
                 <>
                   <Link
@@ -368,7 +371,7 @@ export default function KosFloorPlan({
                     className="flex-1"
                     onClick={() => setSelectedRoom(null)}
                   >
-                    <Button className="w-full h-12 rounded-2xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
+                    <Button className="w-full h-11 rounded-xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
                       <span>Ajukan Booking {selectedRoom.number}</span>
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -378,7 +381,7 @@ export default function KosFloorPlan({
                     href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya tertarik tanya ketersediaan dan survey ${selectedRoom.number} (${selectedRoom.type}) di Kos Pandan Kota Solok.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="h-12 px-5 rounded-2xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
+                    className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span>Tanya WA</span>
@@ -386,14 +389,14 @@ export default function KosFloorPlan({
                 </>
               ) : (
                 <div className="w-full space-y-2">
-                  <div className="text-center py-2.5 px-3 bg-slate-200/90 rounded-xl text-xs font-bold text-slate-700">
+                  <div className="text-center py-2 px-3 bg-slate-200/90 rounded-xl text-xs font-bold text-slate-700">
                     Kamar ini sedang terisi penghuni. Silakan pilih kamar berwarna hijau lainnya di denah.
                   </div>
                   <a
                     href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full h-12 rounded-2xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] flex items-center justify-center gap-2 shadow-sm"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span>Tanya Pemilik Kapan Kosong via WA</span>

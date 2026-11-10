@@ -1,62 +1,7 @@
-import { Suspense } from 'react'
 import { Building2 } from 'lucide-react'
-import PropertyCard from '@/components/property/PropertyCard'
 import KosFloorPlan from '@/components/property/KosFloorPlan'
-import { getProperties } from '@/lib/queries'
-import { PropertyFilters as Filters } from '@/types'
 
-interface KosPageProps {
-  searchParams: Promise<{ [key: string]: string | undefined }>
-}
-
-async function KosList({ filters }: { filters: Filters }) {
-  const properties = await getProperties({ ...filters, type: 'kos' })
-
-  if (properties.length === 0) {
-    return (
-      <div className="text-center py-20 bg-white rounded-4xl border border-[#E8D8C8] shadow-soft p-8">
-        <div className="w-16 h-16 rounded-3xl bg-[#5D4037] text-[#FAF7F2] flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
-          🏠
-        </div>
-        <h3 className="text-xl font-extrabold text-[#2D241E]">Belum Ada Kamar Kos Tersedia</h3>
-        <p className="text-[#8D6E63] text-sm mt-1.5 max-w-sm mx-auto">
-          Unit kamar kos sedang disiapkan oleh pemilik. Hubungi kami langsung melalui WhatsApp untuk informasi ketersediaan.
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <>
-      <div className="flex items-center justify-between mb-5">
-        <p className="text-xs font-bold text-[#8D6E63] uppercase tracking-wider">
-          Menampilkan <span className="text-[#3E2723] font-black">{properties.length}</span> kos pilihan
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))}
-      </div>
-    </>
-  )
-}
-
-export default async function KosPage({ searchParams }: KosPageProps) {
-  const params = await searchParams
-
-  const filters: Filters = {
-    search: params.search,
-    kota: params.kota,
-    gender_type: params.gender as any,
-  }
-
-  if (params.price) {
-    const [min, max] = params.price.split('-').map(Number)
-    if (min) filters.min_price = min
-    if (max) filters.max_price = max
-  }
-
+export default function KosPage() {
   return (
     <div className="container mx-auto px-4 lg:px-8 py-10 max-w-7xl">
       {/* Header Banner - COKLAT DOMINAN & KREM */}
@@ -79,24 +24,11 @@ export default async function KosPage({ searchParams }: KosPageProps) {
       </div>
 
       {/* Denah Interaktif Lantai 1 Kos */}
-      <div className="mb-12">
-        <KosFloorPlan
-          propertyId="kos-vilano-pandan"
-          propertyName="Vilano Kos Putra Pandan"
-          ownerPhone="08127951435"
-        />
-      </div>
-
-      {/* Results */}
-      <Suspense fallback={
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-[#E8D8C8]/50 rounded-3xl h-80 animate-pulse" />
-          ))}
-        </div>
-      }>
-        <KosList filters={filters} />
-      </Suspense>
+      <KosFloorPlan
+        propertyId="kos-vilano-pandan"
+        propertyName="Vilano Kos Putra Pandan"
+        ownerPhone="08127951435"
+      />
     </div>
   )
 }
