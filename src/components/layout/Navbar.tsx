@@ -124,7 +124,7 @@ export default function Navbar({ user }: NavbarProps) {
           <div className="hidden md:flex items-center gap-3">
             {/* Direct Contact WhatsApp CTA */}
             <a
-              href="https://wa.me/628127951435?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20ketersediaan%20unit%20kos%20/%20kontrakan%20di%20Kota%20Solok"
+              href="https://wa.me/6281363327600?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20ketersediaan%20unit%20kos%20/%20kontrakan%20di%20Kota%20Solok"
               target="_blank"
               rel="noopener noreferrer"
               suppressHydrationWarning

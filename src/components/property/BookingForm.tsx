@@ -43,7 +43,7 @@ export default function BookingForm({
   const totalPrice = pricePerMonth * duration
 
   function buildWhatsAppUrl(clientName: string, clientPhone: string, date: string, dur: number, clientNotes: string, room: string) {
-    const rawOwner = ownerPhone || '08127951435'
+    const rawOwner = ownerPhone || '081363327600'
     const targetPhone = rawOwner.replace(/[^0-9]/g, '').replace(/^0/, '62')
 
     const dateFormatted = new Date(date).toLocaleDateString('id-ID', {

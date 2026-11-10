@@ -23,11 +23,13 @@ export default function KosFloorPlan({
   propertyId = 'kos-vilano-pandan',
   propertyName,
   rooms: initialRooms = DEFAULT_FLOOR1_ROOMS,
-  ownerPhone = '08127951435',
+  ownerPhone = '081363327600',
 }: KosFloorPlanProps) {
   const [rooms, setRooms] = useState<KosRoom[]>(initialRooms)
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
   const [activePhotoIndex, setActivePhotoIndex] = useState(0)
+
+  const waTarget = (ownerPhone || '081363327600').replace(/[^0-9]/g, '').replace(/^0/, '62') || '6281363327600'
 
   // Reset indeks foto saat ganti kamar
   useEffect(() => {
@@ -551,7 +553,7 @@ export default function KosFloorPlan({
                   </Link>
 
                   <a
-                    href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya tertarik tanya ketersediaan dan survey ${selectedRoom.number} (${selectedRoom.type}) di Kos Pandan Kota Solok.`)}`}
+                    href={`https://wa.me/${waTarget}?text=${encodeURIComponent(`Halo Pemilik Vilano, saya tertarik tanya ketersediaan dan survey ${selectedRoom.number} (${selectedRoom.type}) di Kos Pandan Kota Solok.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
@@ -577,7 +579,7 @@ export default function KosFloorPlan({
                       </Button>
                     </Link>
                     <a
-                      href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
+                      href={`https://wa.me/${waTarget}?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"

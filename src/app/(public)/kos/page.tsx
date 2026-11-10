@@ -31,7 +31,7 @@ export default async function KosPage() {
         propertyId="kos-vilano-pandan"
         propertyName="Vilano Kos Putra Pandan"
         rooms={rooms}
-        ownerPhone="08127951435"
+        ownerPhone="081363327600"
       />
     </div>
   )

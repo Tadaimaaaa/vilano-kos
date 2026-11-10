@@ -42,7 +42,7 @@ BEGIN
       gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Putra Pandan - Kamar AC & KM Dalam',
       'Kamar kos putra eksklusif berkonsep modern minimalis di Ps. Pandan Air Mati, Kota Solok. Lingkungan tenang, aman, bersih, dan nyaman.',
       'Jl. Pandan Tengah, Ps. Pandan Air Mati', 'Lubuk Sikarah', 'Kota Solok',
-      950000, 8, 3, 'putra', '08127951435', 'active', true
+      950000, 8, 3, 'putra', '081363327600', 'active', true
     ) RETURNING id INTO v_prop_kos1;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
@@ -61,7 +61,7 @@ BEGIN
       gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Putra Pandan - Kamar Standar & KM Dalam',
       'Kamar kos putra nyaman dan sejuk alami di Jl. Pandan Tengah, Ps. Pandan Air Mati, Kota Solok. Dilengkapi kasur, lemari, meja kerja, dan kamar mandi dalam.',
       'Jl. Pandan Tengah, Ps. Pandan Air Mati', 'Lubuk Sikarah', 'Kota Solok',
-      750000, 6, 2, 'putra', '08127951435', 'active', true
+      750000, 6, 2, 'putra', '081363327600', 'active', true
     ) RETURNING id INTO v_prop_kos2;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
@@ -79,7 +79,7 @@ BEGIN
       gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Rumah Kontrakan Keluarga Suhada',
       'Satu unit rumah kontrakan utuh siap huni di Simpang Rumbio, Lubuk Sikarah, Kota Solok. 3 kamar tidur, 2 kamar mandi, ruang tamu luas, dapur pribadi, dan carport berkanopi.',
       'Jl. Gg. Suhada No.8, Simpang Rumbio', 'Lubuk Sikarah', 'Kota Solok',
-      1600000, 1, 1, 'all', '08127951435', 'active', true
+      1600000, 1, 1, 'all', '081363327600', 'active', true
     ) RETURNING id INTO v_prop_kontrakan1;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
@@ -97,7 +97,7 @@ BEGIN
       gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Rumah Kontrakan Minimalis Suhada',
       'Rumah kontrakan asri dan bersih berkonsep minimalis di Jl. Gg. Suhada No.8, Simpang Rumbio, Lubuk Sikarah, Kota Solok. 2 kamar tidur, 1 kamar mandi, ruang tamu, dan dapur bersih.',
       'Jl. Gg. Suhada No.8, Simpang Rumbio', 'Lubuk Sikarah', 'Kota Solok',
-      1250000, 1, 1, 'all', '08127951435', 'active', true
+      1250000, 1, 1, 'all', '081363327600', 'active', true
     ) RETURNING id INTO v_prop_kontrakan2;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")

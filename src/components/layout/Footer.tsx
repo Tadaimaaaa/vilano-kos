@@ -73,13 +73,13 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <Phone className="h-3.5 w-3.5 text-[#D4BCA7] shrink-0" />
                 <a
-                  href="https://wa.me/628127951435?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20unit%20kos%20/%20kontrakan%20di%20Kota%20Solok"
+                  href="https://wa.me/6281363327600?text=Halo%20Pemilik%20Vilano,%20saya%20tertarik%20tanya%20unit%20kos%20/%20kontrakan%20di%20Kota%20Solok"
                   target="_blank"
                   rel="noopener noreferrer"
                   suppressHydrationWarning
                   className="hover:text-white transition-colors"
                 >
-                  WhatsApp: 0812-7951-435
+                  WhatsApp: 0813-6332-7600
                 </a>
               </li>
               <li className="flex items-center gap-2">
