@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
-import { Shield, Home, Building2, CalendarCheck, Users, LogOut, ArrowLeft, PlusCircle } from 'lucide-react'
+import { Shield } from 'lucide-react'
+import AdminSidebarNav from '@/components/admin/AdminSidebarNav'
 
 async function getAdminUser() {
   const supabase = await createClient()
@@ -61,48 +63,10 @@ export default async function AdminLayout({
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1.5">
-          <Link
-            href="/admin"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#E8D8C8] bg-[#3E2723] hover:bg-[#5D4037] transition-colors"
-          >
-            <Shield className="h-4 w-4 text-[#D4BCA7]" />
-            <span>Master Control</span>
-          </Link>
-          <Link
-            href="/admin/properti"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
-          >
-            <Building2 className="h-4 w-4" />
-            <span>Kelola Properti</span>
-          </Link>
-          <Link
-            href="/admin/properti/baru"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
-          >
-            <PlusCircle className="h-4 w-4" />
-            <span>Tambah Properti Baru</span>
-          </Link>
-          <Link
-            href="/admin/booking"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#A98467] hover:bg-[#3E2723] hover:text-[#FAF7F2] transition-colors"
-          >
-            <CalendarCheck className="h-4 w-4" />
-            <span>Booking Masuk</span>
-          </Link>
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-[#3E2723]">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-bold text-[#8D6E63] hover:text-[#FAF7F2] transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Kembali ke Web Publik
-          </Link>
-        </div>
+        {/* Navigation - Cukup Dashboard, Kelola Kos, Kelola Kontrakan, Booking Masuk */}
+        <Suspense fallback={<div className="flex-1 p-4 space-y-2" />}>
+          <AdminSidebarNav />
+        </Suspense>
       </aside>
 
       {/* Main Content */}

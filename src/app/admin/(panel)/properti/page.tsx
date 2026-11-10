@@ -11,7 +11,14 @@ import { MOCK_PROPERTIES } from '@/lib/mock-data'
 import { parseRoomsFromDescription, DEFAULT_FLOOR1_ROOMS } from '@/lib/rooms'
 import { getRoomsData } from '@/lib/rooms-storage'
 
-export default async function DashboardPropertiPage() {
+export default async function DashboardPropertiPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ [key: string]: string | undefined }>
+}) {
+  const resolvedParams = searchParams ? await searchParams : {}
+  const typeFilter = resolvedParams.type // 'kos' | 'kontrakan' | undefined
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
@@ -28,20 +35,34 @@ export default async function DashboardPropertiPage() {
     console.warn('Properti page fetch notice:', err)
   }
 
-  const displayProperties = properties.length > 0 ? properties : MOCK_PROPERTIES
-  const kosProperty = displayProperties.find((p: any) => p.type === 'kos')
+  const allProperties = properties.length > 0 ? properties : MOCK_PROPERTIES
+  const displayProperties = typeFilter
+    ? allProperties.filter((p: any) => p.type === typeFilter)
+    : allProperties
+
+  const kosProperty = allProperties.find((p: any) => p.type === 'kos')
   const kosRooms = await getRoomsData(kosProperty?.id || 'kos-vilano-pandan')
   if (kosProperty) {
     kosProperty.available_units = kosRooms.filter((r) => r.status === 'available').length
   }
+
+  const isKos = typeFilter === 'kos'
+  const isKontrakan = typeFilter === 'kontrakan'
+
+  const pageTitle = isKos ? 'Kelola Kos' : isKontrakan ? 'Kelola Kontrakan' : 'Kelola Properti Saya'
+  const pageSubtitle = isKos
+    ? 'Kelola data unit kos dan tata letak denah kamar Vilano di Kota Solok.'
+    : isKontrakan
+    ? 'Kelola data unit rumah kontrakan Vilano di Kota Solok.'
+    : 'Daftar semua kos dan kontrakan yang kamu sewakan di Vilano.'
 
   return (
     <div className="space-y-8">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Kelola Properti Saya</h1>
-          <p className="text-xs text-slate-500 mt-1">Daftar semua kos dan kontrakan yang kamu sewakan di Vilano.</p>
+          <h1 className="text-2xl font-black text-slate-900">{pageTitle}</h1>
+          <p className="text-xs text-slate-500 mt-1">{pageSubtitle}</p>
         </div>
         <Link href="/admin/properti/baru">
           <Button variant="gradient" className="gap-2 rounded-2xl font-bold h-11 px-5 shadow-sm">
@@ -129,24 +150,26 @@ export default async function DashboardPropertiPage() {
         </div>
       </div>
 
-      {/* TATA LETAK & KELOLA STATUS KAMAR (DENAH LANTAI 1) */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-black text-slate-900">
-              Tata Letak & Denah Kamar Kos (Lantai 1)
-            </h2>
-            <p className="text-xs text-slate-500">
-              Kelola status kamar terisi/kosong secara visual sesuai denah fisik properti kos Anda di Kota Solok.
-            </p>
+      {/* TATA LETAK & KELOLA STATUS KAMAR (DENAH LANTAI 1) - HANYA MUNCUL DI KELOLA KOS ATAU DEFAULT */}
+      {!isKontrakan && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-black text-slate-900">
+                Tata Letak & Denah Kamar Kos (Lantai 1)
+              </h2>
+              <p className="text-xs text-slate-500">
+                Kelola status kamar terisi/kosong secara visual sesuai denah fisik properti kos Anda di Kota Solok.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <AdminKosFloorPlan
-          propertyId={kosProperty?.id || 'kos-vilano-pandan'}
-          initialRooms={kosRooms}
-        />
-      </div>
+          <AdminKosFloorPlan
+            propertyId={kosProperty?.id || 'kos-vilano-pandan'}
+            initialRooms={kosRooms}
+          />
+        </div>
+      )}
     </div>
   )
 }
