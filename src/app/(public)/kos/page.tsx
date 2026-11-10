@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
 import { Building2 } from 'lucide-react'
 import PropertyCard from '@/components/property/PropertyCard'
-import PropertyFilters from '@/components/property/PropertyFilters'
-import { getProperties, getKotaList } from '@/lib/queries'
+import { getProperties } from '@/lib/queries'
 import { PropertyFilters as Filters } from '@/types'
 
 interface KosPageProps {
@@ -44,7 +43,6 @@ async function KosList({ filters }: { filters: Filters }) {
 
 export default async function KosPage({ searchParams }: KosPageProps) {
   const params = await searchParams
-  const kotaList = await getKotaList()
 
   const filters: Filters = {
     search: params.search,
@@ -77,11 +75,6 @@ export default async function KosPage({ searchParams }: KosPageProps) {
         <div className="absolute right-6 -bottom-6 text-9xl opacity-15 select-none hidden md:block">
           🏢
         </div>
-      </div>
-
-      {/* Filters */}
-      <div className="mb-8">
-        <PropertyFilters kotaList={kotaList} defaultType="kos" />
       </div>
 
       {/* Results */}

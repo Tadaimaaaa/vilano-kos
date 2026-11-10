@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
 import { Home } from 'lucide-react'
 import PropertyCard from '@/components/property/PropertyCard'
-import PropertyFilters from '@/components/property/PropertyFilters'
-import { getProperties, getKotaList } from '@/lib/queries'
+import { getProperties } from '@/lib/queries'
 import { PropertyFilters as Filters } from '@/types'
 
 interface KontrakanPageProps {
@@ -44,7 +43,6 @@ async function KontrakanList({ filters }: { filters: Filters }) {
 
 export default async function KontrakanPage({ searchParams }: KontrakanPageProps) {
   const params = await searchParams
-  const kotaList = await getKotaList()
 
   const filters: Filters = {
     search: params.search,
@@ -76,11 +74,6 @@ export default async function KontrakanPage({ searchParams }: KontrakanPageProps
         <div className="absolute right-6 -bottom-6 text-9xl opacity-15 select-none hidden md:block">
           🏘️
         </div>
-      </div>
-
-      {/* Filters */}
-      <div className="mb-8">
-        <PropertyFilters kotaList={kotaList} defaultType="kontrakan" />
       </div>
 
       {/* Results */}
