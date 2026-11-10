@@ -91,3 +91,4 @@ function saveRoomsToFile(rooms: KosRoom[]) {
     console.warn('Notice write rooms file:', err)
   }
 }
+

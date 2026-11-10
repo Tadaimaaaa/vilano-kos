@@ -11,14 +11,16 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate, getWALink, getGenderTypeLabel } from '@/lib/utils'
 import { parseRoomsFromDescription, getCleanDescription } from '@/lib/rooms'
-import KosFloorPlan from '@/components/property/KosFloorPlan'
 
 interface PropertyDetailPageProps {
   params: Promise<{ id: string }>
+  searchParams?: Promise<{ [key: string]: string | undefined }>
 }
 
-export default async function PropertyDetailPage({ params }: PropertyDetailPageProps) {
+export default async function PropertyDetailPage({ params, searchParams }: PropertyDetailPageProps) {
   const { id } = await params
+  const sParams = searchParams ? await searchParams : {}
+  const selectedKamar = sParams.kamar
 
   const propertyData = await getPropertyById(id)
   if (!propertyData) {
@@ -36,7 +38,9 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
   const rooms = parseRoomsFromDescription(property.description)
   const cleanDescription = getCleanDescription(property.description)
 
-  const waMessage = `Halo, saya tertarik dengan ${property.name} di Vilano (Alamat: ${property.address}). Apakah masih tersedia unit untuk disewa?`
+  const waMessage = selectedKamar
+    ? `Halo, saya tertarik dengan ${selectedKamar} di ${property.name} Vilano (Alamat: ${property.address}). Apakah kamar ini masih tersedia?`
+    : `Halo, saya tertarik dengan ${property.name} di Vilano (Alamat: ${property.address}). Apakah masih tersedia unit untuk disewa?`
 
   return (
     <div className="bg-[#FAF7F2] min-h-screen py-8">
@@ -66,6 +70,12 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             <Badge variant={isKos ? 'kos' : 'kontrakan'} className="text-xs font-bold">
               {isKos ? '🏠 Kos' : '🏡 Kontrakan'}
             </Badge>
+
+            {selectedKamar && (
+              <Badge className="bg-[#5D4037] text-white border border-[#3E2723] text-xs font-black shadow-2xs">
+                📍 Unit Terpilih: {selectedKamar} (Lantai 1)
+              </Badge>
+            )}
 
             {isKos && property.gender_type && property.gender_type !== 'all' && (
               <Badge variant="outline" className="text-xs font-bold">
@@ -181,16 +191,6 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
               </p>
             </div>
 
-            {/* Denah & Tata Letak Kamar Lantai 1 (Khusus Kos) */}
-            {isKos && (
-              <KosFloorPlan
-                propertyId={property.id}
-                propertyName={property.name}
-                rooms={rooms}
-                ownerPhone={property.wa_number}
-              />
-            )}
-
             {/* Facilities */}
             <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E8D8C8] shadow-soft">
               <h2 className="text-lg font-black text-[#2D241E] mb-4">Fasilitas yang Disediakan</h2>
@@ -303,11 +303,21 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
                   </div>
                 </div>
 
+                {selectedKamar && (
+                  <div className="flex items-center justify-between text-xs p-3 rounded-2xl bg-[#5D4037] text-white shadow-xs">
+                    <span className="font-semibold text-[#E8D8C8]">Unit Dipilih:</span>
+                    <span className="font-black text-sm text-[#FAF7F2]">{selectedKamar}</span>
+                  </div>
+                )}
+
                 {property.available_units > 0 ? (
-                  <Link href={`/properti/${property.id}/booking`} className="block">
+                  <Link
+                    href={selectedKamar ? `/properti/${property.id}/booking?kamar=${encodeURIComponent(selectedKamar)}` : `/properti/${property.id}/booking`}
+                    className="block"
+                  >
                     <Button className="w-full h-12 rounded-2xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] shadow-md border border-[#3E2723] gap-2 transition-all hover:-translate-y-0.5">
                       <CalendarCheck className="h-4 w-4 text-[#E8D8C8]" />
-                      <span>Ajukan Booking Sekarang</span>
+                      <span>Ajukan Booking {selectedKamar || 'Sekarang'}</span>
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
