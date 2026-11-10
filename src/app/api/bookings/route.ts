@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       booking: newBooking,
-      ownerWa: prop.wa_number,
+      ownerWa: prop.wa_number || '08127951435',
       message: 'Booking berhasil diajukan',
     })
   } catch (err: any) {

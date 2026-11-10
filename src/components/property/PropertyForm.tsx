@@ -40,7 +40,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     total_units: initialData?.total_units || 1,
     available_units: initialData?.available_units || 1,
     gender_type: initialData?.gender_type || (initialData?.type === 'kontrakan' ? 'all' : 'putra'),
-    wa_number: initialData?.wa_number || '',
+    wa_number: initialData?.wa_number || '08127951435',
   })
 
   const [facilityList, setFacilityList] = useState<Facility[]>(facilities || [])
@@ -383,7 +383,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
             <Input
               className="mt-1 h-12 rounded-2xl bg-[#FAF7F2] border-[#D4BCA7] text-xs font-semibold text-[#2D241E]"
               type="tel"
-              placeholder="081234567890"
+              placeholder="08127951435"
               value={formData.wa_number}
               onChange={(e) => setFormData({ ...formData, wa_number: e.target.value })}
             />

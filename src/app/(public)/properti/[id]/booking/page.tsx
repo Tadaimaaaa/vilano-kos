@@ -158,3 +158,4 @@ export default async function BookingPage({ params }: BookingPageProps) {
     </div>
   )
 }
+
