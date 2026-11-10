@@ -53,3 +53,4 @@ export default function DeletePropertyButton({ id, name }: DeletePropertyButtonP
     </Button>
   )
 }
+
