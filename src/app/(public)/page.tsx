@@ -1,58 +1,11 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight, Building2, Home, ShieldCheck,
   Sparkles, MessageSquare, Zap, ThumbsUp, CalendarCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import PropertyCard from '@/components/property/PropertyCard'
 import KosFloorPlan from '@/components/property/KosFloorPlan'
-import { getFeaturedProperties, getProperties } from '@/lib/queries'
 import { getRoomsData } from '@/lib/rooms-storage'
-
-async function FeaturedSection() {
-  const properties = await getFeaturedProperties()
-  const displayProps = properties.length > 0 ? properties : await getProperties()
-
-  if (displayProps.length === 0) return null
-
-  return (
-    <section className="py-12 container mx-auto px-4 lg:px-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#5D4037] bg-[#F5EDE4] px-3 py-1 rounded-full border border-[#D4BCA7]">
-            Unit Pilihan Vilano
-          </span>
-          <h2 className="text-2xl md:text-3xl font-black text-[#2D241E] mt-2">
-            Kamar Kos & Rumah Kontrakan Kami
-          </h2>
-          <p className="text-[#8D6E63] text-sm mt-1">
-            Pilihan kamar kos khusus cowok (coklat-krem) dan rumah kontrakan keluarga (krem-coklat) terawat yang siap kamu huni.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          <Link href="/kos">
-            <Button size="sm" className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] rounded-xl font-bold text-xs gap-1.5 border border-[#3E2723]">
-              <Building2 className="h-3.5 w-3.5 text-[#E8D8C8]" /> Semua Kos
-            </Button>
-          </Link>
-          <Link href="/kontrakan">
-            <Button size="sm" className="bg-[#F5EDE4] hover:bg-[#E8D8C8] text-[#4E342E] border-2 border-[#D4BCA7] rounded-xl font-bold text-xs gap-1.5">
-              <Home className="h-3.5 w-3.5 text-[#5D4037]" /> Semua Kontrakan
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {displayProps.slice(0, 6).map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))}
-      </div>
-    </section>
-  )
-}
 
 export default async function HomePage() {
   const rooms = await getRoomsData('kos-vilano-pandan')
@@ -124,11 +77,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Featured Properties Section */}
-      <Suspense fallback={<div className="py-16 text-center text-[#8D6E63]">Memuat properti pilihan...</div>}>
-        <FeaturedSection />
-      </Suspense>
 
       {/* Denah Interaktif Kamar Kos (Lantai 1) di Beranda */}
       <section className="py-6 container mx-auto px-4 lg:px-8">
