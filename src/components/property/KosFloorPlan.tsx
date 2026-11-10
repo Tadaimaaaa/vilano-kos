@@ -175,13 +175,20 @@ export default function KosFloorPlan({
         </div>
 
         {/* Center: Type Preview */}
-        <div className="my-2">
-          <p className="text-[11px] font-bold text-[#4E342E] truncate">
-            {room.type}
-          </p>
-          <p className="text-[10px] text-[#8D6E63] font-semibold">
-            {formatPrice(room.price)} / bln
-          </p>
+        <div className="my-2 flex items-start justify-between gap-1">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-bold text-[#4E342E] truncate">
+              {room.type}
+            </p>
+            <p className="text-[10px] text-[#8D6E63] font-semibold">
+              {formatPrice(room.price)} / bln
+            </p>
+          </div>
+          {room.photoUrl && (
+            <span className="text-[10px] bg-white text-[#5D4037] px-1.5 py-0.5 rounded-md border border-[#D4BCA7] shrink-0 font-bold flex items-center gap-0.5 shadow-2xs" title="Ada Foto Kamar">
+              📷
+            </span>
+          )}
         </div>
 
         {/* Bottom Click Hint */}
@@ -388,6 +395,20 @@ export default function KosFloorPlan({
                 )}
               </div>
             </div>
+
+            {/* Foto Kamar Asli (Jika Ada) */}
+            {selectedRoom.photoUrl && (
+              <div className="relative w-full aspect-video max-h-56 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm my-3 group bg-[#E8D8C8]/40">
+                <img
+                  src={selectedRoom.photoUrl}
+                  alt={`${selectedRoom.number} - ${selectedRoom.type}`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-2.5 left-2.5 bg-[#3E2723]/80 backdrop-blur-md text-[#FAF7F2] text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
+                  <span>📷 Foto Asli Kamar</span>
+                </div>
+              </div>
+            )}
 
             {/* Spesifikasi & Fasilitas Kamar */}
             <div className="py-3 space-y-3">

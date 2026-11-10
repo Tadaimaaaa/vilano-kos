@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react'
 import {
   CheckCircle2, XCircle, Footprints, Utensils, DoorOpen,
-  Sparkles, Save, Edit3, X, Check, RefreshCw, Plus, Trash2
+  Sparkles, Save, Edit3, X, Check, RefreshCw, Plus, Trash2,
+  Camera, Image as ImageIcon, UploadCloud, Loader2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatPrice } from '@/lib/utils'
 import { KosRoom, DEFAULT_FLOOR1_ROOMS } from '@/lib/rooms'
+import { createClient } from '@/lib/supabase/client'
 
 interface AdminKosFloorPlanProps {
   propertyId?: string
@@ -29,6 +31,50 @@ export default function AdminKosFloorPlan({
   const [saving, setSaving] = useState(false)
   const [saveNotice, setSaveNotice] = useState<string | null>(null)
   const [newFacilityInput, setNewFacilityInput] = useState('')
+  const [uploadingRoomPhoto, setUploadingRoomPhoto] = useState(false)
+  const [photoUrlInput, setPhotoUrlInput] = useState('')
+
+  // Handle upload foto kamar (Supabase Storage dengan fallback Base64)
+  async function handleRoomPhotoFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !editingRoom) return
+
+    setUploadingRoomPhoto(true)
+    try {
+      // 1. Coba upload ke Supabase Storage
+      const supabase = createClient()
+      const ext = file.name.split('.').pop() || 'jpg'
+      const filename = `rooms/${editingRoom.id}-${Date.now()}.${ext}`
+      const { data, error } = await supabase.storage
+        .from('property-photos')
+        .upload(filename, file, { upsert: true })
+
+      if (!error && data) {
+        const { data: urlData } = supabase.storage
+          .from('property-photos')
+          .getPublicUrl(data.path)
+
+        if (urlData?.publicUrl) {
+          setEditingRoom({ ...editingRoom, photoUrl: urlData.publicUrl })
+          setUploadingRoomPhoto(false)
+          return
+        }
+      }
+    } catch {
+      // Abaikan jika storage belum siap
+    }
+
+    // 2. Fallback Base64 (bekerja 100% offline & instan)
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setEditingRoom({ ...editingRoom, photoUrl: reader.result })
+      }
+      setUploadingRoomPhoto(false)
+    }
+    reader.onerror = () => setUploadingRoomPhoto(false)
+    reader.readAsDataURL(file)
+  }
 
   // Kunci scroll background saat modal edit terbuka
   useEffect(() => {
@@ -230,13 +276,20 @@ export default function AdminKosFloorPlan({
         </div>
 
         {/* Center: Info */}
-        <div className="my-1.5">
-          <p className="text-[11px] font-bold text-[#4E342E] truncate">
-            {room.type}
-          </p>
-          <p className="text-[10px] text-[#8D6E63] font-semibold">
-            {formatPrice(room.price)} / bln
-          </p>
+        <div className="my-1.5 flex items-start justify-between gap-1">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-bold text-[#4E342E] truncate">
+              {room.type}
+            </p>
+            <p className="text-[10px] text-[#8D6E63] font-semibold">
+              {formatPrice(room.price)} / bln
+            </p>
+          </div>
+          {room.photoUrl && (
+            <span className="text-[10px] bg-[#FAF7F2] text-[#5D4037] px-1.5 py-0.5 rounded-md border border-[#D4BCA7] shrink-0 font-bold flex items-center gap-0.5 shadow-2xs" title="Ada Foto Kamar">
+              📷
+            </span>
+          )}
         </div>
 
         {/* Bottom Quick Toggle Action */}
@@ -469,6 +522,99 @@ export default function AdminKosFloorPlan({
                   onChange={(e) => setEditingRoom({ ...editingRoom, type: e.target.value })}
                   placeholder="Kamar Mandi Dalam / AC / Standar"
                 />
+              </div>
+
+              {/* FOTO KAMAR INI */}
+              <div className="bg-white p-4 rounded-2xl border border-[#D4BCA7] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Camera className="h-4 w-4 text-[#5D4037]" />
+                    <Label className="text-xs font-black text-[#4E342E] uppercase tracking-wide">
+                      Foto Kamar Ini
+                    </Label>
+                  </div>
+                  {editingRoom.photoUrl ? (
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300">
+                      ✓ Foto Terpasang
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-[#8D6E63]">
+                      Opsional
+                    </span>
+                  )}
+                </div>
+
+                {/* Preview Foto */}
+                {editingRoom.photoUrl ? (
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-[#D4BCA7] bg-[#FAF7F2] aspect-video group shadow-inner">
+                    <img
+                      src={editingRoom.photoUrl}
+                      alt={editingRoom.number}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingRoom({ ...editingRoom, photoUrl: '' })}
+                        className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span>Hapus Foto</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-[#D4BCA7] rounded-2xl p-3.5 text-center bg-[#FAF7F2]">
+                    <ImageIcon className="h-7 w-7 text-[#A98467] mx-auto mb-1 opacity-70" />
+                    <p className="text-xs font-bold text-[#4E342E]">Belum ada foto kamar</p>
+                    <p className="text-[10px] text-[#8D6E63] mt-0.5">Unggah foto agar penyewa bisa melihat kondisi asli kamar.</p>
+                  </div>
+                )}
+
+                {/* Tombol Unggah File & Input URL */}
+                <div className="space-y-2 pt-1">
+                  <label className="flex items-center justify-center gap-2 w-full h-10 rounded-xl border border-[#D4BCA7] bg-[#FAF7F2] hover:bg-[#F5EDE4] text-[#4E342E] text-xs font-bold cursor-pointer transition-all shadow-2xs">
+                    {uploadingRoomPhoto ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin text-[#6D4C41]" />
+                        <span>Memproses Foto...</span>
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud className="h-4 w-4 text-[#6D4C41]" />
+                        <span>{editingRoom.photoUrl ? 'Ganti Foto dari File (JPG/PNG)' : 'Unggah Foto dari File (JPG/PNG)'}</span>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingRoomPhoto}
+                      onChange={handleRoomPhotoFileChange}
+                    />
+                  </label>
+
+                  <div className="flex gap-2">
+                    <Input
+                      value={photoUrlInput}
+                      onChange={(e) => setPhotoUrlInput(e.target.value)}
+                      placeholder="Atau tempel Link / URL Gambar (https://...)"
+                      className="h-9 text-xs bg-[#FAF7F2] border-[#D4BCA7] rounded-xl font-medium"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (photoUrlInput.trim()) {
+                          setEditingRoom({ ...editingRoom, photoUrl: photoUrlInput.trim() })
+                          setPhotoUrlInput('')
+                        }
+                      }}
+                      className="h-9 px-3 text-xs font-bold bg-[#5D4037] hover:bg-[#4E342E] text-white rounded-xl shrink-0 cursor-pointer"
+                    >
+                      Terapkan
+                    </Button>
+                  </div>
+                </div>
               </div>
 
               {/* FASILITAS KAMAR (BISA DI-EDIT LANGSUNG, DITAMBAH, ATAU DIHAPUS) */}

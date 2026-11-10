@@ -8,6 +8,8 @@ export interface KosRoom {
   status: 'available' | 'occupied'
   facilities: string[]
   notes?: string
+  photoUrl?: string
+  photos?: string[]
 }
 
 export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
@@ -21,6 +23,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['AC Dingin', 'Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi pojok kiri atas dekat tangga, sirkulasi udara sejuk dan tenang.',
+    photoUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 2,
@@ -32,6 +35,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['AC Dingin', 'Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi sisi kiri tengah, akses mudah ke lorong dan jemuran.',
+    photoUrl: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 3,
@@ -43,6 +47,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'occupied',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi sisi kiri depan, akses cepat ke pintu utama.',
+    photoUrl: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 4,
@@ -54,6 +59,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi depan sebelah kiri luar, dekat area parkir motor.',
+    photoUrl: 'https://images.unsplash.com/photo-1540518614846-7ede433c4570?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 5,
@@ -65,6 +71,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi depan tepat di sebelah kiri pintu masuk utama.',
+    photoUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 6,
@@ -76,6 +83,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'occupied',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi depan tepat di sebelah kanan pintu masuk utama.',
+    photoUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 7,
@@ -87,6 +95,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi depan sebelah kanan luar, dekat teras depan.',
+    photoUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 8,
@@ -98,6 +107,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi sisi kanan bawah, sirkulasi udara alami.',
+    photoUrl: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 9,
@@ -109,6 +119,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'available',
     facilities: ['AC Dingin', 'Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi sisi kanan tengah, nyaman dan tenang.',
+    photoUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 10,
@@ -120,6 +131,7 @@ export const DEFAULT_FLOOR1_ROOMS: KosRoom[] = [
     status: 'occupied',
     facilities: ['AC Dingin', 'Kamar Mandi Dalam', 'Kasur & Bantal', 'Lemari Pakaian', 'Meja Belajar', 'WiFi Cepat'],
     notes: 'Posisi pojok kanan atas, bersebelahan dengan dapur bersama.',
+    photoUrl: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
