@@ -4,6 +4,33 @@ import { formatPrice, formatDate, getBookingStatusLabel, getBookingStatusColor }
 import { CalendarCheck, User, Phone, Check, X, Building2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+function parseTenantInfo(booking: any) {
+  let name = booking.tenant?.full_name || ''
+  let phone = booking.tenant?.phone || ''
+
+  if (booking.notes) {
+    const nameMatch = booking.notes.match(/Nama:\s*([^\n\r]+)/i)
+    const phoneMatch = booking.notes.match(/(?:No\.\s*WhatsApp|WA|Telepon|HP):\s*([^\n\r]+)/i)
+    if (nameMatch && nameMatch[1]) name = nameMatch[1].trim()
+    if (phoneMatch && phoneMatch[1]) phone = phoneMatch[1].trim()
+  }
+
+  return {
+    name: name || 'Calon Penyewa',
+    phone: phone || null,
+  }
+}
+
+function parseCleanNotes(notes: string | null) {
+  if (!notes) return ''
+  return notes
+    .replace(/\[CALON PENYEWA\]/gi, '')
+    .replace(/Nama:\s*[^\n\r]+/gi, '')
+    .replace(/(?:No\.\s*WhatsApp|WA|Telepon|HP):\s*[^\n\r]+/gi, '')
+    .replace(/Catatan:\s*/gi, '')
+    .trim()
+}
+
 export default async function DashboardBookingPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -90,32 +117,46 @@ export default async function DashboardBookingPage() {
                     </span>
                   </div>
 
-                  {isPemilik && booking.tenant && (
-                    <div className="flex flex-wrap items-center gap-3 text-xs bg-[#FAF7F2] p-3 rounded-2xl border border-[#E8D8C8]">
-                      <div className="flex items-center gap-1.5 font-bold text-[#2D241E]">
-                        <User className="h-3.5 w-3.5 text-[#5D4037]" />
-                        <span>Penyewa: {booking.tenant.full_name || 'Tanpa Nama'}</span>
-                      </div>
-                      {booking.tenant.phone && (
-                        <div className="flex items-center gap-1 text-[#6D4C41]">
-                          <Phone className="h-3 w-3 text-[#5D4037]" />
-                          <span>{booking.tenant.phone}</span>
+                  {(() => {
+                    const tenant = parseTenantInfo(booking)
+                    const cleanPhone = tenant.phone ? tenant.phone.replace(/[^0-9]/g, '').replace(/^0/, '62') : null
+                    const cleanNotes = parseCleanNotes(booking.notes)
+
+                    return (
+                      <>
+                        <div className="flex flex-wrap items-center gap-3 text-xs bg-[#FAF7F2] p-3 rounded-2xl border border-[#E8D8C8]">
+                          <div className="flex items-center gap-1.5 font-bold text-[#2D241E]">
+                            <User className="h-3.5 w-3.5 text-[#5D4037]" />
+                            <span>Penyewa: {tenant.name}</span>
+                          </div>
+                          {tenant.phone && (
+                            <a
+                              href={`https://wa.me/${cleanPhone}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-emerald-800 hover:text-emerald-950 font-bold bg-emerald-100/70 hover:bg-emerald-100 px-2.5 py-1 rounded-xl transition-colors"
+                              title="Chat WhatsApp Penyewa"
+                            >
+                              <Phone className="h-3 w-3 text-emerald-700" />
+                              <span>{tenant.phone} (WhatsApp)</span>
+                            </a>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  )}
+
+                        {cleanNotes && (
+                          <p className="text-xs text-slate-600 italic bg-amber-50/70 p-2.5 rounded-xl border border-amber-200">
+                            &ldquo;{cleanNotes}&rdquo;
+                          </p>
+                        )}
+                      </>
+                    )
+                  })()}
 
                   <div className="flex flex-wrap gap-4 text-xs text-[#6D4C41]">
                     <span className="font-medium">📅 Masuk: <strong>{new Date(booking.start_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</strong></span>
                     <span className="font-medium">📆 Durasi: <strong>{booking.duration_months} Bulan</strong></span>
                     <span className="font-medium">💰 Total: <strong className="text-[#5D4037] font-extrabold text-sm">{formatPrice(booking.total_price)}</strong></span>
                   </div>
-
-                  {booking.notes && (
-                    <p className="text-xs text-slate-500 italic bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
-                      &ldquo;{booking.notes}&rdquo;
-                    </p>
-                  )}
                 </div>
 
                 {/* Status & Action */}

@@ -265,26 +265,15 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
                 </div>
               </div>
 
-              {/* Booking Form or Login Prompt */}
-              {user ? (
-                <BookingForm
-                  propertyId={property.id}
-                  pricePerMonth={property.price_per_month}
-                  availableUnits={property.available_units}
-                />
-              ) : (
-                <div className="space-y-3 text-center py-2">
-                  <div className="p-4 rounded-2xl bg-[#F5EDE4] border border-[#D4BCA7] text-left">
-                    <p className="text-xs font-bold text-[#3E2723] mb-1">Tertarik sewa hunian ini?</p>
-                    <p className="text-xs text-[#6D4C41]">Masuk ke akunmu untuk mengirim permohonan booking resmi ke pemilik.</p>
-                  </div>
-                  <Link href="/auth/login" className="block">
-                    <Button variant="gradient" className="w-full rounded-2xl font-bold h-12 shadow-sm">
-                      Masuk untuk Booking
-                    </Button>
-                  </Link>
-                </div>
-              )}
+              {/* Form Booking Mandiri untuk Konsumen */}
+              <BookingForm
+                propertyId={property.id}
+                propertyName={property.name}
+                propertyType={property.type}
+                pricePerMonth={property.price_per_month}
+                availableUnits={property.available_units}
+                ownerPhone={property.wa_number}
+              />
 
               {/* Direct WhatsApp Callout */}
               {property.wa_number && (
