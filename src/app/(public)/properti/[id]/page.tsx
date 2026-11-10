@@ -2,14 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
-  MapPin, Star, Users, CheckCircle2, MessageCircle, ArrowLeft, ShieldCheck
+  MapPin, Star, Users, CheckCircle2, MessageCircle, ArrowLeft, ShieldCheck,
+  CalendarCheck, ArrowRight
 } from 'lucide-react'
 import { getPropertyById } from '@/lib/queries'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate, getWALink, getGenderTypeLabel } from '@/lib/utils'
-import BookingForm from '@/components/property/BookingForm'
 
 interface PropertyDetailPageProps {
   params: Promise<{ id: string }>
@@ -265,15 +265,44 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
                 </div>
               </div>
 
-              {/* Form Booking Mandiri untuk Konsumen */}
-              <BookingForm
-                propertyId={property.id}
-                propertyName={property.name}
-                propertyType={property.type}
-                pricePerMonth={property.price_per_month}
-                availableUnits={property.available_units}
-                ownerPhone={property.wa_number}
-              />
+              {/* Unit Info & CTA Booking */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs p-3 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
+                  <span className="text-[#8D6E63] font-semibold">Ketersediaan Unit:</span>
+                  <span className={`font-bold ${property.available_units > 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                    {property.available_units > 0 ? `Sisa ${property.available_units} Unit Kosong` : 'Penuh'}
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-xs text-[#6D4C41]">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>Foto & Fasilitas 100% Real Sesuai Aslinya</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>Langsung dari Pemilik Resmi Tanpa Calo</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>Bebas Biaya Layanan / Admin 100%</span>
+                  </div>
+                </div>
+
+                {property.available_units > 0 ? (
+                  <Link href={`/properti/${property.id}/booking`} className="block">
+                    <Button className="w-full h-12 rounded-2xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] shadow-md border border-[#3E2723] gap-2 transition-all hover:-translate-y-0.5">
+                      <CalendarCheck className="h-4 w-4 text-[#E8D8C8]" />
+                      <span>Ajukan Booking Sekarang</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button disabled className="w-full h-12 rounded-2xl font-bold text-xs bg-slate-200 text-slate-500">
+                    Unit Penuh
+                  </Button>
+                )}
+              </div>
 
               {/* Direct WhatsApp Callout */}
               {property.wa_number && (

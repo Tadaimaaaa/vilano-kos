@@ -211,36 +211,39 @@ export default function BookingForm({
         <p className="text-[11px] text-[#8D6E63]">Isi data di bawah untuk booking langsung ke pemilik resmi.</p>
       </div>
 
-      {/* Nama Lengkap */}
-      <div>
-        <Label className="text-xs font-bold text-[#4E342E] flex items-center gap-1 mb-1">
-          <User className="h-3.5 w-3.5 text-[#8D6E63]" />
-          <span>Nama Lengkap Anda *</span>
-        </Label>
-        <Input
-          type="text"
-          placeholder="Nama lengkap calon penyewa"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="h-11 rounded-xl bg-[#FAF7F2] text-xs font-semibold border-[#D4BCA7] placeholder:text-[#A98467]"
-        />
-      </div>
+      {/* 2-Col Grid for Name & Phone */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Nama Lengkap */}
+        <div>
+          <Label className="text-xs font-bold text-[#4E342E] flex items-center gap-1 mb-1">
+            <User className="h-3.5 w-3.5 text-[#8D6E63]" />
+            <span>Nama Lengkap Anda *</span>
+          </Label>
+          <Input
+            type="text"
+            placeholder="Nama lengkap calon penyewa"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="h-11 rounded-xl bg-[#FAF7F2] text-xs font-semibold border-[#D4BCA7] placeholder:text-[#A98467]"
+          />
+        </div>
 
-      {/* Nomor WhatsApp */}
-      <div>
-        <Label className="text-xs font-bold text-[#4E342E] flex items-center gap-1 mb-1">
-          <Phone className="h-3.5 w-3.5 text-[#8D6E63]" />
-          <span>Nomor WhatsApp Aktif *</span>
-        </Label>
-        <Input
-          type="tel"
-          placeholder="Contoh: 081234567890"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          className="h-11 rounded-xl bg-[#FAF7F2] text-xs font-semibold border-[#D4BCA7] placeholder:text-[#A98467]"
-        />
+        {/* Nomor WhatsApp */}
+        <div>
+          <Label className="text-xs font-bold text-[#4E342E] flex items-center gap-1 mb-1">
+            <Phone className="h-3.5 w-3.5 text-[#8D6E63]" />
+            <span>Nomor WhatsApp Aktif *</span>
+          </Label>
+          <Input
+            type="tel"
+            placeholder="Contoh: 081234567890"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            className="h-11 rounded-xl bg-[#FAF7F2] text-xs font-semibold border-[#D4BCA7] placeholder:text-[#A98467]"
+          />
+        </div>
       </div>
 
       {/* Tanggal Mulai Masuk */}
