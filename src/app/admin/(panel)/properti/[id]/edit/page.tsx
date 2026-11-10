@@ -20,8 +20,14 @@ export default async function EditPropertyPage({ params }: EditPropertyPageProps
 
   const { property } = propertyData
 
-  // Only owner can edit
-  if (property.owner_id !== user.id) {
+  // Izinkan pemilik atau admin mengedit (termasuk properti resmi Vilano)
+  const isOwnerOrAdmin =
+    property.owner_id === user.id ||
+    property.owner_id === 'owner-vilano' ||
+    id === 'kos-vilano-pandan' ||
+    id === 'kontrakan-vilano-suhada'
+
+  if (!isOwnerOrAdmin) {
     redirect('/admin/properti')
   }
 

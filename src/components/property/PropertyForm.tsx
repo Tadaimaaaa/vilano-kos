@@ -195,8 +195,9 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     }
 
     let propertyId = initialData?.id
+    const isMockSlug = initialData?.id && typeof initialData.id === 'string' && initialData.id.includes('-vilano-')
 
-    if (initialData?.id) {
+    if (initialData?.id && !isMockSlug) {
       const { error } = await supabase
         .from('properties')
         .update(propertyData)

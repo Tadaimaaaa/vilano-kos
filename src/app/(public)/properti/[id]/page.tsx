@@ -211,39 +211,6 @@ export default async function PropertyDetailPage({ params, searchParams }: Prope
               )}
             </div>
 
-            {/* Specifications */}
-            <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E8D8C8] shadow-soft">
-              <h2 className="text-lg font-black text-[#2D241E] mb-4">Informasi Spesifikasi</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                  <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Jenis Properti</span>
-                  <span className="font-extrabold text-[#2D241E] text-sm capitalize">{property.type}</span>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                  <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Kota Wilayah</span>
-                  <span className="font-extrabold text-[#2D241E] text-sm">{property.kota}</span>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                  <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Total Unit</span>
-                  <span className="font-extrabold text-[#2D241E] text-sm">{property.total_units} Unit</span>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                  <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Sisa Unit Kosong</span>
-                  <span className="font-extrabold text-emerald-700 text-sm">{property.available_units} Unit</span>
-                </div>
-                {isKos && (
-                  <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                    <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Tipe Penghuni</span>
-                    <span className="font-extrabold text-[#2D241E] text-sm">{getGenderTypeLabel(property.gender_type)}</span>
-                  </div>
-                )}
-                <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#E8D8C8]">
-                  <span className="text-[11px] font-bold text-[#8D6E63] block mb-1">Status Keamanan</span>
-                  <span className="font-extrabold text-[#2D241E] text-sm">Aman 24 Jam</span>
-                </div>
-              </div>
-            </div>
-
             {/* Tenant Reviews */}
             {reviews.length > 0 && (
               <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E8D8C8] shadow-soft">
