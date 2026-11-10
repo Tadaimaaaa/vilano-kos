@@ -133,7 +133,7 @@ export default function Navbar({ user }: NavbarProps) {
               <span>Hubungi Pemilik</span>
             </a>
 
-            {user ? (
+            {user && (
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -180,15 +180,6 @@ export default function Navbar({ user }: NavbarProps) {
                   </div>
                 )}
               </div>
-            ) : (
-              <Link
-                href="/admin/login"
-                className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-bold text-[#6D4C41] hover:text-[#3E2723] hover:bg-[#F5EDE4] rounded-xl border border-transparent hover:border-[#D4BCA7] transition-all"
-                title="Portal Login Admin"
-              >
-                <Shield className="h-3.5 w-3.5 text-[#8D6E63]" />
-                <span>Login Admin</span>
-              </Link>
             )}
           </div>
 
@@ -231,7 +222,7 @@ export default function Navbar({ user }: NavbarProps) {
                 Beranda Utama
               </Link>
 
-              {user ? (
+              {user && (
                 <>
                   <Link
                     href="/admin"
@@ -249,17 +240,6 @@ export default function Navbar({ user }: NavbarProps) {
                     Keluar
                   </button>
                 </>
-              ) : (
-                <div className="pt-3">
-                  <Link
-                    href="/admin/login"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 text-xs font-bold rounded-xl border border-[#D4BCA7] bg-[#FAF7F2] text-[#5D4037] hover:bg-[#F5EDE4]"
-                  >
-                    <Shield className="h-3.5 w-3.5 text-[#8D6E63]" />
-                    <span>Login Admin Vilano</span>
-                  </Link>
-                </div>
               )}
             </div>
           </div>
