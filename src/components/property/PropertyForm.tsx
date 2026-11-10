@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Upload, X, CheckCircle2, Camera } from 'lucide-react'
+import { Loader2, Upload, X, CheckCircle2, Camera, Plus, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -43,14 +43,82 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     wa_number: initialData?.wa_number || '',
   })
 
+  const [facilityList, setFacilityList] = useState<Facility[]>(facilities || [])
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(
     initialData?.facilities?.map((f: any) => f.id) || []
   )
+  const [customFacilityName, setCustomFacilityName] = useState('')
+  const [addingFacility, setAddingFacility] = useState(false)
+  const [facilityNotice, setFacilityNotice] = useState<string | null>(null)
 
   function toggleFacility(id: string) {
     setSelectedFacilities((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     )
+  }
+
+  async function handleAddCustomFacility(e?: React.FormEvent) {
+    if (e) e.preventDefault()
+    const trimmed = customFacilityName.trim()
+    if (!trimmed) return
+
+    // 1. Cek apakah sudah ada di list lokal (case-insensitive)
+    const existing = facilityList.find(
+      (f) => f.name.toLowerCase() === trimmed.toLowerCase()
+    )
+
+    if (existing) {
+      if (!selectedFacilities.includes(existing.id)) {
+        setSelectedFacilities((prev) => [...prev, existing.id])
+      }
+      setCustomFacilityName('')
+      setFacilityNotice(`"${existing.name}" sudah ada dan otomatis dipilih.`)
+      setTimeout(() => setFacilityNotice(null), 3000)
+      return
+    }
+
+    setAddingFacility(true)
+    setFacilityNotice(null)
+
+    try {
+      const res = await fetch('/api/facilities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmed }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        if (data.error === 'RLS_RESTRICTION') {
+          setFacilityNotice('Catatan: Jalankan perintah SQL di Supabase SQL Editor untuk mengizinkan penambahan fasilitas baru.')
+        } else {
+          setFacilityNotice(data.error || 'Gagal menambahkan fasilitas')
+        }
+        return
+      }
+
+      if (data.facility) {
+        const newFac = data.facility as Facility
+        // Tambahkan ke list jika belum ada
+        setFacilityList((prev) => {
+          if (prev.some((f) => f.id === newFac.id)) return prev
+          return [...prev, newFac]
+        })
+        // Otomatis pilih
+        setSelectedFacilities((prev) => {
+          if (prev.includes(newFac.id)) return prev
+          return [...prev, newFac.id]
+        })
+        setCustomFacilityName('')
+        setFacilityNotice(`Berhasil menambahkan "${newFac.name}"!`)
+        setTimeout(() => setFacilityNotice(null), 3000)
+      }
+    } catch {
+      setFacilityNotice('Terjadi kesalahan jaringan saat menambahkan fasilitas.')
+    } finally {
+      setAddingFacility(false)
+    }
   }
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -325,11 +393,19 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
 
       {/* Facilities Selection */}
       <div className="bg-white rounded-3xl border border-[#E8D8C8] p-6 md:p-8 shadow-soft">
-        <h2 className="text-base font-extrabold text-[#2D241E] mb-1">Fasilitas yang Disediakan</h2>
-        <p className="text-xs text-[#8D6E63] mb-4">Pilih fasilitas yang ada di propertimu.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 className="text-base font-extrabold text-[#2D241E]">Fasilitas yang Disediakan</h2>
+            <p className="text-xs text-[#8D6E63] mt-0.5">Pilih dari daftar atau ketik sendiri fasilitas khusus di bawah.</p>
+          </div>
+          <span className="text-[11px] font-bold text-[#5D4037] bg-[#F5EDE4] px-3 py-1 rounded-full border border-[#D4BCA7] self-start sm:self-auto">
+            {selectedFacilities.length} dipilih
+          </span>
+        </div>
 
+        {/* Grid Fasilitas yang Tersedia */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-          {facilities.map((facility) => {
+          {facilityList.map((facility) => {
             const isSelected = selectedFacilities.includes(facility.id)
             return (
               <button
@@ -343,10 +419,71 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
                 }`}
               >
                 <CheckCircle2 className={`h-4 w-4 shrink-0 ${isSelected ? 'text-[#5D4037]' : 'text-[#D4BCA7]'}`} />
-                <span>{facility.name}</span>
+                <span className="truncate">{facility.name}</span>
               </button>
             )
           })}
+        </div>
+
+        {/* Input Ketik Fasilitas Sendiri */}
+        <div className="mt-6 pt-5 border-t border-[#E8D8C8]/80">
+          <label className="block text-xs font-bold text-[#4E342E] mb-1.5">
+            ➕ Ketik Fasilitas Tambahan Sendiri
+          </label>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div className="relative flex-1">
+              <Input
+                type="text"
+                placeholder="Ketik fasilitas lain (contoh: Water Heater, Dispenser, Balkon, Dapur Bersama...)"
+                value={customFacilityName}
+                onChange={(e) => setCustomFacilityName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleAddCustomFacility()
+                  }
+                }}
+                className="h-11 rounded-2xl bg-[#FAF7F2] border-[#D4BCA7] text-xs font-semibold text-[#2D241E] placeholder:text-[#A98467] pr-8"
+              />
+              {customFacilityName && (
+                <button
+                  type="button"
+                  onClick={() => setCustomFacilityName('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+            <Button
+              type="button"
+              onClick={() => handleAddCustomFacility()}
+              disabled={addingFacility || !customFacilityName.trim()}
+              className="h-11 px-5 rounded-2xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs gap-1.5 shrink-0 shadow-sm"
+            >
+              {addingFacility ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Tambah Fasilitas</span>
+                </>
+              )}
+            </Button>
+          </div>
+
+          {facilityNotice && (
+            <p className={`text-xs mt-2 font-medium ${
+              facilityNotice.includes('Berhasil') || facilityNotice.includes('otomatis')
+                ? 'text-emerald-700 font-semibold'
+                : 'text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200 mt-2.5'
+            }`}>
+              {facilityNotice}
+            </p>
+          )}
         </div>
       </div>
 
