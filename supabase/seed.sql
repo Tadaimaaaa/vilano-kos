@@ -34,15 +34,15 @@ BEGIN
     SELECT id INTO v_parkir_mobil FROM facilities WHERE name = 'Parkir Mobil';
     SELECT id INTO v_dapur FROM facilities WHERE name = 'Dapur';
 
-    -- 1. Kos Putra Eksklusif Dekat Kampus (Yogyakarta)
+    -- 1. Kos Putra Pandan (Kota Solok)
     INSERT INTO properties (
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Griya Asri Pogung',
-      'Kos putra nyaman, tenang, dan strategis dekat kampus UGM. Fasilitas lengkap tinggal bawa koper. Lingkungan aman dengan CCTV 24 jam.',
-      'Jl. Pogung Kidul No. 15', 'Mlati', 'Yogyakarta',
-      1200000, 10, 3, 'putra', '081234567890', 'active', true
+      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Putra Pandan - Kamar AC & KM Dalam',
+      'Kamar kos putra eksklusif berkonsep modern minimalis di Ps. Pandan Air Mati, Kota Solok. Lingkungan tenang, aman, bersih, dan nyaman.',
+      'Jl. Pandan Tengah, Ps. Pandan Air Mati', 'Lubuk Sikarah', 'Kota Solok',
+      950000, 8, 3, 'putra', '081234567890', 'active', true
     ) RETURNING id INTO v_prop_kos1;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
@@ -53,33 +53,33 @@ BEGIN
     IF v_km_dalam IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos1, v_km_dalam); END IF;
     IF v_parkir_motor IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos1, v_parkir_motor); END IF;
 
-    -- 2. Kos Putri Modern Tebet (Jakarta Selatan)
+    -- 2. Kos Putra Pandan Standar (Kota Solok)
     INSERT INTO properties (
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kost Putri Cempaka Tebet',
-      'Kost khusus putri di area strategis Tebet, hanya 5 menit ke stasiun KRL. Akses mudah ke perkantoran Kuningan dan Sudirman.',
-      'Jl. Tebet Barat Dalam VII No. 20', 'Tebet', 'Jakarta',
-      2100000, 8, 2, 'putri', '081298765432', 'active', true
+      gen_random_uuid(), v_owner_id, 'kos', 'Vilano Kos Putra Pandan - Kamar Standar & KM Dalam',
+      'Kamar kos putra nyaman dan sejuk alami di Jl. Pandan Tengah, Ps. Pandan Air Mati, Kota Solok. Dilengkapi kasur, lemari, meja kerja, dan kamar mandi dalam.',
+      'Jl. Pandan Tengah, Ps. Pandan Air Mati', 'Lubuk Sikarah', 'Kota Solok',
+      750000, 6, 2, 'putra', '081234567890', 'active', true
     ) RETURNING id INTO v_prop_kos2;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
     VALUES (v_prop_kos2, 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80', true, 0);
 
     IF v_wifi IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos2, v_wifi); END IF;
-    IF v_ac IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos2, v_ac); END IF;
     IF v_km_dalam IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos2, v_km_dalam); END IF;
+    IF v_parkir_motor IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kos2, v_parkir_motor); END IF;
 
-    -- 3. Kontrakan Minimalis 2 Lantai (Bandung)
+    -- 3. Kontrakan Keluarga Suhada (Kota Solok)
     INSERT INTO properties (
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Kontrakan Harmoni Dago',
-      'Rumah kontrakan 2 kamar tidur, 1 kamar mandi, ruang tamu luas, dapur, dan carport. Udara sejuk dekat kawasan wisata Dago.',
-      'Jl. Dago Asri Blok B No. 4', 'Coblong', 'Bandung',
-      3500000, 1, 1, 'all', '081311223344', 'active', true
+      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Rumah Kontrakan Keluarga Suhada',
+      'Satu unit rumah kontrakan utuh siap huni di Simpang Rumbio, Lubuk Sikarah, Kota Solok. 3 kamar tidur, 2 kamar mandi, ruang tamu luas, dapur pribadi, dan carport berkanopi.',
+      'Jl. Gg. Suhada No.8, Simpang Rumbio', 'Lubuk Sikarah', 'Kota Solok',
+      1600000, 1, 1, 'all', '081234567890', 'active', true
     ) RETURNING id INTO v_prop_kontrakan1;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")
@@ -89,15 +89,15 @@ BEGIN
     IF v_parkir_mobil IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kontrakan1, v_parkir_mobil); END IF;
     IF v_parkir_motor IS NOT NULL THEN INSERT INTO property_facilities VALUES (v_prop_kontrakan1, v_parkir_motor); END IF;
 
-    -- 4. Kontrakan Asri Keluarga (Surabaya)
+    -- 4. Kontrakan Minimalis Suhada (Kota Solok)
     INSERT INTO properties (
       id, owner_id, type, name, description, address, kecamatan, kota,
       price_per_month, total_units, available_units, gender_type, wa_number, status, is_featured
     ) VALUES (
-      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Kontrakan Rungkut Asri',
-      'Kontrakan siap huni di perumahan tenang. 3 Kamar Tidur, 2 Kamar Mandi, Listrik 2200 VA token, PDAM lancar, bebas banjir.',
-      'Perum Rungkut Asri Timur No. 12', 'Rungkut', 'Surabaya',
-      2800000, 1, 1, 'all', '081555667788', 'active', true
+      gen_random_uuid(), v_owner_id, 'kontrakan', 'Vilano Rumah Kontrakan Minimalis Suhada',
+      'Rumah kontrakan asri dan bersih berkonsep minimalis di Jl. Gg. Suhada No.8, Simpang Rumbio, Lubuk Sikarah, Kota Solok. 2 kamar tidur, 1 kamar mandi, ruang tamu, dan dapur bersih.',
+      'Jl. Gg. Suhada No.8, Simpang Rumbio', 'Lubuk Sikarah', 'Kota Solok',
+      1250000, 1, 1, 'all', '081234567890', 'active', true
     ) RETURNING id INTO v_prop_kontrakan2;
 
     INSERT INTO property_photos (property_id, url, is_primary, "order")

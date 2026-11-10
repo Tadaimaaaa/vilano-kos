@@ -17,9 +17,7 @@ interface PropertyFormProps {
 }
 
 const KOTA_LIST = [
-  'Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Semarang',
-  'Medan', 'Makassar', 'Palembang', 'Tangerang', 'Bekasi',
-  'Depok', 'Bogor', 'Malang', 'Solo', 'Denpasar', 'Lainnya'
+  'Kota Solok', 'Padang', 'Bukittinggi', 'Jakarta', 'Bandung', 'Yogyakarta', 'Lainnya'
 ]
 
 export default function PropertyForm({ facilities, ownerId, initialData }: PropertyFormProps) {

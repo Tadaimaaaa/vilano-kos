@@ -190,7 +190,7 @@ export async function getAllFacilities() {
 
 export async function getKotaList(): Promise<string[]> {
   if (!isSupabaseConfigured()) {
-    return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
+    return ['Kota Solok']
   }
 
   try {
@@ -200,11 +200,11 @@ export async function getKotaList(): Promise<string[]> {
       .select('kota')
       .eq('status', 'active')
     if (error || !data || data.length === 0) {
-      return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
+      return ['Kota Solok']
     }
     const unique = [...new Set(data.map((d: any) => d.kota).filter(Boolean))] as string[]
-    return unique.sort()
+    return unique.length > 0 ? unique.sort() : ['Kota Solok']
   } catch {
-    return ['Bandung', 'Jakarta', 'Surabaya', 'Yogyakarta']
+    return ['Kota Solok']
   }
 }

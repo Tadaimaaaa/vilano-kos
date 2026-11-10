@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Home, Mail, Phone, ShieldCheck } from 'lucide-react'
+import { Home, Mail, Phone, ShieldCheck, MapPin } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -61,6 +61,10 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5 text-[#D4BCA7]" />
                 <span>support@vilano.id</span>
+              </li>
+              <li className="flex items-start gap-2 text-xs">
+                <MapPin className="h-3.5 w-3.5 text-[#D4BCA7] mt-0.5 shrink-0" />
+                <span>Kec. Lubuk Sikarah, Kota Solok, Sumatera Barat</span>
               </li>
             </ul>
           </div>
