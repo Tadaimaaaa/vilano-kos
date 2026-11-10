@@ -28,7 +28,10 @@ export async function POST(request: NextRequest) {
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (serviceKey && !serviceKey.includes('placeholder') && !serviceKey.includes('your-')) {
       const { createClient: createAdminClient } = await import('@supabase/supabase-js')
-      dbClient = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey) as any
+      dbClient = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uqdjdasdjqubenkykozv.supabase.co',
+        serviceKey
+      ) as any
     }
 
     const roomInfo = roomNumber ? `\nKamar Terpilih: ${roomNumber} (Lantai 1)` : ''

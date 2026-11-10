@@ -4,8 +4,14 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const DEFAULT_SUPABASE_URL = 'https://uqdjdasdjqubenkykozv.supabase.co'
+  const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_EgzOYdxHg_j1h_fYrQZRYg_IeKNw7g9'
+
+  const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  const supabaseUrl = (envUrl && !envUrl.includes('placeholder')) ? envUrl : DEFAULT_SUPABASE_URL
+  const supabaseKey = (envKey && !envKey.includes('placeholder')) ? envKey : DEFAULT_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseKey) {
     return supabaseResponse

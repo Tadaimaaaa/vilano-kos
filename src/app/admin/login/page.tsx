@@ -37,7 +37,15 @@ function AdminLoginForm() {
       })
 
       if (authError) {
-        setError('Email atau password salah. Silakan periksa kembali.')
+        if (
+          authError.message.toLowerCase().includes('invalid login credentials') ||
+          authError.message.toLowerCase().includes('invalid grant') ||
+          authError.status === 400
+        ) {
+          setError('Email atau password salah. Silakan periksa kembali.')
+        } else {
+          setError(`Gagal otentikasi: ${authError.message}`)
+        }
         setLoading(false)
         return
       }

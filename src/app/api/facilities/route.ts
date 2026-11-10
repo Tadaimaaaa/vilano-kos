@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     if (serviceKey && !serviceKey.includes('placeholder') && !serviceKey.includes('your-')) {
       const { createClient: createAdminClient } = await import('@supabase/supabase-js')
       insertClient = createAdminClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uqdjdasdjqubenkykozv.supabase.co',
         serviceKey
       ) as any
     }
