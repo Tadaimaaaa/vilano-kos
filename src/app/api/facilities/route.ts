@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 2. Insert fasilitas baru (gunakan admin service role jika tersedia, atau client terotentikasi)
+    // 2. Insert fasilitas baru
     let insertClient = supabase
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (serviceKey && !serviceKey.includes('placeholder') && !serviceKey.includes('your-')) {
@@ -72,11 +72,10 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (insertError) {
-      // Jika terjadi error RLS 42501
       if (insertError.code === '42501') {
         return NextResponse.json({
           error: 'RLS_RESTRICTION',
-          message: 'Izin simpan fasilitas di database Supabase terblokir RLS. Silakan jalankan SQL penyesuaian di Supabase SQL Editor.',
+          message: 'Izin simpan fasilitas di database Supabase terblokir RLS.',
           code: insertError.code,
         }, { status: 403 })
       }

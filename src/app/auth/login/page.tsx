@@ -132,13 +132,6 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 pt-5 border-t border-[#F5EDE4] text-center space-y-3">
-            <p className="text-xs text-[#8D6E63] font-medium">
-              Belum punya akun?{' '}
-              <Link href="/auth/register" className="text-[#5D4037] font-extrabold hover:underline">
-                Daftar akun baru
-              </Link>
-            </p>
-
             <div>
               <Link
                 href="/admin/login"

@@ -181,20 +181,14 @@ export default function Navbar({ user }: NavbarProps) {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/auth/login"
-                  className="inline-flex items-center justify-center h-9 px-3.5 text-xs font-bold text-[#4E342E] hover:bg-[#F5EDE4] rounded-xl transition-colors"
-                >
-                  Masuk
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className="inline-flex items-center justify-center h-9 px-4 text-xs font-bold bg-gradient-to-r from-[#795548] via-[#6D4C41] to-[#4E342E] text-[#FAF7F2] shadow-sm hover:from-[#6D4C41] hover:to-[#3E2723] rounded-xl transition-all"
-                >
-                  Daftar Gratis
-                </Link>
-              </div>
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-bold text-[#6D4C41] hover:text-[#3E2723] hover:bg-[#F5EDE4] rounded-xl border border-transparent hover:border-[#D4BCA7] transition-all"
+                title="Portal Login Admin"
+              >
+                <Shield className="h-3.5 w-3.5 text-[#8D6E63]" />
+                <span>Login Admin</span>
+              </Link>
             )}
           </div>
 
@@ -256,20 +250,14 @@ export default function Navbar({ user }: NavbarProps) {
                   </button>
                 </>
               ) : (
-                <div className="grid grid-cols-2 gap-2 pt-3">
+                <div className="pt-3">
                   <Link
-                    href="/auth/login"
+                    href="/admin/login"
                     onClick={() => setMenuOpen(false)}
-                    className="inline-flex items-center justify-center h-10 px-3 text-xs font-bold rounded-xl border border-[#D4BCA7] bg-white text-[#4E342E] shadow-xs hover:bg-[#F5EDE4]"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-xs font-bold rounded-xl border border-[#D4BCA7] bg-[#FAF7F2] text-[#5D4037] hover:bg-[#F5EDE4]"
                   >
-                    Masuk
-                  </Link>
-                  <Link
-                    href="/auth/register"
-                    onClick={() => setMenuOpen(false)}
-                    className="inline-flex items-center justify-center h-10 px-3 text-xs font-bold rounded-xl bg-gradient-to-r from-[#795548] via-[#6D4C41] to-[#4E342E] text-[#FAF7F2] shadow-sm hover:from-[#6D4C41] hover:to-[#3E2723]"
-                  >
-                    Daftar
+                    <Shield className="h-3.5 w-3.5 text-[#8D6E63]" />
+                    <span>Login Admin Vilano</span>
                   </Link>
                 </div>
               )}
