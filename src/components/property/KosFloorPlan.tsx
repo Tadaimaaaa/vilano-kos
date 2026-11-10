@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Bed, Wind, Bath, CheckCircle2, XCircle, ArrowRight, X,
   Sparkles, Utensils, Footprints, DoorOpen, Info, ShieldCheck,
-  MessageCircle
+  MessageCircle, Camera, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,6 +27,12 @@ export default function KosFloorPlan({
 }: KosFloorPlanProps) {
   const [rooms, setRooms] = useState<KosRoom[]>(initialRooms)
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0)
+
+  // Reset indeks foto saat ganti kamar
+  useEffect(() => {
+    setActivePhotoIndex(0)
+  }, [selectedRoom?.id])
 
   // Sinkronisasi Real-Time (BroadcastChannel + LocalStorage + Server Polling)
   useEffect(() => {
@@ -396,19 +402,86 @@ export default function KosFloorPlan({
               </div>
             </div>
 
-            {/* Foto Kamar Asli (Jika Ada) */}
-            {selectedRoom.photoUrl && (
-              <div className="relative w-full aspect-video max-h-56 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm my-3 group bg-[#E8D8C8]/40">
-                <img
-                  src={selectedRoom.photoUrl}
-                  alt={`${selectedRoom.number} - ${selectedRoom.type}`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-2.5 left-2.5 bg-[#3E2723]/80 backdrop-blur-md text-[#FAF7F2] text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
-                  <span>📷 Foto Asli Kamar</span>
+            {/* Galeri Foto Kamar Asli (Bisa Banyak Foto dengan Slider & Thumbnail) */}
+            {(() => {
+              const roomPhotos = selectedRoom.photos && selectedRoom.photos.length > 0
+                ? selectedRoom.photos
+                : (selectedRoom.photoUrl ? [selectedRoom.photoUrl] : [])
+
+              if (roomPhotos.length === 0) return null
+
+              const safeIndex = activePhotoIndex < roomPhotos.length ? activePhotoIndex : 0
+
+              return (
+                <div className="my-3 space-y-2">
+                  <div className="relative w-full aspect-video max-h-60 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm group bg-[#E8D8C8]/40">
+                    <img
+                      src={roomPhotos[safeIndex]}
+                      alt={`${selectedRoom.number} - Foto ${safeIndex + 1}`}
+                      className="w-full h-full object-cover transition-all duration-300"
+                    />
+
+                    {/* Badge Counter */}
+                    <div className="absolute top-2.5 left-2.5 bg-[#3E2723]/80 backdrop-blur-md text-[#FAF7F2] text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
+                      <Camera className="h-3 w-3" />
+                      <span>
+                        {roomPhotos.length > 1
+                          ? `Foto ${safeIndex + 1} dari ${roomPhotos.length}`
+                          : 'Foto Asli Kamar'}
+                      </span>
+                    </div>
+
+                    {/* Navigasi Panah Kiri/Kanan jika foto > 1 */}
+                    {roomPhotos.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : roomPhotos.length - 1))
+                          }}
+                          className="absolute left-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
+                          aria-label="Foto sebelumnya"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setActivePhotoIndex((prev) => (prev < roomPhotos.length - 1 ? prev + 1 : 0))
+                          }}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
+                          aria-label="Foto berikutnya"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Thumbnail Row jika foto > 1 */}
+                  {roomPhotos.length > 1 && (
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 px-0.5">
+                      {roomPhotos.map((url, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setActivePhotoIndex(idx)}
+                          className={`relative w-14 h-10 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer shadow-2xs ${
+                            safeIndex === idx
+                              ? 'border-[#5D4037] ring-2 ring-[#5D4037]/40 scale-105'
+                              : 'border-[#D4BCA7] opacity-60 hover:opacity-100'
+                          }`}
+                        >
+                          <img src={url} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              )
+            })()}
 
             {/* Spesifikasi & Fasilitas Kamar */}
             <div className="py-3 space-y-3">
