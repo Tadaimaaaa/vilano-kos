@@ -72,97 +72,116 @@ export default async function DashboardPropertiPage({
         </Link>
       </div>
 
-      {/* Tabel Daftar Properti */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-soft">
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="text-sm font-extrabold text-slate-900">Daftar Unit Properti</h2>
-          <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
-            Total {displayProperties.length} Unit
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <th className="px-6 py-4">Nama Properti</th>
-                <th className="px-4 py-4">Kategori</th>
-                <th className="px-4 py-4">Harga / Bln</th>
-                <th className="px-4 py-4">Ketersediaan</th>
-                <th className="px-4 py-4">Status Tayang</th>
-                <th className="px-6 py-4 text-right">Tindakan</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
-              {displayProperties.map((property: any) => (
-                <tr key={property.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-bold text-slate-900">{property.name}</p>
-                      <p className="text-xs text-slate-400">{property.kota} &middot; {property.address}</p>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4">
-                    <Badge variant={property.type === 'kos' ? 'kos' : 'kontrakan'}>
-                      {property.type === 'kos' ? '🏠 Kos' : '🏡 Kontrakan'}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-4 font-extrabold text-slate-900">
-                    {formatPrice(property.price_per_month)}
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className={`font-bold ${property.available_units > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                      {property.available_units}
-                    </span>
-                    <span className="text-xs text-slate-400 font-medium">/{property.total_units} unit</span>
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${
-                      property.status === 'active' ? 'bg-emerald-100 text-emerald-800' :
-                      property.status === 'pending' ? 'bg-amber-100 text-amber-800' :
-                      'bg-slate-100 text-slate-600'
-                    }`}>
-                      {property.status === 'active' ? 'Aktif Tayang' :
-                       property.status === 'pending' ? 'Review Admin' : 'Nonaktif'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Link href={`/properti/${property.id}`} target="_blank">
-                        <Button variant="ghost" size="icon" title="Lihat Halaman Publik" className="h-9 w-9 rounded-xl text-slate-500 hover:text-slate-900">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Link href={`/admin/properti/${property.id}/edit`}>
-                        <Button variant="outline" size="icon" title="Edit Properti" className="h-9 w-9 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                      </Link>
-                      {property.id !== 'kos-vilano-pandan' && property.id !== 'kontrakan-vilano-suhada' && (
-                        <DeletePropertyButton id={property.id} name={property.name} />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* TATA LETAK & KELOLA STATUS KAMAR (DENAH LANTAI 1) - HANYA MUNCUL DI KELOLA KOS ATAU DEFAULT */}
-      {!isKontrakan && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-black text-slate-900">
-                Tata Letak & Denah Kamar Kos (Lantai 1)
-              </h2>
-              <p className="text-xs text-slate-500">
-                Kelola status kamar terisi/kosong secara visual sesuai denah fisik properti kos Anda di Kota Solok.
-              </p>
-            </div>
+      {/* Jika Kelola Kontrakan: Tampilkan Tabel Unit Kontrakan */}
+      {isKontrakan && (
+        <div className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-soft">
+          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-sm font-extrabold text-slate-900">Daftar Unit Kontrakan</h2>
+            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+              Total {displayProperties.length} Unit
+            </span>
           </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/70 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-4">Nama Properti</th>
+                  <th className="px-4 py-4">Kategori</th>
+                  <th className="px-4 py-4">Harga / Bln</th>
+                  <th className="px-4 py-4">Ketersediaan</th>
+                  <th className="px-4 py-4">Status Tayang</th>
+                  <th className="px-6 py-4 text-right">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {displayProperties.map((property: any) => (
+                  <tr key={property.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-bold text-slate-900">{property.name}</p>
+                        <p className="text-xs text-slate-400">{property.kota} &middot; {property.address}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <Badge variant="kontrakan">
+                        🏡 Kontrakan
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-4 font-extrabold text-slate-900">
+                      {formatPrice(property.price_per_month)}
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className={`font-bold ${property.available_units > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        {property.available_units}
+                      </span>
+                      <span className="text-xs text-slate-400 font-medium">/{property.total_units} unit</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${
+                        property.status === 'active' ? 'bg-emerald-100 text-emerald-800' :
+                        property.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                        'bg-slate-100 text-slate-600'
+                      }`}>
+                        {property.status === 'active' ? 'Aktif Tayang' :
+                         property.status === 'pending' ? 'Review Admin' : 'Nonaktif'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link href={`/properti/${property.id}`} target="_blank">
+                          <Button variant="ghost" size="icon" title="Lihat Halaman Publik" className="h-9 w-9 rounded-xl text-slate-500 hover:text-slate-900">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Link href={`/admin/properti/${property.id}/edit`}>
+                          <Button variant="outline" size="icon" title="Edit Properti" className="h-9 w-9 rounded-xl border-slate-200 text-slate-700 hover:bg-slate-50">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                        {property.id !== 'kontrakan-vilano-suhada' && (
+                          <DeletePropertyButton id={property.id} name={property.name} />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Jika Kelola Kos: Tampilkan Daftar Kamar & Denah Kos */}
+      {!isKontrakan && (
+        <div className="space-y-6">
+          {kosProperty && (
+            <div className="bg-[#FAF7F2] p-4 rounded-2xl border border-[#D4BCA7] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#5D4037] text-white flex items-center justify-center font-black text-base shadow-xs">
+                  🏢
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm text-[#2D241E]">{kosProperty.name}</h3>
+                  <p className="text-xs text-[#8D6E63]">{kosProperty.address}, {kosProperty.kota}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/properti/${kosProperty.id}`} target="_blank">
+                  <Button variant="outline" size="sm" className="h-9 rounded-xl border-[#D4BCA7] text-xs font-bold text-[#5D4037] gap-1.5">
+                    <Eye className="h-3.5 w-3.5" />
+                    <span>Lihat Web Publik</span>
+                  </Button>
+                </Link>
+                <Link href={`/admin/properti/${kosProperty.id}/edit`}>
+                  <Button variant="outline" size="sm" className="h-9 rounded-xl border-[#D4BCA7] text-xs font-bold text-[#5D4037] gap-1.5">
+                    <Pencil className="h-3.5 w-3.5" />
+                    <span>Edit Info Umum Kos</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
 
           <AdminKosFloorPlan
             propertyId={kosProperty?.id || 'kos-vilano-pandan'}

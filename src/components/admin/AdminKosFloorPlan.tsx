@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   CheckCircle2, XCircle, Footprints, Utensils, DoorOpen,
   Sparkles, Save, Edit3, X, Check, RefreshCw, Plus, Trash2,
-  Camera, Image as ImageIcon, UploadCloud, Loader2
+  Camera, Image as ImageIcon, UploadCloud, Loader2, Pencil, Building2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -324,7 +324,148 @@ export default function AdminKosFloorPlan({
   }
 
   return (
-    <div className="bg-white rounded-3xl p-6 md:p-8 border-2 border-[#D4BCA7] shadow-soft space-y-6">
+    <div className="space-y-8">
+      {/* 1. TABEL DAFTAR KAMAR KOS (LANTAI 1) */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-soft">
+        <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EDE4] text-xs font-bold text-[#5D4037] border border-[#D4BCA7] mb-1.5">
+              <Building2 className="h-3.5 w-3.5 text-[#8D6E63]" />
+              <span>Unit Kamar Kos &bull; Lantai 1</span>
+            </div>
+            <h2 className="text-base md:text-lg font-black text-[#2D241E]">
+              Daftar Kamar Kos (Lantai 1)
+            </h2>
+            <p className="text-xs text-[#8D6E63]">
+              Kelola status ketersediaan, fasilitas, tarif sewa, dan foto masing-masing kamar kos.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs font-bold self-start sm:self-auto">
+            <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-xl shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+              <span>{availableCount} Kosong</span>
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-100 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-xl shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-slate-400" />
+              <span>{occupiedCount} Terisi</span>
+            </span>
+            <span className="bg-[#FAF7F2] text-[#5D4037] border border-[#D4BCA7] px-3 py-1.5 rounded-xl font-black">
+              Total {rooms.length} Kamar
+            </span>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50/70 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="px-5 py-4">Kamar</th>
+                <th className="px-4 py-4">Tipe Kamar</th>
+                <th className="px-4 py-4">Fasilitas Dalam Kamar</th>
+                <th className="px-4 py-4">Tarif Sewa</th>
+                <th className="px-4 py-4">Status Ketersediaan</th>
+                <th className="px-5 py-4 text-right">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-sm">
+              {rooms.map((room) => {
+                const isAvail = room.status === 'available'
+                return (
+                  <tr key={room.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        {room.photoUrl ? (
+                          <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#D4BCA7] bg-[#FAF7F2] shrink-0 shadow-2xs">
+                            <img
+                              src={room.photoUrl}
+                              alt={room.number}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded-xl border border-dashed border-[#D4BCA7] bg-[#FAF7F2] flex items-center justify-center text-[#8D6E63] shrink-0">
+                            <Camera className="h-5 w-5 opacity-60" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-black text-slate-900 text-sm">{room.number}</p>
+                          {room.notes && (
+                            <p className="text-[11px] text-slate-500 truncate max-w-xs" title={room.notes}>
+                              📍 {room.notes}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="px-4 py-4">
+                      <span className="text-xs font-bold text-[#4E342E] bg-[#FAF7F2] border border-[#D4BCA7] px-2.5 py-1 rounded-lg">
+                        {room.type}
+                      </span>
+                    </td>
+
+                    <td className="px-4 py-4">
+                      <div className="flex flex-wrap gap-1 max-w-sm">
+                        {room.facilities?.slice(0, 3).map((f, i) => (
+                          <span
+                            key={i}
+                            className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200"
+                          >
+                            {f}
+                          </span>
+                        ))}
+                        {room.facilities && room.facilities.length > 3 && (
+                          <span className="text-[10px] font-bold text-[#8D6E63] bg-[#F5EDE4] px-1.5 py-0.5 rounded-md">
+                            +{room.facilities.length - 3} lagi
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="px-4 py-4 font-black text-slate-900 text-xs sm:text-sm">
+                      {formatPrice(room.price)}
+                      <span className="text-[10px] text-slate-400 font-normal block">/ bulan</span>
+                    </td>
+
+                    <td className="px-4 py-4">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(room.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs ${
+                          isAvail
+                            ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300'
+                            : 'bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300'
+                        }`}
+                        title="Klik untuk ubah status kamar"
+                      >
+                        <span className={`w-2 h-2 rounded-full ${isAvail ? 'bg-emerald-600 animate-pulse' : 'bg-slate-600'}`} />
+                        <span>{isAvail ? 'Kosong & Siap Huni' : 'Sedang Terisi'}</span>
+                      </button>
+                    </td>
+
+                    <td className="px-5 py-4 text-right">
+                      <Button
+                        type="button"
+                        onClick={() => setEditingRoom(room)}
+                        variant="outline"
+                        size="sm"
+                        className="rounded-xl border-[#D4BCA7] hover:bg-[#F5EDE4] text-[#5D4037] font-bold text-xs gap-1.5 shadow-2xs cursor-pointer h-9 px-3"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        <span>Edit Kamar</span>
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 2. DENAH TATA LETAK KAMAR KOS (VISUAL BLUEPRINT) */}
+      <div className="bg-white rounded-3xl p-6 md:p-8 border-2 border-[#D4BCA7] shadow-soft space-y-6">
       {/* Header Denah Admin */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F5EDE4]">
         <div>
@@ -457,6 +598,7 @@ export default function AdminKosFloorPlan({
           </div>
         </div>
       </div>
+    </div>
 
       {/* MODAL EDIT DETAIL KAMAR (JIKA INGIN UBAH TARIF / FASILITAS / TIPE) */}
       {editingRoom && (
