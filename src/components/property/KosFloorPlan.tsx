@@ -89,11 +89,11 @@ export default function KosFloorPlan({
     }
   }, [propertyId])
 
-  // Update detail kamar pop-up secara real-time jika kamar yang sedang dibuka statusnya diubah oleh admin
+  // Update detail kamar pop-up secara real-time jika kamar yang sedang dibuka datanya diubah oleh admin
   useEffect(() => {
     if (selectedRoom) {
       const updated = rooms.find((r) => r.id === selectedRoom.id)
-      if (updated && (updated.status !== selectedRoom.status || updated.price !== selectedRoom.price)) {
+      if (updated && JSON.stringify(updated) !== JSON.stringify(selectedRoom)) {
         setSelectedRoom(updated)
       }
     }
@@ -345,7 +345,7 @@ export default function KosFloorPlan({
           }}
         >
           <div
-            className="bg-[#FAF7F2] rounded-3xl p-5 md:p-6 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-200 my-auto"
+            className="bg-[#FAF7F2] rounded-3xl p-5 md:p-6 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-200 my-auto max-h-[92vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
           >

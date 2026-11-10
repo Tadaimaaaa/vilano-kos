@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   CheckCircle2, XCircle, Footprints, Utensils, DoorOpen,
-  Sparkles, Save, Edit3, X, Check, RefreshCw
+  Sparkles, Save, Edit3, X, Check, RefreshCw, Plus, Trash2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,6 +28,71 @@ export default function AdminKosFloorPlan({
   const [editingRoom, setEditingRoom] = useState<KosRoom | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveNotice, setSaveNotice] = useState<string | null>(null)
+  const [newFacilityInput, setNewFacilityInput] = useState('')
+
+  // Kunci scroll background saat modal edit terbuka
+  useEffect(() => {
+    if (editingRoom) {
+      const originalOverflow = window.getComputedStyle(document.body).overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = originalOverflow
+      }
+    }
+  }, [editingRoom])
+
+  // Preset fasilitas umum kos
+  const COMMON_FACILITIES = [
+    'AC Dingin',
+    'Kamar Mandi Dalam',
+    'Kamar Mandi Luar',
+    'Kasur & Bantal',
+    'Lemari Pakaian',
+    'Meja Belajar',
+    'WiFi Cepat',
+    'Water Heater',
+    'Kulkas Mini',
+    'Smart TV',
+    'Kipas Angin',
+    'Ventilasi Jendela Luar',
+  ]
+
+  function handleAddFacility(facilityName: string) {
+    if (!editingRoom) return
+    const name = facilityName.trim()
+    if (!name) return
+
+    const current = editingRoom.facilities || []
+    if (current.some((f) => f.toLowerCase() === name.toLowerCase())) {
+      setNewFacilityInput('')
+      return
+    }
+
+    setEditingRoom({
+      ...editingRoom,
+      facilities: [...current, name],
+    })
+    setNewFacilityInput('')
+  }
+
+  function handleRemoveFacility(indexToRemove: number) {
+    if (!editingRoom) return
+    const current = editingRoom.facilities || []
+    setEditingRoom({
+      ...editingRoom,
+      facilities: current.filter((_, idx) => idx !== indexToRemove),
+    })
+  }
+
+  function handleUpdateFacility(index: number, newName: string) {
+    if (!editingRoom) return
+    const current = [...(editingRoom.facilities || [])]
+    current[index] = newName
+    setEditingRoom({
+      ...editingRoom,
+      facilities: current,
+    })
+  }
 
   const availableCount = rooms.filter((r) => r.status === 'available').length
   const occupiedCount = rooms.filter((r) => r.status === 'occupied').length
@@ -340,7 +405,7 @@ export default function AdminKosFloorPlan({
         </div>
       </div>
 
-      {/* MODAL EDIT DETAIL KAMAR (JIKA INGIN UBAH TARIF / TIPE) */}
+      {/* MODAL EDIT DETAIL KAMAR (JIKA INGIN UBAH TARIF / FASILITAS / TIPE) */}
       {editingRoom && (
         <div
           className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm p-4 flex min-h-screen items-center justify-center animate-in fade-in duration-150"
@@ -348,11 +413,11 @@ export default function AdminKosFloorPlan({
             if (e.target === e.currentTarget) setEditingRoom(null)
           }}
         >
-          <div className="bg-[#FAF7F2] rounded-3xl p-6 md:p-8 border-2 border-[#5D4037] shadow-2xl w-full max-w-md relative my-auto">
+          <div className="bg-[#FAF7F2] rounded-3xl p-6 md:p-7 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative my-auto max-h-[92vh] overflow-y-auto">
             <button
               type="button"
               onClick={() => setEditingRoom(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-white p-2 rounded-full border border-[#D4BCA7]"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -361,7 +426,7 @@ export default function AdminKosFloorPlan({
               Edit {editingRoom.number}
             </h3>
             <p className="text-xs text-[#8D6E63] mb-4">
-              Ubah status ketersediaan, tipe kamar, atau tarif sewa bulanan.
+              Ubah status ketersediaan, daftar fasilitas kamar, tipe kamar, atau tarif sewa bulanan.
             </p>
 
             <form onSubmit={handleSaveEdit} className="space-y-4">
@@ -371,7 +436,7 @@ export default function AdminKosFloorPlan({
                   <button
                     type="button"
                     onClick={() => setEditingRoom({ ...editingRoom, status: 'available' })}
-                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                       editingRoom.status === 'available'
                         ? 'border-emerald-600 bg-emerald-100 text-emerald-900 shadow-xs'
                         : 'border-[#D4BCA7] bg-white text-[#6D4C41]'
@@ -384,7 +449,7 @@ export default function AdminKosFloorPlan({
                   <button
                     type="button"
                     onClick={() => setEditingRoom({ ...editingRoom, status: 'occupied' })}
-                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                       editingRoom.status === 'occupied'
                         ? 'border-slate-500 bg-slate-200 text-slate-900 shadow-xs'
                         : 'border-[#D4BCA7] bg-white text-[#6D4C41]'
@@ -404,6 +469,107 @@ export default function AdminKosFloorPlan({
                   onChange={(e) => setEditingRoom({ ...editingRoom, type: e.target.value })}
                   placeholder="Kamar Mandi Dalam / AC / Standar"
                 />
+              </div>
+
+              {/* FASILITAS KAMAR (BISA DI-EDIT LANGSUNG, DITAMBAH, ATAU DIHAPUS) */}
+              <div className="bg-white p-4 rounded-2xl border border-[#D4BCA7] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs font-black text-[#4E342E] uppercase tracking-wide">
+                      Fasilitas Kamar Ini
+                    </Label>
+                    <span className="text-[11px] font-bold bg-[#F5EDE4] text-[#5D4037] px-2 py-0.5 rounded-full border border-[#D4BCA7]">
+                      {editingRoom.facilities?.length || 0} Fasilitas
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-[#8D6E63]">
+                    Bisa diedit / ditambah / dihapus
+                  </span>
+                </div>
+
+                {/* List Fasilitas Kamar */}
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  {(!editingRoom.facilities || editingRoom.facilities.length === 0) ? (
+                    <div className="p-3 bg-[#FAF7F2] rounded-xl text-center text-xs text-[#8D6E63] border border-dashed border-[#D4BCA7]">
+                      Belum ada fasilitas di kamar ini. Silakan tambah di bawah.
+                    </div>
+                  ) : (
+                    editingRoom.facilities.map((fac, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 bg-[#FAF7F2] p-1.5 pl-2.5 rounded-xl border border-[#E8D8C8] hover:border-[#D4BCA7] transition-all"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <input
+                          type="text"
+                          value={fac}
+                          onChange={(e) => handleUpdateFacility(idx, e.target.value)}
+                          className="flex-1 bg-transparent text-xs font-semibold text-[#2D241E] focus:outline-none focus:bg-white focus:px-2 focus:py-1 focus:rounded-md transition-all"
+                          placeholder="Nama fasilitas..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFacility(idx)}
+                          className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg transition-colors cursor-pointer"
+                          title="Hapus fasilitas ini"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Input Tambah Fasilitas Baru */}
+                <div className="pt-2 border-t border-[#F5EDE4]">
+                  <Label className="text-[11px] font-bold text-[#6D4C41] block mb-1.5">
+                    + Tambah Fasilitas Baru:
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newFacilityInput}
+                      onChange={(e) => setNewFacilityInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          handleAddFacility(newFacilityInput)
+                        }
+                      }}
+                      placeholder="Ketik fasilitas baru (cth: Balkon Pribadi)..."
+                      className="h-9 text-xs bg-[#FAF7F2] border-[#D4BCA7] rounded-xl"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => handleAddFacility(newFacilityInput)}
+                      className="h-9 px-3 text-xs font-bold bg-[#5D4037] hover:bg-[#4E342E] text-white rounded-xl gap-1 shrink-0 cursor-pointer"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>Tambah</span>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Pilihan Cepat / Preset Fasilitas Umum */}
+                <div>
+                  <span className="text-[10px] font-bold text-[#8D6E63] uppercase tracking-wider block mb-1.5">
+                    Pilihan Cepat (Klik untuk menambah):
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {COMMON_FACILITIES.filter(
+                      (preset) => !editingRoom.facilities?.some((f) => f.toLowerCase() === preset.toLowerCase())
+                    ).map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => handleAddFacility(preset)}
+                        className="text-[11px] font-medium bg-[#FAF7F2] hover:bg-[#5D4037] text-[#5D4037] hover:text-white px-2.5 py-1 rounded-lg border border-[#D4BCA7] transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Plus className="h-3 w-3" />
+                        <span>{preset}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -430,7 +596,7 @@ export default function AdminKosFloorPlan({
               <div className="pt-2 flex gap-2">
                 <Button
                   type="submit"
-                  className="flex-1 h-11 rounded-xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs gap-1.5 shadow-md"
+                  className="flex-1 h-11 rounded-xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs gap-1.5 shadow-md cursor-pointer"
                 >
                   <Save className="h-4 w-4" />
                   <span>Simpan Perubahan</span>
@@ -439,7 +605,7 @@ export default function AdminKosFloorPlan({
                   type="button"
                   variant="outline"
                   onClick={() => setEditingRoom(null)}
-                  className="h-11 rounded-xl border-[#D4BCA7] text-xs font-bold"
+                  className="h-11 rounded-xl border-[#D4BCA7] text-xs font-bold cursor-pointer"
                 >
                   Batal
                 </Button>
