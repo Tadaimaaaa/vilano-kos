@@ -7,17 +7,22 @@ import { Button } from '@/components/ui/button'
 function parseTenantInfo(booking: any) {
   let name = booking.tenant?.full_name || ''
   let phone = booking.tenant?.phone || ''
+  let room = ''
 
   if (booking.notes) {
     const nameMatch = booking.notes.match(/Nama:\s*([^\n\r]+)/i)
     const phoneMatch = booking.notes.match(/(?:No\.\s*WhatsApp|WA|Telepon|HP):\s*([^\n\r]+)/i)
+    const roomMatch = booking.notes.match(/Kamar Terpilih:\s*([^\n\r]+)/i)
+
     if (nameMatch && nameMatch[1]) name = nameMatch[1].trim()
     if (phoneMatch && phoneMatch[1]) phone = phoneMatch[1].trim()
+    if (roomMatch && roomMatch[1]) room = roomMatch[1].trim()
   }
 
   return {
     name: name || 'Calon Penyewa',
     phone: phone || null,
+    room: room || null,
   }
 }
 
@@ -27,6 +32,7 @@ function parseCleanNotes(notes: string | null) {
     .replace(/\[CALON PENYEWA\]/gi, '')
     .replace(/Nama:\s*[^\n\r]+/gi, '')
     .replace(/(?:No\.\s*WhatsApp|WA|Telepon|HP):\s*[^\n\r]+/gi, '')
+    .replace(/Kamar Terpilih:\s*[^\n\r]+/gi, '')
     .replace(/Catatan:\s*/gi, '')
     .trim()
 }
@@ -129,6 +135,11 @@ export default async function DashboardBookingPage() {
                             <User className="h-3.5 w-3.5 text-[#5D4037]" />
                             <span>Penyewa: {tenant.name}</span>
                           </div>
+                          {tenant.room && (
+                            <span className="bg-[#5D4037] text-[#FAF7F2] px-2.5 py-0.5 rounded-lg font-bold text-[11px] shadow-xs">
+                              {tenant.room}
+                            </span>
+                          )}
                           {tenant.phone && (
                             <a
                               href={`https://wa.me/${cleanPhone}`}

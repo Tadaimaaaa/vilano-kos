@@ -9,10 +9,12 @@ import BookingForm from '@/components/property/BookingForm'
 
 interface BookingPageProps {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ kamar?: string }>
 }
 
-export default async function BookingPage({ params }: BookingPageProps) {
+export default async function BookingPage({ params, searchParams }: BookingPageProps) {
   const { id } = await params
+  const { kamar } = await searchParams
   const propertyData = await getPropertyById(id)
 
   if (!propertyData || !propertyData.property) {
@@ -64,6 +66,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
               pricePerMonth={property.price_per_month}
               availableUnits={property.available_units}
               ownerPhone={property.wa_number}
+              initialRoom={kamar || ''}
             />
           </div>
 

@@ -15,6 +15,7 @@ interface BookingFormProps {
   pricePerMonth: number
   availableUnits: number
   ownerPhone?: string | null
+  initialRoom?: string
 }
 
 const DURATIONS = [1, 3, 6, 12]
@@ -26,7 +27,9 @@ export default function BookingForm({
   pricePerMonth,
   availableUnits,
   ownerPhone,
+  initialRoom = '',
 }: BookingFormProps) {
+  const [roomNumber, setRoomNumber] = useState(initialRoom)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [startDate, setStartDate] = useState('')
@@ -39,7 +42,7 @@ export default function BookingForm({
 
   const totalPrice = pricePerMonth * duration
 
-  function buildWhatsAppUrl(clientName: string, clientPhone: string, date: string, dur: number, clientNotes: string) {
+  function buildWhatsAppUrl(clientName: string, clientPhone: string, date: string, dur: number, clientNotes: string, room: string) {
     const rawOwner = ownerPhone || '08127951435'
     const targetPhone = rawOwner.replace(/[^0-9]/g, '').replace(/^0/, '62')
 
@@ -49,16 +52,18 @@ export default function BookingForm({
       year: 'numeric',
     })
 
+    const roomText = room ? ` &bull; *${room} (Lantai 1)*` : ''
+
     const msg = [
       `Halo Pemilik Vilano, saya *${clientName.trim()}* (${clientPhone.trim()}) ingin mengajukan sewa / booking:`,
       ``,
-      `🏠 *Unit*: ${propertyName} (${propertyType === 'kos' ? 'Kos Putra' : 'Kontrakan'})`,
+      `🏠 *Unit*: ${propertyName} (${propertyType === 'kos' ? 'Kos Putra' : 'Kontrakan'})${roomText}`,
       `📅 *Rencana Masuk*: ${dateFormatted}`,
       `⏱️ *Durasi Sewa*: ${dur} Bulan`,
       `💰 *Total Estimasi*: ${formatPrice(pricePerMonth * dur)}`,
       clientNotes.trim() ? `📝 *Catatan*: ${clientNotes.trim()}` : null,
       ``,
-      `Mohon info ketersediaan unit dan petunjuk survey/pembayarannya. Terima kasih!`,
+      `Mohon konfirmasi ketersediaan unit dan petunjuk surveynya. Terima kasih!`,
     ]
       .filter((line) => line !== null)
       .join('\n')
@@ -84,7 +89,7 @@ export default function BookingForm({
     setLoading(true)
     setError('')
 
-    const waUrl = buildWhatsAppUrl(name, phone, startDate, duration, notes)
+    const waUrl = buildWhatsAppUrl(name, phone, startDate, duration, notes, roomNumber)
     setWhatsappUrl(waUrl)
 
     try {
@@ -93,6 +98,7 @@ export default function BookingForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           propertyId,
+          roomNumber,
           name: name.trim(),
           phone: phone.trim(),
           startDate,
@@ -110,11 +116,10 @@ export default function BookingForm({
     } finally {
       setLoading(false)
       setSuccess(true)
-      // Buka otomatis WhatsApp di tab baru jika browser mengizinkan
       try {
         window.open(waUrl, '_blank')
       } catch {
-        // Fallback jika popup terblokir
+        // Fallback
       }
     }
   }
@@ -157,6 +162,12 @@ export default function BookingForm({
 
         {/* Ringkasan Data */}
         <div className="bg-white p-3.5 rounded-2xl border border-[#E8D8C8] text-left text-xs space-y-1.5 text-[#6D4C41]">
+          {roomNumber && (
+            <div className="flex justify-between">
+              <span className="text-[#8D6E63]">Kamar Terpilih:</span>
+              <span className="font-bold text-emerald-800">{roomNumber} (Lantai 1)</span>
+            </div>
+          )}
           <div className="flex justify-between">
             <span className="text-[#8D6E63]">Penyewa:</span>
             <span className="font-bold text-[#2D241E]">{name}</span>
@@ -210,6 +221,45 @@ export default function BookingForm({
         <h3 className="text-sm font-extrabold text-[#2D241E]">Formulir Pengajuan Sewa</h3>
         <p className="text-[11px] text-[#8D6E63]">Isi data di bawah untuk booking langsung ke pemilik resmi.</p>
       </div>
+
+      {/* Pilihan / Badge Kamar (Khusus Kos) */}
+      {propertyType === 'kos' && (
+        roomNumber ? (
+          <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-300 flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
+              <span className="text-xs font-bold text-emerald-950">
+                Kamar Terpilih: <strong>{roomNumber}</strong> (Lantai 1)
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setRoomNumber('')}
+              className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 underline"
+            >
+              Ganti Kamar
+            </button>
+          </div>
+        ) : (
+          <div>
+            <Label className="text-xs font-bold text-[#4E342E] block mb-1">
+              Pilihan Nomor Kamar (Lantai 1)
+            </Label>
+            <select
+              className="w-full h-11 text-xs font-semibold rounded-xl bg-[#FAF7F2] border border-[#D4BCA7] px-3 text-[#2D241E] focus:outline-none"
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
+            >
+              <option value="">-- Bebas / Tentukan Saat Survey --</option>
+              {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={`Kamar ${i + 1 < 10 ? '0' : ''}${i + 1}`}>
+                  Kamar {i + 1 < 10 ? '0' : ''}{i + 1} (Lantai 1)
+                </option>
+              ))}
+            </select>
+          </div>
+        )
+      )}
 
       {/* 2-Col Grid for Name & Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

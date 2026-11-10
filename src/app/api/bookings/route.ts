@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { propertyId, name, phone, startDate, duration, notes, totalPrice } = body
+    const { propertyId, roomNumber, name, phone, startDate, duration, notes, totalPrice } = body
 
     if (!propertyId || !name || !phone || !startDate) {
       return NextResponse.json({ error: 'Mohon lengkapi nama, nomor WhatsApp, dan tanggal masuk' }, { status: 400 })
@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
       dbClient = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey) as any
     }
 
-    const formattedNotes = `[CALON PENYEWA]\nNama: ${name.trim()}\nNo. WhatsApp: ${phone.trim()}\n\n${notes ? `Catatan: ${notes.trim()}` : ''}`.trim()
+    const roomInfo = roomNumber ? `\nKamar Terpilih: ${roomNumber} (Lantai 1)` : ''
+    const formattedNotes = `[CALON PENYEWA]\nNama: ${name.trim()}\nNo. WhatsApp: ${phone.trim()}${roomInfo}\n\n${notes ? `Catatan: ${notes.trim()}` : ''}`.trim()
 
     // 3. Simpan permohonan booking ke database
     const bookingPayload: any = {

@@ -10,6 +10,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate, getWALink, getGenderTypeLabel } from '@/lib/utils'
+import { parseRoomsFromDescription, getCleanDescription } from '@/lib/rooms'
+import KosFloorPlan from '@/components/property/KosFloorPlan'
 
 interface PropertyDetailPageProps {
   params: Promise<{ id: string }>
@@ -31,6 +33,8 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
   const photos = property.photos || []
   const facilities = property.facilities || []
   const reviews = (property as any).reviews || []
+  const rooms = parseRoomsFromDescription(property.description)
+  const cleanDescription = getCleanDescription(property.description)
 
   const waMessage = `Halo, saya tertarik dengan ${property.name} di Vilano (Alamat: ${property.address}). Apakah masih tersedia unit untuk disewa?`
 
@@ -173,9 +177,19 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E8D8C8] shadow-soft">
               <h2 className="text-lg font-black text-[#2D241E] mb-3">Tentang Properti Ini</h2>
               <p className="text-sm text-[#4E342E] leading-relaxed whitespace-pre-line font-medium">
-                {property.description || 'Tidak ada deskripsi detail untuk properti ini.'}
+                {cleanDescription || 'Tidak ada deskripsi detail untuk properti ini.'}
               </p>
             </div>
+
+            {/* Denah & Tata Letak Kamar Lantai 1 (Khusus Kos) */}
+            {isKos && (
+              <KosFloorPlan
+                propertyId={property.id}
+                propertyName={property.name}
+                rooms={rooms}
+                ownerPhone={property.wa_number}
+              />
+            )}
 
             {/* Facilities */}
             <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E8D8C8] shadow-soft">
