@@ -367,12 +367,12 @@ export default function KosFloorPlan({
               {selectedRoom.status === 'available' ? (
                 <>
                   <Link
-                    href={`/properti/${propertyId}/booking?kamar=${encodeURIComponent(selectedRoom.number)}`}
+                    href={`/properti/${propertyId}?kamar=${encodeURIComponent(selectedRoom.number)}`}
                     className="flex-1"
                     onClick={() => setSelectedRoom(null)}
                   >
                     <Button className="w-full h-11 rounded-xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
-                      <span>Ajukan Booking {selectedRoom.number}</span>
+                      <span>Info Detail Kamar</span>
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -392,15 +392,27 @@ export default function KosFloorPlan({
                   <div className="text-center py-2 px-3 bg-slate-200/90 rounded-xl text-xs font-bold text-slate-700">
                     Kamar ini sedang terisi penghuni. Silakan pilih kamar berwarna hijau lainnya di denah.
                   </div>
-                  <a
-                    href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    <span>Tanya Pemilik Kapan Kosong via WA</span>
-                  </a>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Link
+                      href={`/properti/${propertyId}?kamar=${encodeURIComponent(selectedRoom.number)}`}
+                      className="flex-1"
+                      onClick={() => setSelectedRoom(null)}
+                    >
+                      <Button className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
+                        <span>Info Detail Kamar</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                    <a
+                      href={`https://wa.me/628127951435?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span>Tanya WA</span>
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
