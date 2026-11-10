@@ -58,18 +58,18 @@ export async function getProperties(filters?: PropertyFilters): Promise<Property
     }
 
     const { data, error } = await query
-    if (error || !data || data.length === 0) {
-      return filterMockProperties(filters)
+    if (error || !data) {
+      return []
     }
     return data as PropertyWithDetails[]
   } catch {
-    return filterMockProperties(filters)
+    return []
   }
 }
 
 export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
   if (!isSupabaseConfigured()) {
-    return MOCK_PROPERTIES.filter((p) => p.is_featured)
+    return []
   }
 
   try {
@@ -80,12 +80,12 @@ export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
       .eq('status', 'active')
       .eq('is_featured', true)
       .limit(6)
-    if (error || !data || data.length === 0) {
-      return MOCK_PROPERTIES.filter((p) => p.is_featured)
+    if (error || !data) {
+      return []
     }
     return data as PropertyWithDetails[]
   } catch {
-    return MOCK_PROPERTIES.filter((p) => p.is_featured)
+    return []
   }
 }
 

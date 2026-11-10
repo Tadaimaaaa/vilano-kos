@@ -30,7 +30,7 @@ export default function Footer() {
           {/* Lokasi Properti di Kota Solok */}
           <div className="md:col-span-4 space-y-3">
             <h4 className="text-xs font-black uppercase tracking-wider text-[#FAF7F2]">
-              Alamat Properti di Kota Solok
+              Alamat 
             </h4>
             <div className="space-y-3 text-xs">
               <div className="rounded-2xl bg-black/20 p-3.5 border border-[#3E2723]">

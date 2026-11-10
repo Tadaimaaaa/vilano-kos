@@ -31,19 +31,28 @@ CREATE TABLE profiles (
 
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql 
+SECURITY DEFINER 
+SET search_path = public, auth, extensions
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, full_name, phone, role)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'full_name', 'Admin Vilano'),
-    NEW.raw_user_meta_data->>'phone',
+    COALESCE(NEW.raw_user_meta_data->>'phone', ''),
     COALESCE((NEW.raw_user_meta_data->>'role')::public.user_role, 'admin'::public.user_role)
   )
-  ON CONFLICT (id) DO UPDATE SET role = EXCLUDED.role;
+  ON CONFLICT (id) DO UPDATE 
+  SET role = EXCLUDED.role;
+
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  -- Prevent aborting auth transaction if profile creation encounters any conflict
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+$$;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 

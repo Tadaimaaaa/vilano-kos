@@ -37,7 +37,14 @@ function AdminLoginForm() {
       })
 
       if (authError) {
-        setError('Email atau password salah. Silakan periksa kembali.')
+        const msg = authError.message.toLowerCase()
+        if (msg.includes('invalid') || msg.includes('credential')) {
+          setError('Email atau password salah. Pastikan email dan password diketik dengan benar.')
+        } else if (msg.includes('confirm')) {
+          setError('Email belum dikonfirmasi di Supabase.')
+        } else {
+          setError(`Gagal masuk: ${authError.message}`)
+        }
         setLoading(false)
         return
       }

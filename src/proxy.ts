@@ -36,22 +36,23 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Redirect unauthenticated users from protected routes
-  const protectedPaths = ['/dashboard', '/admin']
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  )
+  // Check protected paths: /dashboard or any /admin route EXCEPT /admin/login
+  const pathname = request.nextUrl.pathname
+  const isProtectedPath =
+    pathname.startsWith('/dashboard') ||
+    (pathname.startsWith('/admin') && pathname !== '/admin/login')
 
   if (isProtectedPath && !user) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/auth/login'
-    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    // For admin pages, redirect to dedicated admin login portal
+    redirectUrl.pathname = pathname.startsWith('/admin') ? '/admin/login' : '/auth/login'
+    redirectUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Redirect authenticated users away from auth pages
-  if (user && request.nextUrl.pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Redirect authenticated users away from login pages
+  if (user && (pathname === '/admin/login' || pathname.startsWith('/auth') || pathname === '/dashboard')) {
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return supabaseResponse
