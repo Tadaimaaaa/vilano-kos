@@ -150,10 +150,17 @@ export default function KosFloorPlan({
     const isSelected = selectedRoom?.id === room.id
 
     return (
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setSelectedRoom(room)}
-        className={`relative flex flex-col justify-between p-3.5 rounded-2xl transition-all text-left group ${extraClasses} ${
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setSelectedRoom(room)
+          }
+        }}
+        className={`relative flex flex-col justify-between p-3.5 rounded-2xl transition-all text-left group cursor-pointer select-none ${extraClasses} ${
           isSelected
             ? 'ring-3 ring-[#5D4037] ring-offset-2 scale-[1.02] shadow-lg'
             : 'hover:scale-[1.01] hover:shadow-md'
@@ -205,12 +212,12 @@ export default function KosFloorPlan({
           </span>
           <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform text-[#5D4037]" />
         </div>
-      </button>
+      </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-4xl p-6 md:p-8 border-2 border-[#D4BCA7] shadow-soft space-y-6">
+    <div className="bg-white rounded-4xl p-6 md:p-8 border-2 border-[#D4BCA7] shadow-soft space-y-6" suppressHydrationWarning>
       {/* Header Denah */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#F5EDE4]">
         <div>
