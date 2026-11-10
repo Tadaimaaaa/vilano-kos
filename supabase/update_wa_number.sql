@@ -7,3 +7,4 @@ SET wa_number = '081363327600';
 UPDATE profiles 
 SET phone = '081363327600' 
 WHERE role = 'admin';
+
