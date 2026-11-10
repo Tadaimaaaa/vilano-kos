@@ -151,3 +151,4 @@ export function getCleanDescription(desc: string | null | undefined): string {
   if (!desc) return ''
   return desc.replace(ROOMS_TAG_REGEX, '').trim()
 }
+

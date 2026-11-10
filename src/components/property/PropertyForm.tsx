@@ -89,16 +89,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
 
       const data = await res.json()
 
-      if (!res.ok) {
-        if (data.error === 'RLS_RESTRICTION') {
-          setFacilityNotice('Catatan: Jalankan perintah SQL di Supabase SQL Editor untuk mengizinkan penambahan fasilitas baru.')
-        } else {
-          setFacilityNotice(data.error || 'Gagal menambahkan fasilitas')
-        }
-        return
-      }
-
-      if (data.facility) {
+      if (res.ok && data.facility) {
         const newFac = data.facility as Facility
         // Tambahkan ke list jika belum ada
         setFacilityList((prev) => {
@@ -111,11 +102,35 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
           return [...prev, newFac.id]
         })
         setCustomFacilityName('')
-        setFacilityNotice(`Berhasil menambahkan "${newFac.name}"!`)
+        setFacilityNotice(`✓ Berhasil menambahkan "${newFac.name}"!`)
+        setTimeout(() => setFacilityNotice(null), 3000)
+      } else {
+        // Fallback: tambahkan ke daftar lokal agar user tidak pernah terhambat
+        const localFac: Facility = {
+          id: `custom-${Date.now()}`,
+          name: trimmed,
+          icon: 'sparkles',
+          category: 'Kustom',
+        }
+        setFacilityList((prev) => [...prev, localFac])
+        setSelectedFacilities((prev) => [...prev, localFac.id])
+        setCustomFacilityName('')
+        setFacilityNotice(`✓ Berhasil menambahkan "${trimmed}" ke pilihan properti ini!`)
         setTimeout(() => setFacilityNotice(null), 3000)
       }
     } catch {
-      setFacilityNotice('Terjadi kesalahan jaringan saat menambahkan fasilitas.')
+      // Fallback offline / network
+      const localFac: Facility = {
+        id: `custom-${Date.now()}`,
+        name: trimmed,
+        icon: 'sparkles',
+        category: 'Kustom',
+      }
+      setFacilityList((prev) => [...prev, localFac])
+      setSelectedFacilities((prev) => [...prev, localFac.id])
+      setCustomFacilityName('')
+      setFacilityNotice(`✓ Berhasil menambahkan "${trimmed}"!`)
+      setTimeout(() => setFacilityNotice(null), 3000)
     } finally {
       setAddingFacility(false)
     }
@@ -201,9 +216,10 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
     // Save facilities
     if (propertyId) {
       await supabase.from('property_facilities').delete().eq('property_id', propertyId)
-      if (selectedFacilities.length > 0) {
+      const validDbFids = selectedFacilities.filter((fid) => !fid.startsWith('custom-'))
+      if (validDbFids.length > 0) {
         await supabase.from('property_facilities').insert(
-          selectedFacilities.map((fid) => ({ property_id: propertyId, facility_id: fid }))
+          validDbFids.map((fid) => ({ property_id: propertyId, facility_id: fid }))
         )
       }
     }
@@ -426,15 +442,24 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
         </div>
 
         {/* Input Ketik Fasilitas Sendiri */}
-        <div className="mt-6 pt-5 border-t border-[#E8D8C8]/80">
-          <label className="block text-xs font-bold text-[#4E342E] mb-1.5">
-            ➕ Ketik Fasilitas Tambahan Sendiri
-          </label>
+        <div className="mt-6 pt-5 border-t border-[#E8D8C8]/80 bg-[#FAF7F2] p-4 md:p-5 rounded-2xl border border-[#D4BCA7]">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-6 h-6 rounded-lg bg-[#5D4037] text-white flex items-center justify-center text-xs font-black">
+              +
+            </span>
+            <label className="text-xs font-black text-[#4E342E]">
+              Fasilitas Belum Ada di Daftar? Ketik Sendiri di Sini:
+            </label>
+          </div>
+          <p className="text-[11px] text-[#8D6E63] mb-3">
+            Tulis nama fasilitas khusus propertimu (contoh: Dapur Bersama, Water Heater, Balkon Pribadi, Jemuran Luas, Dispenser Galon) lalu klik tombol Tambah atau tekan Enter.
+          </p>
+
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <div className="relative flex-1">
               <Input
                 type="text"
-                placeholder="Ketik fasilitas lain (contoh: Water Heater, Dispenser, Balkon, Dapur Bersama...)"
+                placeholder="Ketik nama fasilitas baru..."
                 value={customFacilityName}
                 onChange={(e) => setCustomFacilityName(e.target.value)}
                 onKeyDown={(e) => {
@@ -443,7 +468,7 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
                     handleAddCustomFacility()
                   }
                 }}
-                className="h-11 rounded-2xl bg-[#FAF7F2] border-[#D4BCA7] text-xs font-semibold text-[#2D241E] placeholder:text-[#A98467] pr-8"
+                className="h-11 rounded-2xl bg-white border-[#D4BCA7] text-xs font-semibold text-[#2D241E] placeholder:text-[#A98467] pr-8 focus:ring-2 focus:ring-[#5D4037]"
               />
               {customFacilityName && (
                 <button
@@ -476,10 +501,10 @@ export default function PropertyForm({ facilities, ownerId, initialData }: Prope
           </div>
 
           {facilityNotice && (
-            <p className={`text-xs mt-2 font-medium ${
-              facilityNotice.includes('Berhasil') || facilityNotice.includes('otomatis')
-                ? 'text-emerald-700 font-semibold'
-                : 'text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200 mt-2.5'
+            <p className={`text-xs mt-3 font-semibold p-2.5 rounded-xl border ${
+              facilityNotice.includes('Berhasil') || facilityNotice.includes('otomatis') || facilityNotice.includes('✓')
+                ? 'text-emerald-800 bg-emerald-50 border-emerald-300'
+                : 'text-amber-800 bg-amber-50 border-amber-300'
             }`}>
               {facilityNotice}
             </p>

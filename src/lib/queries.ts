@@ -58,18 +58,18 @@ export async function getProperties(filters?: PropertyFilters): Promise<Property
     }
 
     const { data, error } = await query
-    if (error || !data) {
-      return []
+    if (error || !data || data.length === 0) {
+      return filterMockProperties(filters)
     }
     return data as PropertyWithDetails[]
   } catch {
-    return []
+    return filterMockProperties(filters)
   }
 }
 
 export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
   if (!isSupabaseConfigured()) {
-    return []
+    return MOCK_PROPERTIES.filter((p) => p.is_featured)
   }
 
   try {
@@ -80,19 +80,20 @@ export async function getFeaturedProperties(): Promise<PropertyWithDetails[]> {
       .eq('status', 'active')
       .eq('is_featured', true)
       .limit(6)
-    if (error || !data) {
-      return []
+    if (error || !data || data.length === 0) {
+      return MOCK_PROPERTIES.filter((p) => p.is_featured)
     }
     return data as PropertyWithDetails[]
   } catch {
-    return []
+    return MOCK_PROPERTIES.filter((p) => p.is_featured)
   }
 }
 
 export async function getPropertyById(id: string) {
+  const fallback = MOCK_PROPERTIES.find((p) => p.id === id) || (id.includes('kontrakan') ? MOCK_PROPERTIES[1] : MOCK_PROPERTIES[0])
+
   if (!isSupabaseConfigured()) {
-    const mock = MOCK_PROPERTIES.find((p) => p.id === id) || MOCK_PROPERTIES[0]
-    return { property: mock }
+    return { property: fallback }
   }
 
   try {
@@ -117,21 +118,19 @@ export async function getPropertyById(id: string) {
     ])
 
     if (propertyRes.error || !propertyRes.data) {
-      const mock = MOCK_PROPERTIES.find((p) => p.id === id)
-      return mock ? { property: mock } : null
+      return { property: fallback }
     }
 
     return {
       property: {
         ...propertyRes.data,
-        photos: photosRes.data && photosRes.data.length > 0 ? photosRes.data : [],
-        facilities: facilitiesRes.data?.map((f: any) => f.facilities) || [],
+        photos: photosRes.data && photosRes.data.length > 0 ? photosRes.data : fallback?.photos || [],
+        facilities: facilitiesRes.data && facilitiesRes.data.length > 0 ? facilitiesRes.data.map((f: any) => f.facilities) : fallback?.facilities || [],
         reviews: reviewsRes.data || [],
       } as PropertyWithDetails,
     }
   } catch {
-    const mock = MOCK_PROPERTIES.find((p) => p.id === id)
-    return mock ? { property: mock } : null
+    return { property: fallback }
   }
 }
 

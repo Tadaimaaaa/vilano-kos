@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { Building2 } from 'lucide-react'
 import PropertyCard from '@/components/property/PropertyCard'
+import KosFloorPlan from '@/components/property/KosFloorPlan'
 import { getProperties } from '@/lib/queries'
 import { PropertyFilters as Filters } from '@/types'
 
@@ -75,6 +76,15 @@ export default async function KosPage({ searchParams }: KosPageProps) {
         <div className="absolute right-6 -bottom-6 text-9xl opacity-15 select-none hidden md:block">
           🏢
         </div>
+      </div>
+
+      {/* Denah Interaktif Lantai 1 Kos */}
+      <div className="mb-12">
+        <KosFloorPlan
+          propertyId="kos-vilano-pandan"
+          propertyName="Vilano Kos Putra Pandan"
+          ownerPhone="08127951435"
+        />
       </div>
 
       {/* Results */}
