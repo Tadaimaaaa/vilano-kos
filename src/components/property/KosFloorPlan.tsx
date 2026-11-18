@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import {
   Bed, Wind, Bath, CheckCircle2, XCircle, ArrowRight, X,
@@ -28,6 +29,23 @@ export default function KosFloorPlan({
   const [rooms, setRooms] = useState<KosRoom[]>(initialRooms)
   const [selectedRoom, setSelectedRoom] = useState<KosRoom | null>(null)
   const [activePhotoIndex, setActivePhotoIndex] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Kunci scroll body saat modal terbuka agar posisi tetap di tengah layar
+  useEffect(() => {
+    if (selectedRoom) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [selectedRoom])
 
   const waTarget = (ownerPhone || '081363327600').replace(/[^0-9]/g, '').replace(/^0/, '62') || '6281363327600'
 
@@ -358,21 +376,20 @@ export default function KosFloorPlan({
         </div>
       </div>
 
-      {/* POP-UP MODAL INFO KAMAR (DIALOG OVERLAY) */}
-      {selectedRoom && (
+      {/* POP-UP MODAL INFO KAMAR (DIALOG OVERLAY DENGAN PORTAL KE BODY AGAR PERSIS DI TENGAH LAYAR) */}
+      {mounted && selectedRoom && createPortal(
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-200"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setSelectedRoom(null)
-          }}
+          className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-150"
+          onClick={() => setSelectedRoom(null)}
         >
           <div
-            className="bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col relative animate-in zoom-in-95 duration-200 overflow-hidden"
+            className="relative w-full max-w-lg bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-150"
             role="dialog"
             aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Header Pop Up (Pinned at top, never cut off!) */}
-            <div className="p-4 sm:p-5 pb-3 border-b border-[#E8D8C8] bg-[#FAF7F2] relative z-10 shrink-0 pr-12">
+            <div className="p-4 sm:p-5 pb-3 border-b border-[#E8D8C8] bg-[#FAF7F2] shrink-0 relative pr-12">
               {/* Tombol Tutup Silang (X) */}
               <button
                 type="button"
@@ -412,7 +429,7 @@ export default function KosFloorPlan({
             </div>
 
             {/* Scrollable Body (Photo, Facilities, Notes, Price) */}
-            <div className="p-4 sm:p-5 overflow-y-auto space-y-3 flex-1 overscroll-contain">
+            <div className="p-4 sm:p-5 overflow-y-auto min-h-0 flex-1 space-y-3.5 overscroll-contain">
               {/* Galeri Foto Kamar Asli (Bisa Banyak Foto dengan Slider & Thumbnail) */}
               {(() => {
                 const roomPhotos = selectedRoom.photos && selectedRoom.photos.length > 0
@@ -425,7 +442,7 @@ export default function KosFloorPlan({
 
                 return (
                   <div className="space-y-2">
-                    <div className="relative w-full aspect-video max-h-60 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm group bg-[#E8D8C8]/40">
+                    <div className="relative w-full aspect-video max-h-48 sm:max-h-52 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm group bg-[#E8D8C8]/40">
                       <img
                         src={roomPhotos[safeIndex]}
                         alt={`${selectedRoom.number} - Foto ${safeIndex + 1}`}
@@ -549,7 +566,7 @@ export default function KosFloorPlan({
                     className="flex-1"
                     onClick={() => setSelectedRoom(null)}
                   >
-                    <Button className="w-full h-11 rounded-xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
+                    <Button className="w-full h-11 rounded-xl font-bold text-xs md:text-sm bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md cursor-pointer">
                       <span>Info Detail Kamar</span>
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -559,7 +576,7 @@ export default function KosFloorPlan({
                     href={`https://wa.me/${waTarget}?text=${encodeURIComponent(`Halo Pemilik Vilano, saya tertarik tanya ketersediaan dan survey ${selectedRoom.number} (${selectedRoom.type}) di Kos Pandan Kota Solok.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
+                    className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0 cursor-pointer"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span>Tanya WA</span>
@@ -576,7 +593,7 @@ export default function KosFloorPlan({
                       className="flex-1"
                       onClick={() => setSelectedRoom(null)}
                     >
-                      <Button className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md">
+                      <Button className="w-full h-11 rounded-xl font-bold text-xs bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] gap-2 shadow-md cursor-pointer">
                         <span>Info Detail Kamar</span>
                         <ArrowRight className="h-4 w-4" />
                       </Button>
@@ -585,7 +602,7 @@ export default function KosFloorPlan({
                       href={`https://wa.me/${waTarget}?text=${encodeURIComponent(`Halo Pemilik Vilano, saya ingin tanya perkiraan tanggal kosong untuk ${selectedRoom.number} di Kos Pandan Kota Solok.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0"
+                      className="h-11 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2 shadow-md shrink-0 cursor-pointer"
                     >
                       <MessageCircle className="h-4 w-4" />
                       <span>Tanya WA</span>
@@ -595,7 +612,8 @@ export default function KosFloorPlan({
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

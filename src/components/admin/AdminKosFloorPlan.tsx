@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import {
   CheckCircle2, XCircle, Footprints, Utensils, DoorOpen,
   Sparkles, Save, Edit3, X, Check, RefreshCw, Plus, Trash2,
@@ -33,6 +34,23 @@ export default function AdminKosFloorPlan({
   const [newFacilityInput, setNewFacilityInput] = useState('')
   const [uploadingRoomPhoto, setUploadingRoomPhoto] = useState(false)
   const [photoUrlInput, setPhotoUrlInput] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Kunci scroll saat edit modal terbuka
+  useEffect(() => {
+    if (editingRoom) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [editingRoom])
 
   // Handle upload multiple foto kamar (Supabase Storage dengan fallback Base64)
   async function handleRoomPhotosUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -648,14 +666,17 @@ export default function AdminKosFloorPlan({
     </div>
 
       {/* MODAL EDIT DETAIL KAMAR (JIKA INGIN UBAH TARIF / FASILITAS / TIPE) */}
-      {editingRoom && (
+      {mounted && editingRoom && createPortal(
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-150"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditingRoom(null)
-          }}
+          className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-150"
+          onClick={() => setEditingRoom(null)}
         >
-          <div className="bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col relative animate-in zoom-in-95 duration-150 overflow-hidden">
+          <div
+            className="bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative animate-in zoom-in-95 duration-150 overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header Pinned */}
             <div className="p-5 pb-3 border-b border-[#E8D8C8] bg-[#FAF7F2] relative z-10 shrink-0 pr-12">
               <button
@@ -674,8 +695,8 @@ export default function AdminKosFloorPlan({
               </p>
             </div>
 
-            <form onSubmit={handleSaveEdit} className="flex flex-col flex-1 overflow-hidden">
-              <div className="p-5 overflow-y-auto space-y-4 flex-1 overscroll-contain">
+            <form onSubmit={handleSaveEdit} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+              <div className="p-5 overflow-y-auto min-h-0 space-y-4 flex-1 overscroll-contain">
                 <div>
                   <Label className="text-xs font-bold text-[#4E342E]">Status Kamar</Label>
                   <div className="grid grid-cols-2 gap-2 mt-1">
@@ -962,7 +983,8 @@ export default function AdminKosFloorPlan({
             </div>
           </form>
         </div>
-      </div>
+      </div>,
+      document.body
     )}
     </div>
   )
