@@ -84,7 +84,7 @@ export default async function HomePage() {
           propertyId="kos-vilano-pandan"
           propertyName="Vilano Kos Putra Pandan"
           rooms={rooms}
-          ownerPhone="081363327600"
+          ownerPhone="08127951435"
         />
       </section>
 

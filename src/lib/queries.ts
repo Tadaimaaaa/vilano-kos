@@ -99,31 +99,47 @@ export async function getPropertyById(id: string) {
   try {
     const supabase = await createClient()
 
-    const [propertyRes, photosRes, facilitiesRes, reviewsRes] = await Promise.all([
-      supabase.from('properties_with_details').select('*').eq('id', id).single(),
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    let query = supabase.from('properties_with_details').select('*')
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else if (id.includes('kontrakan')) {
+      query = query.eq('type', 'kontrakan')
+    } else {
+      query = query.eq('type', 'kos')
+    }
+
+    const { data: propData, error: propertyError } = await query
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+
+    if (propertyError || !propData) {
+      return { property: fallback }
+    }
+
+    const actualId = propData.id
+
+    const [photosRes, facilitiesRes, reviewsRes] = await Promise.all([
       supabase
         .from('property_photos')
         .select('*')
-        .eq('property_id', id)
+        .eq('property_id', actualId)
         .order('order'),
       supabase
         .from('property_facilities')
         .select('facilities(*)')
-        .eq('property_id', id),
+        .eq('property_id', actualId),
       supabase
         .from('reviews')
         .select('*, reviewer:profiles(full_name, avatar_url)')
-        .eq('property_id', id)
+        .eq('property_id', actualId)
         .order('created_at', { ascending: false }),
     ])
 
-    if (propertyRes.error || !propertyRes.data) {
-      return { property: fallback }
-    }
-
     return {
       property: {
-        ...propertyRes.data,
+        ...propData,
         photos: photosRes.data && photosRes.data.length > 0 ? photosRes.data : fallback?.photos || [],
         facilities: facilitiesRes.data && facilitiesRes.data.length > 0 ? facilitiesRes.data.map((f: any) => f.facilities) : fallback?.facilities || [],
         reviews: reviewsRes.data || [],
