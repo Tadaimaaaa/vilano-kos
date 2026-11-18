@@ -361,29 +361,29 @@ export default function KosFloorPlan({
       {/* POP-UP MODAL INFO KAMAR (DIALOG OVERLAY) */}
       {selectedRoom && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/65 backdrop-blur-sm p-3 sm:p-4 flex min-h-screen items-center justify-center animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-200"
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedRoom(null)
           }}
         >
           <div
-            className="bg-[#FAF7F2] rounded-3xl p-5 md:p-6 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative animate-in zoom-in-95 duration-200 my-auto max-h-[92vh] overflow-y-auto"
+            className="bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col relative animate-in zoom-in-95 duration-200 overflow-hidden"
             role="dialog"
             aria-modal="true"
           >
-            {/* Tombol Tutup Silang (X) */}
-            <button
-              type="button"
-              onClick={() => setSelectedRoom(null)}
-              className="absolute top-4 right-4 text-[#8D6E63] hover:text-[#2D241E] bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs hover:bg-[#F5EDE4] transition-all cursor-pointer"
-              aria-label="Tutup"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            {/* Header Pop Up (Pinned at top, never cut off!) */}
+            <div className="p-4 sm:p-5 pb-3 border-b border-[#E8D8C8] bg-[#FAF7F2] relative z-10 shrink-0 pr-12">
+              {/* Tombol Tutup Silang (X) */}
+              <button
+                type="button"
+                onClick={() => setSelectedRoom(null)}
+                className="absolute top-4 right-4 text-[#8D6E63] hover:text-[#2D241E] bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs hover:bg-[#F5EDE4] transition-all cursor-pointer"
+                aria-label="Tutup"
+              >
+                <X className="h-4 w-4" />
+              </button>
 
-            {/* Header Pop Up */}
-            <div className="space-y-2 pb-3 border-b border-[#E8D8C8] pr-8">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="text-xs font-black uppercase tracking-wider text-[#FAF7F2] bg-[#5D4037] px-3 py-1 rounded-full border border-[#3E2723]">
                   {selectedRoom.number} &bull; Lantai 1
                 </span>
@@ -404,143 +404,146 @@ export default function KosFloorPlan({
                   {selectedRoom.number} &mdash; {selectedRoom.type}
                 </h3>
                 {selectedRoom.notes && (
-                  <p className="text-xs text-[#6D4C41] mt-1 font-medium bg-white/80 p-2 rounded-xl border border-[#D4BCA7]">
+                  <p className="text-xs text-[#6D4C41] mt-1.5 font-medium bg-white/80 p-2 rounded-xl border border-[#D4BCA7]">
                     📍 <span className="font-semibold">{selectedRoom.notes}</span>
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Galeri Foto Kamar Asli (Bisa Banyak Foto dengan Slider & Thumbnail) */}
-            {(() => {
-              const roomPhotos = selectedRoom.photos && selectedRoom.photos.length > 0
-                ? selectedRoom.photos
-                : (selectedRoom.photoUrl ? [selectedRoom.photoUrl] : [])
+            {/* Scrollable Body (Photo, Facilities, Notes, Price) */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-3 flex-1 overscroll-contain">
+              {/* Galeri Foto Kamar Asli (Bisa Banyak Foto dengan Slider & Thumbnail) */}
+              {(() => {
+                const roomPhotos = selectedRoom.photos && selectedRoom.photos.length > 0
+                  ? selectedRoom.photos
+                  : (selectedRoom.photoUrl ? [selectedRoom.photoUrl] : [])
 
-              if (roomPhotos.length === 0) return null
+                if (roomPhotos.length === 0) return null
 
-              const safeIndex = activePhotoIndex < roomPhotos.length ? activePhotoIndex : 0
+                const safeIndex = activePhotoIndex < roomPhotos.length ? activePhotoIndex : 0
 
-              return (
-                <div className="my-3 space-y-2">
-                  <div className="relative w-full aspect-video max-h-60 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm group bg-[#E8D8C8]/40">
-                    <img
-                      src={roomPhotos[safeIndex]}
-                      alt={`${selectedRoom.number} - Foto ${safeIndex + 1}`}
-                      className="w-full h-full object-cover transition-all duration-300"
-                    />
+                return (
+                  <div className="space-y-2">
+                    <div className="relative w-full aspect-video max-h-60 rounded-2xl overflow-hidden border-2 border-[#D4BCA7] shadow-sm group bg-[#E8D8C8]/40">
+                      <img
+                        src={roomPhotos[safeIndex]}
+                        alt={`${selectedRoom.number} - Foto ${safeIndex + 1}`}
+                        className="w-full h-full object-cover transition-all duration-300"
+                      />
 
-                    {/* Badge Counter */}
-                    <div className="absolute top-2.5 left-2.5 bg-[#3E2723]/80 backdrop-blur-md text-[#FAF7F2] text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
-                      <Camera className="h-3 w-3" />
-                      <span>
-                        {roomPhotos.length > 1
-                          ? `Foto ${safeIndex + 1} dari ${roomPhotos.length}`
-                          : 'Foto Asli Kamar'}
-                      </span>
+                      {/* Badge Counter */}
+                      <div className="absolute top-2.5 left-2.5 bg-[#3E2723]/80 backdrop-blur-md text-[#FAF7F2] text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
+                        <Camera className="h-3 w-3" />
+                        <span>
+                          {roomPhotos.length > 1
+                            ? `Foto ${safeIndex + 1} dari ${roomPhotos.length}`
+                            : 'Foto Asli Kamar'}
+                        </span>
+                      </div>
+
+                      {/* Navigasi Panah Kiri/Kanan jika foto > 1 */}
+                      {roomPhotos.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : roomPhotos.length - 1))
+                            }}
+                            className="absolute left-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
+                            aria-label="Foto sebelumnya"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActivePhotoIndex((prev) => (prev < roomPhotos.length - 1 ? prev + 1 : 0))
+                            }}
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
+                            aria-label="Foto berikutnya"
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
 
-                    {/* Navigasi Panah Kiri/Kanan jika foto > 1 */}
+                    {/* Thumbnail Row jika foto > 1 */}
                     {roomPhotos.length > 1 && (
-                      <>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : roomPhotos.length - 1))
-                          }}
-                          className="absolute left-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
-                          aria-label="Foto sebelumnya"
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setActivePhotoIndex((prev) => (prev < roomPhotos.length - 1 ? prev + 1 : 0))
-                          }}
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/85 text-white p-1.5 rounded-full transition-all cursor-pointer shadow-md"
-                          aria-label="Foto berikutnya"
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </button>
-                      </>
+                      <div className="flex items-center gap-2 overflow-x-auto pb-1 px-0.5">
+                        {roomPhotos.map((url, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setActivePhotoIndex(idx)}
+                            className={`relative w-14 h-10 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer shadow-2xs ${
+                              safeIndex === idx
+                                ? 'border-[#5D4037] ring-2 ring-[#5D4037]/40 scale-105'
+                                : 'border-[#D4BCA7] opacity-60 hover:opacity-100'
+                            }`}
+                          >
+                            <img src={url} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
+                )
+              })()}
 
-                  {/* Thumbnail Row jika foto > 1 */}
-                  {roomPhotos.length > 1 && (
-                    <div className="flex items-center gap-2 overflow-x-auto pb-1 px-0.5">
-                      {roomPhotos.map((url, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => setActivePhotoIndex(idx)}
-                          className={`relative w-14 h-10 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer shadow-2xs ${
-                            safeIndex === idx
-                              ? 'border-[#5D4037] ring-2 ring-[#5D4037]/40 scale-105'
-                              : 'border-[#D4BCA7] opacity-60 hover:opacity-100'
-                          }`}
-                        >
-                          <img src={url} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )
-            })()}
-
-            {/* Spesifikasi & Fasilitas Kamar */}
-            <div className="py-3 space-y-3">
-              <div>
-                <span className="text-[11px] font-black text-[#4E342E] uppercase tracking-wider block mb-1.5">
-                  Fasilitas Dalam Kamar:
-                </span>
-                <div className="grid grid-cols-2 gap-1.5">
-                  {selectedRoom.facilities.map((fac, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-1.5 text-xs font-semibold bg-white text-[#4E342E] px-2.5 py-1.5 rounded-xl border border-[#D4BCA7] shadow-2xs"
-                    >
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                      <span className="truncate">{fac}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Fasilitas Bersama */}
-              <div className="bg-[#F5EDE4] p-2.5 rounded-xl border border-[#D4BCA7] text-[11px] text-[#5D4037]">
-                <span className="font-bold">Fasilitas Bersama di Lantai 1: </span>
-                <span className="text-[#6D4C41]">
-                  Dapur Bersama, tangga lantai 2, koridor sirkulasi udara sejuk, parkir motor, air PDAM.
-                </span>
-              </div>
-
-              {/* Tarif Sewa Bulanan */}
-              <div className="bg-white p-3.5 rounded-2xl border border-[#D4BCA7] flex items-center justify-between shadow-2xs">
+              {/* Spesifikasi & Fasilitas Kamar */}
+              <div className="space-y-3">
                 <div>
-                  <span className="text-[10px] font-bold text-[#8D6E63] block uppercase tracking-wider">Tarif Sewa Kamar:</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xl md:text-2xl font-black text-[#5D4037]">
-                      {formatPrice(selectedRoom.price)}
-                    </span>
-                    <span className="text-xs text-[#8D6E63] font-semibold">/ bulan</span>
+                  <span className="text-[11px] font-black text-[#4E342E] uppercase tracking-wider block mb-1.5">
+                    Fasilitas Dalam Kamar:
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {selectedRoom.facilities.map((fac, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-1.5 text-xs font-semibold bg-white text-[#4E342E] px-2.5 py-1.5 rounded-xl border border-[#D4BCA7] shadow-2xs"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                        <span className="truncate">{fac}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-[#A98467] font-semibold block">Tanpa Biaya Calo</span>
-                  <span className="text-xs font-bold text-emerald-700">Langsung Pemilik</span>
+
+                {/* Fasilitas Bersama */}
+                <div className="bg-[#F5EDE4] p-2.5 rounded-xl border border-[#D4BCA7] text-[11px] text-[#5D4037]">
+                  <span className="font-bold">Fasilitas Bersama di Lantai 1: </span>
+                  <span className="text-[#6D4C41]">
+                    Dapur Bersama, tangga lantai 2, koridor sirkulasi udara sejuk, parkir motor, air PDAM.
+                  </span>
+                </div>
+
+                {/* Tarif Sewa Bulanan */}
+                <div className="bg-white p-3.5 rounded-2xl border border-[#D4BCA7] flex items-center justify-between shadow-2xs">
+                  <div>
+                    <span className="text-[10px] font-bold text-[#8D6E63] block uppercase tracking-wider">Tarif Sewa Kamar:</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl md:text-2xl font-black text-[#5D4037]">
+                        {formatPrice(selectedRoom.price)}
+                      </span>
+                      <span className="text-xs text-[#8D6E63] font-semibold">/ bulan</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-[#A98467] font-semibold block">Tanpa Biaya Calo</span>
+                    <span className="text-xs font-bold text-emerald-700">Langsung Pemilik</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="pt-1 flex flex-col sm:flex-row gap-2">
+            {/* Footer Action Buttons (Pinned at bottom, always visible!) */}
+            <div className="p-4 sm:p-5 pt-3 border-t border-[#E8D8C8] bg-[#FAF7F2] shrink-0">
               {selectedRoom.status === 'available' ? (
-                <>
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Link
                     href={`/properti/${propertyId}?kamar=${encodeURIComponent(selectedRoom.number)}`}
                     className="flex-1"
@@ -561,7 +564,7 @@ export default function KosFloorPlan({
                     <MessageCircle className="h-4 w-4" />
                     <span>Tanya WA</span>
                   </a>
-                </>
+                </div>
               ) : (
                 <div className="w-full space-y-2">
                   <div className="text-center py-2 px-3 bg-slate-200/90 rounded-xl text-xs font-bold text-slate-700">

@@ -650,31 +650,35 @@ export default function AdminKosFloorPlan({
       {/* MODAL EDIT DETAIL KAMAR (JIKA INGIN UBAH TARIF / FASILITAS / TIPE) */}
       {editingRoom && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm p-4 flex min-h-screen items-center justify-center animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-150"
           onClick={(e) => {
             if (e.target === e.currentTarget) setEditingRoom(null)
           }}
         >
-          <div className="bg-[#FAF7F2] rounded-3xl p-6 md:p-7 border-2 border-[#5D4037] shadow-2xl w-full max-w-lg relative my-auto max-h-[92vh] overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => setEditingRoom(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs cursor-pointer"
-            >
-              <X className="h-4 w-4" />
-            </button>
+          <div className="bg-[#FAF7F2] rounded-3xl border-2 border-[#5D4037] shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col relative animate-in zoom-in-95 duration-150 overflow-hidden">
+            {/* Header Pinned */}
+            <div className="p-5 pb-3 border-b border-[#E8D8C8] bg-[#FAF7F2] relative z-10 shrink-0 pr-12">
+              <button
+                type="button"
+                onClick={() => setEditingRoom(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-white p-2 rounded-full border border-[#D4BCA7] shadow-xs cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
 
-            <h3 className="text-xl font-black text-[#2D241E] mb-1">
-              Edit {editingRoom.number}
-            </h3>
-            <p className="text-xs text-[#8D6E63] mb-4">
-              Ubah status ketersediaan, daftar fasilitas kamar, tipe kamar, atau tarif sewa bulanan.
-            </p>
+              <h3 className="text-xl font-black text-[#2D241E]">
+                Edit {editingRoom.number}
+              </h3>
+              <p className="text-xs text-[#8D6E63] mt-0.5">
+                Ubah status ketersediaan, daftar fasilitas kamar, tipe kamar, atau tarif sewa bulanan.
+              </p>
+            </div>
 
-            <form onSubmit={handleSaveEdit} className="space-y-4">
-              <div>
-                <Label className="text-xs font-bold text-[#4E342E]">Status Kamar</Label>
-                <div className="grid grid-cols-2 gap-2 mt-1">
+            <form onSubmit={handleSaveEdit} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-5 overflow-y-auto space-y-4 flex-1 overscroll-contain">
+                <div>
+                  <Label className="text-xs font-bold text-[#4E342E]">Status Kamar</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-1">
                   <button
                     type="button"
                     onClick={() => setEditingRoom({ ...editingRoom, status: 'available' })}
@@ -936,28 +940,30 @@ export default function AdminKosFloorPlan({
                   placeholder="Sisi depan dekat pintu masuk"
                 />
               </div>
+            </div>
 
-              <div className="pt-2 flex gap-2">
-                <Button
-                  type="submit"
-                  className="flex-1 h-11 rounded-xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs gap-1.5 shadow-md cursor-pointer"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>Simpan Perubahan</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditingRoom(null)}
-                  className="h-11 rounded-xl border-[#D4BCA7] text-xs font-bold cursor-pointer"
-                >
-                  Batal
-                </Button>
-              </div>
-            </form>
-          </div>
+            {/* Footer Buttons Pinned */}
+            <div className="p-4 sm:p-5 pt-3 border-t border-[#E8D8C8] bg-[#FAF7F2] shrink-0 flex gap-2">
+              <Button
+                type="submit"
+                className="flex-1 h-11 rounded-xl bg-[#5D4037] hover:bg-[#4E342E] text-[#FAF7F2] font-bold text-xs gap-1.5 shadow-md cursor-pointer"
+              >
+                <Save className="h-4 w-4" />
+                <span>Simpan Perubahan</span>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingRoom(null)}
+                className="h-11 rounded-xl border-[#D4BCA7] text-xs font-bold cursor-pointer"
+              >
+                Batal
+              </Button>
+            </div>
+          </form>
         </div>
-      )}
+      </div>
+    )}
     </div>
   )
 }

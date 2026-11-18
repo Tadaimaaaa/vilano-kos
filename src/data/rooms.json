@@ -6,7 +6,7 @@
     "floor": 1,
     "type": "Kamar AC & KM Dalam",
     "price": 950000,
-    "status": "available",
+    "status": "occupied",
     "facilities": [
       "AC Dingin",
       "Kamar Mandi Dalam",
