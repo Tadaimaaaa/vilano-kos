@@ -40,7 +40,7 @@ export default function KosFloorPlan({
   useEffect(() => {
     // 1. Ambil dari cache lokal awal jika ada
     try {
-      const cached = localStorage.getItem('vilano_rooms_' + propertyId)
+      const cached = localStorage.getItem('vilano_rooms_' + propertyId) || localStorage.getItem('vilano_rooms_kos-vilano-pandan')
       if (cached) {
         const parsed = JSON.parse(cached)
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -55,7 +55,7 @@ export default function KosFloorPlan({
         const res = await fetch(`/api/rooms?propertyId=${encodeURIComponent(propertyId)}`)
         if (res.ok) {
           const data = await res.json()
-          if (data.rooms && Array.isArray(data.rooms)) {
+          if (data.rooms && Array.isArray(data.rooms) && data.rooms.length > 0) {
             setRooms(data.rooms)
           }
         }
@@ -69,7 +69,7 @@ export default function KosFloorPlan({
       try {
         channel = new BroadcastChannel('vilano_rooms_sync')
         channel.onmessage = (event) => {
-          if (event.data?.rooms && (!event.data.propertyId || event.data.propertyId === propertyId)) {
+          if (event.data?.rooms && Array.isArray(event.data.rooms)) {
             setRooms(event.data.rooms)
           }
         }
@@ -78,10 +78,10 @@ export default function KosFloorPlan({
 
     // 4. Storage event untuk cross-window sync
     function handleStorage(e: StorageEvent) {
-      if (e.key === 'vilano_rooms_' + propertyId && e.newValue) {
+      if ((e.key === 'vilano_rooms_' + propertyId || e.key === 'vilano_rooms_kos-vilano-pandan') && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue)
-          if (Array.isArray(parsed)) setRooms(parsed)
+          if (Array.isArray(parsed) && parsed.length > 0) setRooms(parsed)
         } catch {}
       }
     }

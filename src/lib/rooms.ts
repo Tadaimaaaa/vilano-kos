@@ -139,28 +139,50 @@ const ROOMS_TAG_REGEX = /<!--VILANO_ROOMS:([\s\S]*?)-->/
 
 export function parseRoomsFromDescription(desc: string | null | undefined): KosRoom[] {
   if (!desc) return DEFAULT_FLOOR1_ROOMS
-  const match = desc.match(ROOMS_TAG_REGEX)
-  if (!match || !match[1]) return DEFAULT_FLOOR1_ROOMS
 
-  try {
-    const parsed = JSON.parse(match[1])
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed as KosRoom[]
+  // 1. Cek format <!--VILANO_ROOMS:...-->
+  const match1 = desc.match(ROOMS_TAG_REGEX)
+  if (match1 && match1[1]) {
+    try {
+      const parsed = JSON.parse(match1[1])
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as KosRoom[]
+      }
+    } catch {}
+  }
+
+  // 2. Cek format alternatif [VILANO_ROOMS_DATA:...]
+  const startTag = '[VILANO_ROOMS_DATA:'
+  const startIdx = desc.indexOf(startTag)
+  if (startIdx !== -1) {
+    const endIdx = desc.lastIndexOf(']')
+    if (endIdx > startIdx) {
+      try {
+        const jsonStr = desc.slice(startIdx + startTag.length, endIdx)
+        const parsed = JSON.parse(jsonStr)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed as KosRoom[]
+        }
+      } catch {}
     }
-  } catch {
-    // fallback
   }
 
   return DEFAULT_FLOOR1_ROOMS
 }
 
 export function serializeRoomsToDescription(cleanDesc: string, rooms: KosRoom[]): string {
-  const base = cleanDesc.replace(ROOMS_TAG_REGEX, '').trim()
+  const base = cleanDesc
+    .replace(ROOMS_TAG_REGEX, '')
+    .replace(/\[VILANO_ROOMS_DATA:[\s\S]*?\]/g, '')
+    .trim()
   return `${base}\n\n<!--VILANO_ROOMS:${JSON.stringify(rooms)}-->`
 }
 
 export function getCleanDescription(desc: string | null | undefined): string {
   if (!desc) return ''
-  return desc.replace(ROOMS_TAG_REGEX, '').trim()
+  return desc
+    .replace(ROOMS_TAG_REGEX, '')
+    .replace(/\[VILANO_ROOMS_DATA:[\s\S]*?\]/g, '')
+    .trim()
 }
 

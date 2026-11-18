@@ -264,6 +264,7 @@ export default function AdminKosFloorPlan({
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('vilano_rooms_' + propertyId, JSON.stringify(updatedRooms))
+        localStorage.setItem('vilano_rooms_kos-vilano-pandan', JSON.stringify(updatedRooms))
       } catch {}
     }
   }
